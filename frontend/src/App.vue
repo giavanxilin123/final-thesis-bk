@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div class="header">
-      <div class="logo">
-        <img src="./assets/logo.svg" alt="">
+      <div @click="goBack" class="logo">
+        <img  src="./assets/logo.svg" alt="">
       </div>
       <div class="shopping-cart">
         <div class="icon">
@@ -21,6 +21,22 @@
     <router-view/>
   </div>
 </template>
+
+<script>
+  export default {
+    data() {
+      
+    },
+
+    methods: {
+      goBack(){
+        this.$router.push("/");
+      }
+    }
+
+  }
+</script>
+
 
 <style>
 body {
@@ -46,6 +62,10 @@ body {
 .shopping-cart {
   display: flex;
   align-items: center;
+}
+
+.header .logo {
+  cursor: pointer;
 }
 
 .header .logo img {
