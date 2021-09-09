@@ -24,9 +24,9 @@
 
 <script>
   export default {
-    data() {
-      
-    },
+    // data() {
+    //   return;
+    // },
 
     methods: {
       goBack(){
@@ -49,7 +49,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #000000;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .header {
