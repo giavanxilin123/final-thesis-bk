@@ -26,14 +26,14 @@
           <div class="total">
           <div class="type-fee">
             <div style= "text-align: left">
-              <div>Subtotal</div>
-              <div>Shipping</div>
-              <div>Taxes</div>
+              <div class="fee-detail">Subtotal</div>
+              <div class="fee-detail">Shipping</div>
+              <div class="fee-detail">Taxes</div>
             </div>
             <div style= "text-align: right">
-              <div>$37.95</div>
-              <div>Free</div>
-              <div>$0.00</div>
+              <div class="fee-detail">$37.95</div>
+              <div class="fee-detail">Free</div>
+              <div class="fee-detail">$0.00</div>
             </div>
           </div>
           <div class = "sum">
@@ -41,7 +41,7 @@
             <div>$37.95</div>
           </div>
           <el-button @click="checkOut" class="checkout" type="success">Proceed to checkout</el-button>
-        </div>
+          </div>
         </span>
       </el-dialog>
     </div>

@@ -17,7 +17,7 @@
               <img src="../assets/cherry.jpeg" alt="">
             </div>
             <div class="product-name">Cherry</div>
-            <div class="product-price">$9.00</div>
+            <div class="product-price">$37.95</div>
             <div class="product-buy">
               <el-input-number v-model="num" controls-position="right"  :min="1" :max="10"></el-input-number>
               <el-button type = "success">Add To Cart</el-button>
@@ -29,11 +29,11 @@
             <div class="product-img">
               <img src="../assets/blackberry.jpeg" alt="">
             </div>
-            <div class="product-name">Cherry</div>
-            <div class="product-price">$9.00</div>
+            <div class="product-name">BlackBerry</div>
+            <div class="product-price">$32.75</div>
             <div class="product-buy">
               <el-input-number v-model="num" controls-position="right"  :min="1" :max="10"></el-input-number>
-              <el-button type = "success">Add To Cart</el-button>
+              <el-button  type = "success">Add To Cart</el-button>
             </div>
           </div>
         </el-col>
@@ -42,11 +42,11 @@
             <div class="product-img">
               <img src="../assets/blueberry.jpeg" alt="">
             </div>
-            <div class="product-name">Cherry</div>
-            <div class="product-price">$9.00</div>
+            <div class="product-name">BlueBerry</div>
+            <div class="product-price">$43.00</div>
             <div class="product-buy">
               <el-input-number v-model="num" controls-position="right"  :min="1" :max="10"></el-input-number>
-              <el-button type = "success">Add To Cart</el-button>
+              <el-button  type = "success">Add To Cart</el-button>
             </div>
           </div>
         </el-col>
@@ -55,8 +55,8 @@
             <div class="product-img">
               <img src="../assets/watermelon.jpeg" alt="">
             </div>
-            <div class="product-name">Cherry</div>
-            <div class="product-price">$9.00</div>
+            <div class="product-name">Watermenlon</div>
+            <div class="product-price">$54.95</div>
             <div class="product-buy">
               <el-input-number v-model="num" controls-position="right"  :min="1" :max="10"></el-input-number>
               <el-button type = "success">Add To Cart</el-button>
@@ -84,7 +84,7 @@ export default {
     },
 
   methods: {
-
+    
   }
 
 }
