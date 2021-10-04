@@ -219,6 +219,11 @@ body {
   border-bottom: 1px solid rgba(0,0,0,.1);
   padding-bottom: 15px;
 }
+.fee-detail {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 5px;
+}
 .sum {
   display: flex;
   justify-content: space-between;
