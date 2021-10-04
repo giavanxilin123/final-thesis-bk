@@ -39,7 +39,7 @@
             <div style= "text-align: right">
               <div class="fee-detail">$37.95</div>
               <div class="fee-detail">Free</div>
-              <div class="fee-detail">$0.00</div>
+              <div class="fee-detail">$0.0</div>
             </div>
           </div>
           <div class = "sum">
