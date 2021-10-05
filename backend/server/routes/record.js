@@ -1,15 +1,29 @@
 const express = require("express");
-
-// recordRoutes is an instance of the express router.
-// We use it to define our routes.
-// The router will be added as a middleware and will take control of requests starting with path /listings.
-const recordRoutes = express.Router();
-
-// This will help us connect to the database
 const dbo = require("../db/conn");
+const recordRoutes = express.Router();
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
+dotenv.config()
 
-// This section will help you get a list of all the records.
-recordRoutes.route("/user").get(async function (req, res) {
+authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  
+  if (token == null) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET , (err, user) => {
+    console.log(err)
+
+    if (err) return res.sendStatus(403)
+
+    req.user = user
+
+    next()
+  })
+}
+
+recordRoutes.get('/user', authenticateToken, async function (req, res) {
   const dbConnect = dbo.getDb();
   dbConnect
     .collection("user")
@@ -23,6 +37,97 @@ recordRoutes.route("/user").get(async function (req, res) {
     });
 
 });
+
+recordRoutes.route("/customer").get(async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("customer")
+    .find({}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
+
+//register
+recordRoutes.post('/register', async (req, res, next) => {
+  try{
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.password, salt)
+      var newUser = {
+        fullname: req.body.fullname,
+        username: req.body.username,
+        email: req.body.email,
+        phone: req.body.phone,
+        password: hashedPassword
+      }    
+      
+      const dbConnect = dbo.getDb();
+      dbConnect
+      .collection("customer")
+      .insertOne(newUser, (err, result) => {
+        res.json(result)
+      })
+  }catch{
+      res.status(500).send();
+  }
+})
+
+
+//login
+
+recordRoutes.post('/login', (req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  
+  const dbConnect = dbo.getDb();
+  dbConnect
+  .collection("customer")
+  .find({username: username})
+  .toArray((err, body) => {
+    if(body.length > 0) {
+      bcrypt.compare(
+        password,
+        body[0].password,
+        (err, result) => {
+          if(result){
+            const accessToken = jwt.sign({
+                cusId : body[0]._id,
+                email: body[0].email
+            }, process.env.ACCESS_TOKEN_SECRET,
+            {
+                expiresIn: "1h"
+            }
+            )
+            res.status(200).send({
+               user: {
+                    fullname: body[0].fullname,
+                    username: body[0].username,
+                    email: body[0].email,
+                    phone: body[0].phone
+               },
+               accessToken : accessToken
+           })
+        }
+        else{
+            res.status(403).send({message : "Mật khẩu không chính xác"});
+        }
+        }
+      )
+    } else{
+      res.status(404).send({message : "Tài khoản không tồn tại! "})
+    }
+  })
+})
+
+
+
+
+
+
 
 // This section will help you create a new record.
 recordRoutes.route("/listings/recordSwipe").post(function (req, res) {
