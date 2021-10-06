@@ -23,10 +23,10 @@ authenticateToken = (req, res, next) => {
   })
 }
 
-recordRoutes.get('/user', authenticateToken, async function (req, res) {
+recordRoutes.get('/order', async function (req, res) {
   const dbConnect = dbo.getDb();
   dbConnect
-    .collection("user")
+    .collection("order")
     .find({}).limit(50)
     .toArray(function (err, result) {
       if (err) {
@@ -123,6 +123,31 @@ recordRoutes.post('/login', (req, res, next) => {
   })
 })
 
+recordRoutes.put("/order", async (req, res, next) => {
+  try{
+    // var newOrder = {
+    //   username : req.body.username,
+    //   fullname : req.body.fullname,
+    //   phone : req.body.phone,
+    //   email : req.body.email,
+    //   address : req.body.address,
+    //   location : req.body.location,
+    //   product_name : req.body.product_name,
+    //   quantity : req.body.quantity,
+    // }
+
+    var newOrder = req.body.formOrder
+    
+    const dbConnect = dbo.getDb();
+        dbConnect
+        .collection("order")
+        .insertOne(newOrder, (err, result) => {
+            res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
 
 
 
@@ -130,9 +155,7 @@ recordRoutes.post('/login', (req, res, next) => {
 
 
 // This section will help you create a new record.
-recordRoutes.route("/listings/recordSwipe").post(function (req, res) {
-  // Insert swipe informations
-});
+
 
 // This section will help you update a record by id.
 recordRoutes.route("/listings/updateLike").post(function (req, res) {

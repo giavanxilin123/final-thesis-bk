@@ -3,28 +3,31 @@
     <el-row :gutter="20">
         <el-col style="text-align: left; position: relative;  border-right: 1px solid #e5e5e5;" :span="15">
             <div style="font-size: 25px; margin: 15px 0; font-weight: 700">1. Personal Information</div>
-            <el-form style="margin-bottom: 40px" ref="form" :model="form" label-width="120px">
-                    <el-form-item label="First Name">
-                        <el-input v-model="form.fname"></el-input>
+            <el-form style="margin-bottom: 40px" ref="form" :model="formOrder" label-width="120px">
+                    <el-form-item label="Full Name">
+                        <el-input v-model="formOrder.fullname"></el-input>
                     </el-form-item>
-                    <el-form-item label="Last name">
-                        <el-input v-model="form.lname"></el-input>
+                    <el-form-item label="Username">
+                        <el-input v-model="formOrder.username"></el-input>
                     </el-form-item>
                     <el-form-item label="Email">
-                        <el-input v-model="form.email"></el-input>
+                        <el-input v-model="formOrder.email"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Phone">
+                        <el-input v-model="formOrder.phone"></el-input>
                     </el-form-item>
             </el-form>
                 
             <div style="font-size: 25px; margin: 15px 0; border-top: 2px solid #e5e5e5; padding-top: 25px; font-weight: 700">2. Addresses</div>
-            <el-form style="margin-bottom: 50px" ref="form" :model="form" label-width="120px">
+            <el-form style="margin-bottom: 50px" ref="form" :model="formOrder" label-width="120px">
                     <el-form-item label="Enter Address">
-                        <el-input id="auto_search" v-model="form.address"></el-input>
+                        <el-input id="auto_search" v-model="formOrder.address"></el-input>
                     </el-form-item>
             </el-form>
             
             <div id="map"></div>
             <div style="font-size: 25px; margin: 15px 0; border-top: 2px solid #e5e5e5; padding-top: 25px; font-weight: 700">3. Payment</div>
-            <el-button style="position: absolute; right: 0; margin: 50px" type="success">CheckOut</el-button>
+            <el-button @click ="checkOut" style="position: absolute; right: 0; margin: 50px" type="success">CheckOut</el-button>
         </el-col>
         
         <el-col :span="9">
@@ -76,17 +79,24 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 export default {
      data() {
       return {
-        form: {
-            fname:'',
-            lname:'',
+        formOrder: {
+            fullname:'',
+            username:'',
             email:'',
-            address: ''
+            phone:'',
+            address: '',
+            quantity: 1,
+            product_name: 'cherry',
+            location: {
+                lat: '',
+                lng: ''
+            }
         },
-        center: { lat: 10.76694, lng: 106.65912},
+        center: {lat: 10.7719937, lng: 106.7057951},
       };
     },
     
@@ -109,6 +119,9 @@ export default {
         );
         autoComplete.addListener('place_changed', () => {
             let place = autoComplete.getPlace()
+            this.formOrder.location.lat = place.geometry.location.lat()
+            this.formOrder.location.lng = place.geometry.location.lng()
+            console.log(place.geometry.location.lat(),place.geometry.location.lng())
             directionsService.route({
                 origin: this.center,
                 destination: place.geometry.location,
@@ -121,20 +134,42 @@ export default {
                         map: map
                         }
                     )
-                    let directionsData = res.routes[0].legs[0]
-                    console.log(directionsData.distance.text)
-                    console.log(directionsData)
+                    // let directionsData = res.routes[0].legs[0]
+                    // console.log(directionsData.distance.text)
+                    // console.log(directionsData)
+                    
+                    
                 }
             },
             map.setCenter(place.geometry.location),
             marker.setPosition(place.geometry.location)
+            
         )
         })
     },
 
     methods: {
-        checkOut(){
-            
+        async checkOut(){
+            await axios.put('http://localhost:5000/order', {formOrder: this.formOrder})
+            .then(res => {
+                this.alertSuccess();
+                console.log(res)
+            })
+            .catch(err => this.alertErr(err.response.data))
+        },
+        alertErr(err) {
+        this.$message({
+            showClose: true,
+            message:  err.message || "Đã có lỗi xảy ra!",
+            type: "error"
+        });
+        },
+        alertSuccess() {
+        this.$message({
+          showClose: true,
+          message: "Thành Công!",
+          type: "success"
+        });
         }
     
   }
