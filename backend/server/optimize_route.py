@@ -112,9 +112,9 @@ def create_data_model():
     #     ],
     # ]
     # data['demands'] = [0, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2]
-    data['demands'] = [0,1,1,1,1,1]
-    data['vehicle_capacities'] = [5]
-    data['num_vehicles'] = 1
+    data['demands'] = [0,1,1,1,1,1,1]
+    data['vehicle_capacities'] = [2,2,2]
+    data['num_vehicles'] = 3
     data['depot'] = 0
     return data
 
