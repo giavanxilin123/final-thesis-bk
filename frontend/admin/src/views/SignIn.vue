@@ -18,12 +18,13 @@
           <el-input
           placeholder="Username"
           prefix-icon="el-icon-user-solid"
-          v-model="username">
+          v-model="form.username">
         </el-input>
         <el-input
+          type="password"
           placeholder="Password"
           prefix-icon="el-icon-lock"
-          v-model="password">
+          v-model="form.password">
         </el-input>
         <el-button @click="logIn">LOGIN</el-button>
         </div>
@@ -38,38 +39,59 @@
 export default {
   data(){
     return {
-      username:"",
-      password: ""
+      form:{
+        username:"",
+        password: ""
+      }  
     }
   },
   methods: {
-    logIn(){
-      this.$router.push("/dashboard");
-    }
+    async logIn() {
+      try{
+          await this.$store.dispatch("logIn", this.form);
+          this.alertSuccess();
+          this.$router.push("/dashboard/management");
+        }catch(err){
+          this.alertErr(err)
+        }
+    },
+    alertErr(err) {
+      this.$message({
+        showClose: true,
+        message:  err.message || "Đã có lỗi xảy ra!",
+        type: "error"
+      });
+      },
+      alertSuccess() {
+        this.$message({
+          showClose: true,
+          message: "Đăng nhập thành công!",
+          type: "success"
+        });
+      }
   }
 }
 </script>
 
 <style>
-  .input-login .el-button {
+  .login-bg .input-login .el-button {
     margin-top: 40px;
     border: none !important;
     color: #4caf50;
     letter-spacing: 1px;
   }
-  .input-login .el-button:hover{
+  .login-bg.input-login .el-button:hover{
     background-color: white;
   }
 </style>
 
 <style scope>
-  .icon {
+  .login-bg .icon {
     padding: 40px;
-  }
-  .icon {
     margin: 0 10px;
   }
-  .third-login {
+  
+  .login-bg .third-login {
     background: linear-gradient(60deg,#66bb6a,#43a047);
     width: 90%;
     border-radius: 5px;
@@ -80,7 +102,7 @@ export default {
     transform: translateX(50%);
     font-size: 20px;
   }
-  .login-form .el-input {
+  .login-bg .login-form .el-input {
     margin: 10px;
     width: 90%;
   }
@@ -91,23 +113,23 @@ export default {
     height: 100vh;
     width: 100%;
   }
-  .overlay {
+  .login-bg .overlay {
     background-color: rgba(0,0,0,0.5);
     height: 100vh;
     width: 100%;
     position: relative;
   }
-  .logo {
+  .login-bg .logo {
     width: 250px;
     padding: 20px;
   }
-  .logo-svg{
+  .login-bg .logo-svg{
      filter:   invert(1) sepia(1) saturate(1);
   }
-  .logo img {
+  .login-bg .logo img {
     width: 100%;
   }
-  .login-form {
+  .login-bg .login-form {
     position: absolute;
     right: 50%;
     top: 50%;
@@ -118,7 +140,7 @@ export default {
     border-radius: 5px;
   }
   
-  .input-login{
+  .login-bg .input-login{
     position: absolute;
     bottom: 8%;
   }

@@ -22,37 +22,6 @@ authenticateToken = (req, res, next) => {
     next()
   })
 }
-
-recordRoutes.get('/order', async function (req, res) {
-  const dbConnect = dbo.getDb();
-  dbConnect
-    .collection("order")
-    .find({}).limit(50)
-    .toArray(function (err, result) {
-      if (err) {
-        res.status(400).send("Error fetching listings!");
-     } else {
-        res.json(result);
-      }
-    });
-
-});
-
-recordRoutes.route("/customer").get(async function (req, res) {
-  const dbConnect = dbo.getDb();
-  dbConnect
-    .collection("customer")
-    .find({}).limit(50)
-    .toArray(function (err, result) {
-      if (err) {
-        res.status(400).send("Error fetching listings!");
-     } else {
-        res.json(result);
-      }
-    });
-});
-
-//register
 recordRoutes.post('/register', async (req, res, next) => {
   try{
       const salt = await bcrypt.genSalt();
@@ -67,7 +36,7 @@ recordRoutes.post('/register', async (req, res, next) => {
       
       const dbConnect = dbo.getDb();
       dbConnect
-      .collection("customer")
+      .collection("user")
       .insertOne(newUser, (err, result) => {
         res.json(result)
       })
@@ -75,17 +44,13 @@ recordRoutes.post('/register', async (req, res, next) => {
       res.status(500).send();
   }
 })
-
-
-//login
-
 recordRoutes.post('/login', (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
   
   const dbConnect = dbo.getDb();
   dbConnect
-  .collection("customer")
+  .collection("user")
   .find({username: username})
   .toArray((err, body) => {
     if(body.length > 0) {
@@ -104,10 +69,11 @@ recordRoutes.post('/login', (req, res, next) => {
             )
             res.status(200).send({
                user: {
-                    fullname: body[0].fullname,
+                    name: body[0].name,
                     username: body[0].username,
                     email: body[0].email,
-                    phone: body[0].phone
+                    phone: body[0].phone,
+                    role: body[0].role
                },
                accessToken : accessToken
            })
@@ -123,19 +89,51 @@ recordRoutes.post('/login', (req, res, next) => {
   })
 })
 
+recordRoutes.get('/order', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("order")
+    .find({}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+
+});
+
+recordRoutes.get('/user-list', async (req, res) => {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("user")
+    .find({}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+})
+
+recordRoutes.route("/customer").get(async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("customer")
+    .find({}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
+
 recordRoutes.put("/order", async (req, res, next) => {
   try{
-    // var newOrder = {
-    //   username : req.body.username,
-    //   fullname : req.body.fullname,
-    //   phone : req.body.phone,
-    //   email : req.body.email,
-    //   address : req.body.address,
-    //   location : req.body.location,
-    //   product_name : req.body.product_name,
-    //   quantity : req.body.quantity,
-    // }
-
     var newOrder = req.body.formOrder
     
     const dbConnect = dbo.getDb();
@@ -148,13 +146,6 @@ recordRoutes.put("/order", async (req, res, next) => {
         res.status(500).send();
   }
 });
-
-
-
-
-
-
-// This section will help you create a new record.
 
 
 // This section will help you update a record by id.

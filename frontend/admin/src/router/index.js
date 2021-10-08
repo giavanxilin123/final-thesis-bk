@@ -7,23 +7,42 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/dashboard',
-    name: 'DashBoard',
-    component: DashBoard
+    component: DashBoard,
+    children: [
+      {
+        path: 'management',
+        name:'User Management',
+        component: () => import('../views/dashboard/UserManagement.vue')
+      },
+      {
+        path: 'order',
+        name:'Order Management',
+        component: () => import('../views/dashboard/Order.vue')
+      }
+    ]
   },
   {
     path: '/',
     name: 'SignIn',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/SignIn.vue')
-  }
+    component: () => import('../views/SignIn.vue')
+  },
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  var token = localStorage.getItem('accessToken')
+  let requiredAuth = ['/dashboard'] 
+  // add route to requiredAuth
+  if (!token && requiredAuth.find((r) => to.path.includes(r))) {
+    next('/')
+  } else {
+    next()
+  }
 })
 
 export default router
