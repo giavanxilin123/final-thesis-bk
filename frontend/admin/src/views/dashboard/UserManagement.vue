@@ -112,9 +112,7 @@ export default {
         await this.$store.dispatch('fetchUser');
     },
 
-    async updated() {
-        await this.$store.dispatch('fetchUser');
-    },
+    
     
     computed: {
         allUsers() {

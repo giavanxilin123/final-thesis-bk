@@ -66,7 +66,8 @@
                              <el-col :span="3">
                                 <div style="width: 85px; text-align:center; color: white; font-weight: 600" :style="{
                                     padding:'5px', 
-                                    backgroundColor: order.status == 'New' ? '#409eff' : (order.status == 'Completed'? '#67c23a' :(order.status == 'Delivering'? '#9c27b0' :'#e6a23c'))}" 
+                                    backgroundColor: order.status == 'New' ? '#409eff' : (order.status == 'Completed'? '#67c23a' 
+                                    :(order.status == 'Delivering'? '#9c27b0' :'#e6a23c'))}" 
                                     class= "status">
                                     {{order.status}}
                                 </div>
