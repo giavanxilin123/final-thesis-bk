@@ -3,15 +3,18 @@
     <el-row>
       <el-col class="menu" :span="4">
         <div class="overlay">
-          <div style="padding: 20px; font-size: 18px; font-weight: 600"><i style="margin-right: 20px; font-size: 25px" class="el-icon-menu"></i>DASHBOARD</div>
+          <div style="padding: 20px; font-size: 18px; font-weight: 600; text-align: left"><i style="margin-right: 20px; font-size: 25px" class="el-icon-menu"></i>DASHBOARD</div>
           <div class="divider"></div>
-          <div class="sidebar-content" @click = "user"><i class="el-icon-s-custom icon"></i>User Management</div>
+          <div class=user>{{user.name}}</div>
+          <div class="divider"></div>
+          <div class="sidebar-content" @click = "userManagementRoute"><i class="el-icon-s-custom icon"></i>User Management</div>
           
-          <div class="sidebar-content" @click = "order">
-            <el-badge style="margin-right: 20px" :value="6" class="item">
+          <div class="sidebar-content" @click = "orderManagementRoute">
+            <el-badge style="margin-right: 20px" :value="countNewOrder" class="item">
             <i style="margin-right: 0" class="el-icon-s-order icon"></i>
           </el-badge>Order Management</div>
           <div class="sidebar-content" ><i class="el-icon-map-location icon"></i>Optimize Routing Solver</div>
+          <div @click ="logOut" class="sidebar-content" ><i class="el-icon-switch-button icon"></i>Log Out</div>
         </div>
       </el-col>
 
@@ -37,22 +40,42 @@ export default {
         }
     },
      methods: {
-      
-      async user() {
+      async userManagementRoute() {
         this.$router.push("/dashboard/management").catch(error => {
           if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
             console.log(error)
           }
         })
       },
-      async order() {
+      async orderManagementRoute() {
          this.$router.push("/dashboard/order").catch(error => {
           if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
             console.log(error)
           }
         })
-      }
-    }
+      },
+      logOut() {
+        this.$store.dispatch('logOut');
+        this.$router.push('/')
+      },
+    },
+    computed: {
+      user(){
+          return this.$store.state.user
+        },
+      orderList() {
+          return this.$store.state.orders;
+      },
+      countNewOrder(){
+        return this.orderList.filter(x => x.status == "New").length
+        
+      },
+      
+    },
+
+    async mounted() {
+        await this.$store.dispatch('fetchOrders');
+    },  
     
 }
 </script>
@@ -62,6 +85,10 @@ export default {
 </style>
 
 <style scoped>
+  .user {
+    padding: 20px;
+    text-align: left;
+  }
   .nav {
     text-align: right;
     margin: 0 auto;

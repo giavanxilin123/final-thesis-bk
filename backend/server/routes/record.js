@@ -3,7 +3,8 @@ const dbo = require("../db/conn");
 const recordRoutes = express.Router();
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
+const { ObjectID, ObjectId } = require("mongodb");
 dotenv.config()
 
 authenticateToken = (req, res, next) => {
@@ -141,6 +142,22 @@ recordRoutes.put("/order", async (req, res, next) => {
         .collection("order")
         .insertOne(newOrder, (err, result) => {
             res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
+recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
+  try{
+    let id = req.params.id
+    let status = req.body.status
+    
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("order")
+        .update({_id: ObjectId(id)}, {$set: {"status": status == 'New' ? 'Progressing' : 'New'}}, (err, result) => {
+          res.json(result)
         })
   } catch{
         res.status(500).send();

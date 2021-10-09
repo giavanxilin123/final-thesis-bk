@@ -111,11 +111,12 @@ export default {
     async created() {
         await this.$store.dispatch('fetchUser');
     },
+
+    async updated() {
+        await this.$store.dispatch('fetchUser');
+    },
     
     computed: {
-        user(){
-            return this.$store.state.user
-        },
         allUsers() {
             return this.$store.state.allUsers
         }

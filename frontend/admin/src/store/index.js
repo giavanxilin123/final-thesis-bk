@@ -10,9 +10,13 @@ export default new Vuex.Store({
   state: {
     BASE_URL,
     user: user || {}, 
-    allUsers: []
+    allUsers: [],
+    orders: []
   },
   mutations,
   actions,
+
 });
+
+
 

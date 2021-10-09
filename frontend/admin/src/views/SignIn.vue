@@ -21,12 +21,13 @@
           v-model="form.username">
         </el-input>
         <el-input
+          @keyup.enter.native="logIn"
           type="password"
           placeholder="Password"
           prefix-icon="el-icon-lock"
           v-model="form.password">
         </el-input>
-        <el-button @click="logIn">LOGIN</el-button>
+        <el-button  @click="logIn">LOGIN</el-button>
         </div>
         
       </div>

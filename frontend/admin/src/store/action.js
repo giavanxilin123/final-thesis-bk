@@ -48,5 +48,36 @@ export const actions = {
                 reject(err);
               })
           })
+    },
+    logOut(ctx) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
+        ctx.commit('LOG_OUT');
+    },
+    fetchOrders(ctx) {
+        return new Promise((resolve, reject) => {
+            client
+              .get(`${BASE_URL}/order`)
+              .then(res => {
+                ctx.commit('FETCH_ORDERS', res.data);
+                resolve(res);
+              })
+              .catch(err => {
+                reject(err);
+              })
+          })
+    },
+    updateStatus(ctx, payload){
+        return new Promise((resolve, reject) => {
+            client
+              .put(`${BASE_URL}/updateStatus/${payload.id}`, payload)
+              .then(res => {
+                ctx.commit('UPDATE_STATUS', res.data);
+                resolve(res);
+              })
+              .catch(err => {
+                reject(err);
+              })
+          })
     }
 }
