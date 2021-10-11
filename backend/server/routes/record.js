@@ -156,7 +156,7 @@ recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
     const dbConnect = dbo.getDb();
         await dbConnect
         .collection("order")
-        .findOneAndUpdate({_id: ObjectId(id)}, {$set: {"status": status == 'New' ? 'Progressing' : 'New'}}, {new: true} ,(err, doc) => {
+        .update({_id: ObjectId(id)}, {$set: {"status": status == 'New' ? 'Progressing' : 'New'}}, (err, doc) => {
           res.json(doc)
         })
   } catch{
