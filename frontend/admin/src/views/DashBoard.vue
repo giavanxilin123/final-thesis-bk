@@ -10,9 +10,9 @@
           <div class="sidebar-content" @click ="userManagement"><i class="el-icon-s-custom icon"></i>User Management</div>
           
           <div class="sidebar-content" @click ="orderManagement">
-            <!-- <el-badge style="margin-right: 20px" :value="countNewOrder" class="item"> -->
+            <el-badge style="margin-right: 20px" :value="countNewOrder" :hidden="countNewOrder === 0" class="item">
             <i style="margin-right: 0" class="el-icon-s-order icon"></i>
-          <!-- </el-badge>Order Management -->
+          </el-badge>Order Management
           </div>
           <div class="sidebar-content" @click ="optimizeRoute" ><i class="el-icon-map-location icon"></i>Optimize Routing Solver</div>
           <div @click ="logOut" class="sidebar-content" ><i class="el-icon-switch-button icon"></i>Log Out</div>
@@ -75,9 +75,9 @@ export default {
       orderList() {
           return this.$store.state.orders;
       },
-      // countNewOrder(){
-      //   return this.orderList.filter(x => x.status == "New").length
-      // },
+      countNewOrder(){
+        return this.orderList.filter(x => x.status == "New").length
+      },
       
     },
 
