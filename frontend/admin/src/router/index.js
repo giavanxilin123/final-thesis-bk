@@ -18,6 +18,11 @@ const routes = [
         path: 'order',
         name:'Order Management',
         component: () => import('../views/dashboard/Order.vue')
+      },
+      {
+        path: 'optimize-route',
+        name:'Optimize Route',
+        component: () => import('../views/dashboard/OptimizeRoute.vue')
       }
     ]
   },

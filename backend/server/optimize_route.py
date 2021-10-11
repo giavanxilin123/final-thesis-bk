@@ -14,11 +14,16 @@ client = MongoClient(CONNECTION_STRING)
 dbs = client['GroceryStore']
 collection = dbs['order']
 
-depot_position = (10.7719937, 106.7057951)
-order_list = collection.find()
 
-location_list = list(map(lambda x: x['location'], order_list))
+order_list = collection.find()
+order_delivery_list = list(filter(lambda x: x['status'] == 'Progressing', order_list))
+
+# pprint(list(order_delivery_list))
+location_list = list(map(lambda x: x['location'], order_delivery_list))
 location_tuple = list(map(lambda x: (x['lat'],x['lng']), location_list))
+
+
+depot_position = (10.7719937, 106.7057951)
 
 location_tuple.insert(0,depot_position)
 

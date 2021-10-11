@@ -123,31 +123,23 @@ export default {
             }],
             value: '',
             input: '',
-            // pending: []
          }
     },
 
     methods: {
-        // progress(id) {
-        //     this.pending.push(id)
-        //     console.log(this.pending)
-        // }
         async changeStatus(id, status){
-            await this.$store.dispatch('updateStatus', {id: id, status: status})
-        }
-        
+            this.$store.dispatch('updateStatus', {id: id, status: status})
+            await this.$store.dispatch('fetchOrders')
+        }  
     },
 
     async created() {
         await this.$store.dispatch('fetchOrders');
     },
-    async updated() {
-        await this.$store.dispatch('fetchOrders');
-    },
-
+   
     computed: {
-         orderList() {
-            return  this.$store.state.orders;
+        orderList() {
+            return this.$store.state.orders;
         },
     },
 

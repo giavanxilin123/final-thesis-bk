@@ -72,7 +72,7 @@ export const actions = {
             client
               .put(`${BASE_URL}/updateStatus/${payload.id}`, payload)
               .then(res => {
-                ctx.commit('UPDATE_STATUS', res.data);
+                console.log(res, 'hihi')
                 resolve(res);
               })
               .catch(err => {
