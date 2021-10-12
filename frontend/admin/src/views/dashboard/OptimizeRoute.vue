@@ -104,7 +104,10 @@ export default {
         }],
         value: 1,
         center: {lat: 10.7719937, lng: 106.7057951},
-        fullscreenLoading: false
+        fullscreenLoading: false,
+        map: '',
+        marker: '',
+        color: ['blue', 'green', 'red', 'yellow']
       }
     },
     
@@ -118,53 +121,84 @@ export default {
             });
             await axios.get("http://localhost:5000/solving-route")
             .then(res => {
-                console.log(res)
+                let legs = res.data.route_legs;
+                let location_map = legs.map(x => x.map(y => { return {location : this.orderProgressingList[y-1]['location']}}))
+                for (const step in location_map){
+
+                    new window.google.maps.DirectionsService().route({
+                        origin: this.center,
+                        destination: this.center,
+                        waypoints: location_map[step],
+                        travelMode: 'DRIVING'
+                    },
+                    (res, status) => {
+                        if (status == 'OK'){
+                            new window.google.maps.DirectionsRenderer({
+                                directions: res,
+                                map: this.map,
+                                polylineOptions: {
+                                    strokeColor: this.color[step],
+                                    strokeWeight: '3',
+                                    strokeOpacity: '0.5'
+                                }
+                                }
+                            )
+                        }
+                    },)
+                }
                 loading.close()
             })
         },
-    //     openFullScreen1() {
-        
-    //     setTimeout(() => {
-          
-    //     }, 2000);
-    //   },
     },
 
-    mounted() {
-        const map = new window.google.maps.Map(document.getElementById('map'), {
+    computed: {
+        orderProgressingList() {
+            return this.$store.state.orders.filter(x => x.status == 'Progressing');
+        },
+    },
+
+
+
+    async mounted() {
+        await this.$store.dispatch('fetchOrders');
+        console.log(this.orderProgressingList)
+        
+        this.map = new window.google.maps.Map(document.getElementById('map'), {
             center: { lat: this.center.lat, lng: this.center.lng },
             zoom: 16,
         });
 
-        new window.google.maps.Marker({
+        this.marker = new window.google.maps.Marker({
             position: this.center,
-            map: map,
+            map: this.map,
             animation:  window.google.maps.Animation.BOUNCE
         })
 
-
-        // let directionsService = new window.google.maps.DirectionsService();
-        // directionsService.route({
+        // new window.google.maps.DirectionsService().route({
         //         origin: this.center,
-        //         destination: place.geometry.location,
+        //         destination: this.center,
+        //         waypoints: [
+        //             {location: {lat: 10.7950125, lng: 106.7218535}},
+        //             {location: {lat: 10.7894745, lng: 106.744078}}
+        //         ],
         //         travelMode: 'DRIVING'
         //     },
         //     (res, status) => {
         //         if (status == 'OK'){
         //             new window.google.maps.DirectionsRenderer({
         //                 directions: res,
-        //                 map: map
+        //                 map: this.map,
+        //                 polylineOptions: {
+        //                     strokeColor: 'blue',
+        //                     strokeWeight: '3',
+        //                     strokeOpacity: '0.5'
         //                 }
-        //             )
-        //             // let directionsData = res.routes[0].legs[0]
-        //             // console.log(directionsData.distance.text)
-        //             // console.log(directionsData)
+        //             })
         //         }
         //     },
-        //     // map.setCenter(place.geometry.location),
-        //     marker.setPosition(center)
-        //     )
+        // )
     }
+    
 }
 </script>
 

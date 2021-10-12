@@ -172,8 +172,10 @@ recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
 recordRoutes.get("/solving-route", async (req, res, next) => {
   PythonShell.run('optimize_route.py', null,  function (err, result) {
     if (err) throw err;
-    doc = result.map(x => x.split(',').map(y => parseInt(y)))
-    res.send({route_legs:doc})
+    doc = result.map(x => x.split(',').map(y => parseInt(y))).filter(x => x.length != 2)
+    doc.map(x => x.pop())
+    doc.map(x => x.shift())
+    res.send({route_legs: doc})
     // const dbConnect = dbo.getDb();
     // dbConnect
     // .collection("delivery")

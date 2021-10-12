@@ -123,7 +123,6 @@ def print_solution(data, manager, routing, solution):
     # print(f'Objective: {solution.ObjectiveValue()}')
     total_distance = 0
     total_load = 0
-    array_routes = []
     for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
@@ -139,7 +138,6 @@ def print_solution(data, manager, routing, solution):
             index = solution.Value(routing.NextVar(index))
             route_distance += routing.GetArcCostForVehicle(
                 previous_index, index, vehicle_id)
-        array_routes.append(route_forEach_vehicle )
         plan_output += ' {0} Load({1})\n'.format(manager.IndexToNode(index),
                                                  route_load)
         plan_output += 'Distance of the route: {}m\n'.format(route_distance)
@@ -151,7 +149,6 @@ def print_solution(data, manager, routing, solution):
     # print('Total distance of all routes: {}m'.format(total_distance))
     # print('Total load of all routes: {}'.format(total_load))
     # print(array_routes)
-
 
 def main():
     """Solve the CVRP problem."""
