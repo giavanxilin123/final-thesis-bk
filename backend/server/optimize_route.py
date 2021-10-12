@@ -5,15 +5,13 @@ from pprint import pprint
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
+
 API_KEY = 'AIzaSyAkK1Nj9HWtb4R0crJISga3j9hq2aBC8lQ'
 map_client = googlemaps.Client(API_KEY)
-
 CONNECTION_STRING = "mongodb://localhost:27017"
-
 client = MongoClient(CONNECTION_STRING)
 dbs = client['GroceryStore']
 collection = dbs['order']
-
 
 order_list = collection.find()
 order_delivery_list = list(filter(lambda x: x['status'] == 'Progressing', order_list))
@@ -24,7 +22,6 @@ location_tuple = list(map(lambda x: (x['lat'],x['lng']), location_list))
 
 
 depot_position = (10.7719937, 106.7057951)
-
 location_tuple.insert(0,depot_position)
 
 API_KEY = 'AIzaSyAkK1Nj9HWtb4R0crJISga3j9hq2aBC8lQ'
@@ -37,8 +34,6 @@ def matrix_distance(x, lst):
         directions_result = map_client.directions(origin=x, destination=lst[i], mode="driving")
         f.append(directions_result[0]['legs'][0]['distance']['value'])
     return f
-
-
 
 def create_data_model():
     """Stores the data for the problem."""
@@ -117,40 +112,45 @@ def create_data_model():
     #     ],
     # ]
     # data['demands'] = [0, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2]
-    data['demands'] = [0,1,1,1,1,1,1]
-    data['vehicle_capacities'] = [2,2,2]
-    data['num_vehicles'] = 3
+    data['demands'] = [0,3,5,4,5]
+    data['vehicle_capacities'] = [10,10,10,10]
+    data['num_vehicles'] = 4
     data['depot'] = 0
     return data
 
-
 def print_solution(data, manager, routing, solution):
     """Prints solution on console."""
-    print(f'Objective: {solution.ObjectiveValue()}')
+    # print(f'Objective: {solution.ObjectiveValue()}')
     total_distance = 0
     total_load = 0
+    array_routes = []
     for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
         route_distance = 0
         route_load = 0
+        route_forEach_vehicle = ""
         while not routing.IsEnd(index):
             node_index = manager.IndexToNode(index)
             route_load += data['demands'][node_index]
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
+            route_forEach_vehicle += '{0},'.format(node_index)
             previous_index = index
             index = solution.Value(routing.NextVar(index))
             route_distance += routing.GetArcCostForVehicle(
                 previous_index, index, vehicle_id)
+        array_routes.append(route_forEach_vehicle )
         plan_output += ' {0} Load({1})\n'.format(manager.IndexToNode(index),
                                                  route_load)
         plan_output += 'Distance of the route: {}m\n'.format(route_distance)
         plan_output += 'Load of the route: {}\n'.format(route_load)
-        print(plan_output)
+        # print(plan_output)
         total_distance += route_distance
         total_load += route_load
-    print('Total distance of all routes: {}m'.format(total_distance))
-    print('Total load of all routes: {}'.format(total_load))
+        print(route_forEach_vehicle+'0')
+    # print('Total distance of all routes: {}m'.format(total_distance))
+    # print('Total load of all routes: {}'.format(total_load))
+    # print(array_routes)
 
 
 def main():
@@ -214,3 +214,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

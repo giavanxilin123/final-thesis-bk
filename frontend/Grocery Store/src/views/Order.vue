@@ -143,8 +143,7 @@ export default {
             },
             map.setCenter(place.geometry.location),
             marker.setPosition(place.geometry.location)
-            
-        )
+            )
         })
     },
 

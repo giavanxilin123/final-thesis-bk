@@ -5,6 +5,10 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
 const { ObjectID, ObjectId } = require("mongodb");
+const {PythonShell} = require ('python-shell');
+
+
+
 dotenv.config()
 
 authenticateToken = (req, res, next) => {
@@ -165,14 +169,25 @@ recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
 });
 
 
-// This section will help you update a record by id.
-recordRoutes.route("/listings/updateLike").post(function (req, res) {
-  // Update likes
+recordRoutes.get("/solving-route", async (req, res, next) => {
+  PythonShell.run('optimize_route.py', null,  function (err, result) {
+    if (err) throw err;
+    doc = result.map(x => x.split(',').map(y => parseInt(y)))
+    res.send({route_legs:doc})
+    // const dbConnect = dbo.getDb();
+    // dbConnect
+    // .collection("delivery")
+    // .insertOne({route_legs: doc}, (err, result) => {
+    //     res.send(result)
+    // })
+  });
+  
+  
+  
+  // console.log(data)
+  // console.log('alo', alo)
+  
 });
 
-// This section will help you delete a record
-recordRoutes.route("/listings/delete").delete((req, res) => {
-  // Delete documents
-});
 
 module.exports = recordRoutes;

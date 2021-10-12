@@ -62,7 +62,6 @@
                 </el-row>
                 </div>
             </el-col>
-
             <el-col  :span="12">
                 <div class="map">
                     <div class="tag-map">
@@ -75,11 +74,21 @@
                 </div>
                 
             </el-col>
+            <div class="route-step">
+                <el-button v-loading.fullscreen.lock="fullscreenLoading" @click="optimizeRoute" type="success">Optimize Route</el-button>
+                <!-- <el-button
+                    type="primary"
+                    @click="openFullScreen1"
+                    v-loading.fullscreen.lock="fullscreenLoading">
+                    As a directive
+                </el-button> -->
+            </div>
         </el-row>       
     </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data() {
       return {
@@ -95,20 +104,66 @@ export default {
         }],
         value: 1,
         center: {lat: 10.7719937, lng: 106.7057951},
+        fullscreenLoading: false
       }
     },
     
+    methods : {
+        async optimizeRoute() {
+            const loading = this.$loading({
+                lock: true,
+                text: 'Optimizing Route',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
+            await axios.get("http://localhost:5000/solving-route")
+            .then(res => {
+                console.log(res)
+                loading.close()
+            })
+        },
+    //     openFullScreen1() {
+        
+    //     setTimeout(() => {
+          
+    //     }, 2000);
+    //   },
+    },
+
     mounted() {
-        new window.google.maps.Map(document.getElementById('map'), {
+        const map = new window.google.maps.Map(document.getElementById('map'), {
             center: { lat: this.center.lat, lng: this.center.lng },
             zoom: 16,
         });
 
-        // let marker = new window.google.maps.Marker({
-        //     position: this.center,
-        //     map: map,
-        //     animation:  window.google.maps.Animation.BOUNCE
-        // });
+        new window.google.maps.Marker({
+            position: this.center,
+            map: map,
+            animation:  window.google.maps.Animation.BOUNCE
+        })
+
+
+        // let directionsService = new window.google.maps.DirectionsService();
+        // directionsService.route({
+        //         origin: this.center,
+        //         destination: place.geometry.location,
+        //         travelMode: 'DRIVING'
+        //     },
+        //     (res, status) => {
+        //         if (status == 'OK'){
+        //             new window.google.maps.DirectionsRenderer({
+        //                 directions: res,
+        //                 map: map
+        //                 }
+        //             )
+        //             // let directionsData = res.routes[0].legs[0]
+        //             // console.log(directionsData.distance.text)
+        //             // console.log(directionsData)
+        //         }
+        //     },
+        //     // map.setCenter(place.geometry.location),
+        //     marker.setPosition(center)
+        //     )
     }
 }
 </script>
@@ -152,7 +207,7 @@ export default {
         background-color: white;
         font-weight: 500;
         border-radius: 5px;
-        margin: 0 10px;
+        margin-right: 10px;
         border: 1px solid #eee;
     }
     .vehicle-type {
@@ -181,9 +236,12 @@ export default {
         background-color: white;
         font-weight: 500;
         border-radius: 5px;
-        margin: 0 10px;
+        margin-left: 10px;
         border: 1px solid #eee;
     }
+    /* .route-step {
+        background: white;
+    } */
 </style>
 <style>
     
