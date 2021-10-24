@@ -56,6 +56,7 @@ export default {
           this.alertErr(err)
         }
     },
+    
     alertErr(err) {
       this.$message({
         showClose: true,

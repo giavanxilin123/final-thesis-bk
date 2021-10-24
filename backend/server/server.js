@@ -20,6 +20,7 @@ app.use(require("./routes/record"));
 // });
 
 // perform a database connection when the server starts
+
 dbo.connectToServer(function (err) {
   if (err) {
     console.error(err);
@@ -30,4 +31,6 @@ dbo.connectToServer(function (err) {
   app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
   });
-});
+})
+
+;

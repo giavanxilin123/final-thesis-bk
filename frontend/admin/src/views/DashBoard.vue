@@ -19,7 +19,7 @@
         </div>
       </el-col>
 
-      <el-col style="background-color: #eee" :span="20">
+      <el-col style="background-color: #eee; overflow: auto" :span="20">
         <!-- <div class="nav">
           <el-badge :value="2" class="item">
             <i class="el-icon-message-solid icon"></i>

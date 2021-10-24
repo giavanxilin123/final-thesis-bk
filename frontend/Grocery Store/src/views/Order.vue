@@ -40,14 +40,14 @@
               <div class="fee-detail">Taxes</div>
             </div>
             <div style= "text-align: right">
-              <div class="fee-detail">$37.95</div>
+              <div class="fee-detail">${{subTotal}}</div>
               <div class="fee-detail">Free</div>
-              <div class="fee-detail">$0.00</div>
+              <div class="fee-detail">${{(subTotal*5/100).toFixed(2)}}</div>
             </div>
           </div>
           <div class = "sum">
             <div>TOTAL</div>
-            <div>$37.95</div>
+            <div>${{(subTotal*105/100).toFixed(2)}}</div>
           </div>
           
           <div class="icon-bg">
@@ -89,18 +89,21 @@ export default {
             email:'',
             phone:'',
             address: '',
-            quantity: 1,
-            product_name: 'cherry',
+            order: [],
+            total: 0,
             location: {
                 lat: '',
                 lng: ''
-            }
+            },
+            status: 'New'
         },
         center: {lat: 10.7719937, lng: 106.7057951},
       };
     },
     
     mounted() {
+        this.formOrder.order = this.$store.state.cart;
+        this.formOrder.total = Math.round(this.subTotal * 105) / 100;
         const map = new window.google.maps.Map(document.getElementById('map'), {
             center: { lat: this.center.lat, lng: this.center.lng },
             zoom: 16,
@@ -121,7 +124,7 @@ export default {
             let place = autoComplete.getPlace()
             this.formOrder.location.lat = place.geometry.location.lat()
             this.formOrder.location.lng = place.geometry.location.lng()
-            console.log(place.geometry.location.lat(),place.geometry.location.lng())
+            // console.log(place.geometry.location.lat(),place.geometry.location.lng())
             directionsService.route({
                 origin: this.center,
                 destination: place.geometry.location,
@@ -137,8 +140,6 @@ export default {
                     // let directionsData = res.routes[0].legs[0]
                     // console.log(directionsData.distance.text)
                     // console.log(directionsData)
-                    
-                    
                 }
             },
             map.setCenter(place.geometry.location),
@@ -155,6 +156,8 @@ export default {
                 console.log(res)
             })
             .catch(err => this.alertErr(err.response.data))
+            this.$router.push('/')
+            location.reload();
         },
         alertErr(err) {
         this.$message({
@@ -166,12 +169,19 @@ export default {
         alertSuccess() {
         this.$message({
           showClose: true,
-          message: "Thành Công!",
+          message: "Đặt hàng thành Công!",
           type: "success"
         });
         }
-    
-  }
+  },
+    computed: {
+        cart() {
+            return this.$store.state.cart
+        },
+        subTotal() {
+            return  this.$store.state.cart.map(c => c.price * c.num).reduce((a,b) => a+b, 0).toFixed(2)
+        }
+    }
 
 }
 </script>

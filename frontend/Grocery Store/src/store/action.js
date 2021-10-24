@@ -20,36 +20,28 @@ client.interceptors.request.use((config) => {
 });
   
 export const actions = {
-    // async register(ctx, payload) {
-    //     await axios.post(`${BASE_URL}/api/register`, payload);
-    // },
+    fetchProducts(ctx) {
+        return new Promise((resolve, reject) => {
+            client
+              .get(`${BASE_URL}/products`)
+              .then(res => {
+                ctx.commit('FETCH_PRODUCTS', res.data);
+                resolve(res);
+              })
+              .catch(err => {
+                reject(err);
+              })
+          })
+    },
 
-    // logIn(ctx, payload){
-    //     return new Promise((resolve, reject) => {
-    //         client
-    //         .post(`${BASE_URL}/api/login`, payload)
-    //         .then((res)=>{
-    //             ctx.commit('LOGIN', res.data.user);
-    //             localStorage.setItem('accessToken', JSON.stringify(res.data.accessToken));
-    //             localStorage.setItem('user', JSON.stringify(res.data.user));
-    //             resolve(res)
-    //         })
-    //         .catch(err => {
-    //             reject(err.response.data)
-    //         })
-    //     })
-    // },
+    cart(ctx, payload) {
+        ctx.commit('CART', payload.cart)
+    },
 
-    // signOut(ctx){
-    //     localStorage.removeItem('accessToken');
-    //     localStorage.removeItem('user');
-    //     ctx.commit('SIGN_OUT');
-    // },
+    removeOrderLine(ctx, payload) {
+        ctx.commit('REMOVE_ORDER_LINE', payload)
+    }
 
-    // searchRoom(ctx, payload){
-    //     ctx.commit('SEARCH_ROOM', payload);
-    // }
-   
 }
 
 

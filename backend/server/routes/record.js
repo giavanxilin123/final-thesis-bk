@@ -4,10 +4,10 @@ const recordRoutes = express.Router();
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
-const { ObjectID, ObjectId } = require("mongodb");
+const { ObjectID, ObjectId, mongo } = require("mongodb");
 const {PythonShell} = require ('python-shell');
-
-
+// const upload = require("../middleware/upload")
+const Grid = require('gridfs-stream')
 
 dotenv.config()
 
@@ -27,6 +27,9 @@ authenticateToken = (req, res, next) => {
     next()
   })
 }
+
+//admin 
+
 recordRoutes.post('/register', async (req, res, next) => {
   try{
       const salt = await bcrypt.genSalt();
@@ -49,6 +52,7 @@ recordRoutes.post('/register', async (req, res, next) => {
       res.status(500).send();
   }
 })
+
 recordRoutes.post('/login', (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -168,7 +172,6 @@ recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
   }
 });
 
-
 recordRoutes.get("/solving-route", async (req, res, next) => {
   PythonShell.run('optimize_route.py', null,  function (err, result) {
     if (err) throw err;
@@ -191,5 +194,28 @@ recordRoutes.get("/solving-route", async (req, res, next) => {
   
 });
 
+recordRoutes.get('/products', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("product")
+    .find({}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
+
+
+// recordRoutes.post("/upload", upload.single("file"), (req, res) => {
+//   if(req.file === undefined) return res.send("You must select a file!")
+//   const imgUrl = `http://localhost:5000/file/${req.file.filename}`;
+//   return res.send(imgUrl)
+// })
+
+// let gfs = Grid(dbo.getDb(), mongo)
+// gfs.collection("photos")
 
 module.exports = recordRoutes;

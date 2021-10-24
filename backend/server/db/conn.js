@@ -13,11 +13,12 @@ module.exports = {
             if (err || !db) throw err
             dbConnection = db.db("GroceryStore")
             console.log("Successfully connected to MongoDB")
-
+            
             return callback();
         })
     },
-
+    
+    
     getDb: () => {
         return dbConnection;
     }

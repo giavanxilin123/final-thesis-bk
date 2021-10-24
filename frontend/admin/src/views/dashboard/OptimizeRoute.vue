@@ -32,7 +32,7 @@
                     </el-col>
                     <el-col :span="10">
                         <div style="padding: 10px; background-color: #67c23a; color: white; width: 30%; margin: 0 auto; border-radius: 5px">
-                        15
+                        10
                     </div>
                     </el-col>        
                 </el-row>
@@ -40,24 +40,18 @@
                 <el-row class="vehicle-quantity">
                     <el-col style="border-right: 1px solid #eee" :span="4">Quantity</el-col>
                     <el-col :span="10">
-                         <el-select v-model="value" clearable placeholder="Select">
-                        <el-option
-                        v-for="item in numVehicle"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
+                        2
                     </el-col>
                     <el-col :span="10">
-                         <el-select v-model="value" clearable placeholder="Select">
+                        2
+                         <!-- <el-select v-model="value" clearable placeholder="Select">
                         <el-option
                         v-for="item in numVehicle"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
                         </el-option>
-                    </el-select>
+                    </el-select> -->
                     </el-col>
                 </el-row>
                 </div>
@@ -76,14 +70,15 @@
             </el-col>
             <div class="route-step">
                 <el-button v-loading.fullscreen.lock="fullscreenLoading" @click="optimizeRoute" type="success">Optimize Route</el-button>
-                <!-- <el-button
-                    type="primary"
-                    @click="openFullScreen1"
-                    v-loading.fullscreen.lock="fullscreenLoading">
-                    As a directive
-                </el-button> -->
             </div>
-        </el-row>       
+            <el-col  class="sidebar" :span ="24">
+                <div class="panel"></div>
+                <div class="panel"></div>
+                <div class="panel"></div>
+                <div class="panel"></div>
+            </el-col>
+        </el-row>
+       
     </div>
 </template>
 
@@ -107,7 +102,8 @@ export default {
         fullscreenLoading: false,
         map: '',
         marker: '',
-        color: ['blue', 'green', 'red', 'yellow']
+        color: ['blue', '#f44336', '#67c23a', '#9c27b0', 'black'],
+        legs:[]
       }
     },
     
@@ -124,7 +120,8 @@ export default {
                 let legs = res.data.route_legs;
                 let location_map = legs.map(x => x.map(y => { return {location : this.orderProgressingList[y-1]['location']}}))
                 for (const step in location_map){
-
+                    let num = step + 1;
+                    document.getElementsByClassName("panel")[step].innerHTML= `Vehicle ${step}`
                     new window.google.maps.DirectionsService().route({
                         origin: this.center,
                         destination: this.center,
@@ -134,6 +131,7 @@ export default {
                     (res, status) => {
                         if (status == 'OK'){
                             new window.google.maps.DirectionsRenderer({
+                                panel: document.getElementsByClassName("panel")[step],
                                 directions: res,
                                 map: this.map,
                                 polylineOptions: {
@@ -157,11 +155,8 @@ export default {
         },
     },
 
-
-
     async mounted() {
         await this.$store.dispatch('fetchOrders');
-        console.log(this.orderProgressingList)
         
         this.map = new window.google.maps.Map(document.getElementById('map'), {
             center: { lat: this.center.lat, lng: this.center.lng },
@@ -173,36 +168,27 @@ export default {
             map: this.map,
             animation:  window.google.maps.Animation.BOUNCE
         })
-
-        // new window.google.maps.DirectionsService().route({
-        //         origin: this.center,
-        //         destination: this.center,
-        //         waypoints: [
-        //             {location: {lat: 10.7950125, lng: 106.7218535}},
-        //             {location: {lat: 10.7894745, lng: 106.744078}}
-        //         ],
-        //         travelMode: 'DRIVING'
-        //     },
-        //     (res, status) => {
-        //         if (status == 'OK'){
-        //             new window.google.maps.DirectionsRenderer({
-        //                 directions: res,
-        //                 map: this.map,
-        //                 polylineOptions: {
-        //                     strokeColor: 'blue',
-        //                     strokeWeight: '3',
-        //                     strokeOpacity: '0.5'
-        //                 }
-        //             })
-        //         }
-        //     },
-        // )
     }
     
 }
 </script>
 
 <style scoped="">
+    .panel {
+        background-color: white;
+    }
+    #sidebar {
+        position: absolute;
+        right: 50%;
+        transform: translateX(50%);
+        flex-basis: 15rem;
+        flex-grow: 1;
+        padding: 1rem;
+        max-width: 30rem;
+        height: 200px;
+        box-sizing: border-box;
+        overflow: auto;
+    }
     .optimize #map {
         height: 444px;
         margin: 10px;
@@ -251,12 +237,12 @@ export default {
     }
     .vehicle-quantity {
         border-bottom: 1px solid #eee;
-        padding: 20px;
+        padding: 20px 0;
         display: flex;
         align-items: center;
     }
     .vehicle-capacity {
-        padding: 20px;
+        padding: 20px 0;
         display: flex;
         align-items: center;
     }
@@ -273,9 +259,7 @@ export default {
         margin-left: 10px;
         border: 1px solid #eee;
     }
-    /* .route-step {
-        background: white;
-    } */
+   
 </style>
 <style>
     

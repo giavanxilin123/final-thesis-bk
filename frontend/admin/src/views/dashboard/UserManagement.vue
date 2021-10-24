@@ -78,6 +78,7 @@
                             layout="prev, pager, next"
                             :total="20">
                         </el-pagination>
+                        
                     </div>
                 </div>
             </div>
@@ -86,6 +87,7 @@
 </template>
 
 <script>
+
 export default {
     data(){
         return {
@@ -112,7 +114,9 @@ export default {
         await this.$store.dispatch('fetchUser');
     },
 
-    
+    methods: {
+        
+    },
     
     computed: {
         allUsers() {
