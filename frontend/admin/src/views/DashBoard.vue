@@ -11,10 +11,12 @@
           
           <div class="sidebar-content" @click ="orderManagement">
             <el-badge style="margin-right: 20px" :value="countNewOrder" :hidden="countNewOrder === 0" class="item">
-            <i style="margin-right: 0" class="el-icon-s-order icon"></i>
-          </el-badge>Order Management
+              <i style="margin-right: 0" class="el-icon-s-order icon"></i>
+            </el-badge>Order Management
           </div>
+          <div class="sidebar-content" @click ="productManagement"><i class="el-icon-box icon"></i>Product Management</div>
           <div class="sidebar-content" @click ="optimizeRoute" ><i class="el-icon-map-location icon"></i>Optimize Routing Solver</div>
+          
           <div @click ="logOut" class="sidebar-content" ><i class="el-icon-switch-button icon"></i>Log Out</div>
         </div>
       </el-col>
@@ -50,6 +52,14 @@ export default {
       },
       async orderManagement() {
         await this.$router.push("/dashboard/order").catch(error => {
+          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
+            console.log(error)
+          }
+        })
+      },
+
+      async productManagement() {
+        await this.$router.push("/dashboard/product").catch(error => {
           if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
             console.log(error)
           }

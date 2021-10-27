@@ -77,6 +77,19 @@ export const actions = {
               .catch(err => {
                 reject(err);
               })
-          })
-    }
+        })
+    },
+    fetchProducts(ctx) {
+      return new Promise((resolve, reject) => {
+          client
+            .get(`${BASE_URL}/products`)
+            .then(res => {
+              ctx.commit('FETCH_PRODUCTS', res.data);
+              resolve(res);
+            })
+            .catch(err => {
+              reject(err);
+            })
+        })
+  },
 }

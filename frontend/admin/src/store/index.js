@@ -11,7 +11,8 @@ export default new Vuex.Store({
     BASE_URL,
     user: user || {}, 
     allUsers: [],
-    orders: []
+    orders: [],
+    products: [],
   },
   mutations,
   actions,
