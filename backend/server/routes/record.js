@@ -208,6 +208,21 @@ recordRoutes.get('/products', async function (req, res) {
     });
 });
 
+recordRoutes.put("/addProduct", async (req, res, next) => {
+  try{
+    var newProduct = req.body.productForm
+    
+    const dbConnect = dbo.getDb();
+        dbConnect
+        .collection("product")
+        .insertOne(newProduct, (err, result) => {
+            res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
 
 // recordRoutes.post("/upload", upload.single("file"), (req, res) => {
 //   if(req.file === undefined) return res.send("You must select a file!")

@@ -4,15 +4,15 @@
             <i @click="backProductsList" style="margin-left: 5px;" class="el-icon-arrow-left">Back to Products List</i>
         </div>
         <el-row class="muiGrid">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm"  class="demo-ruleForm">
+            <el-form :model="productForm" :rules="rules" ref="productForm"  class="demo-ruleForm">
             <el-col :span="16">
                 <div class="general-inf">
                     <div class="title"> General Information</div>
                         <el-form-item label="Product name" prop="name">
-                            <el-input v-model="ruleForm.name"></el-input>
+                            <el-input v-model="productForm.name"></el-input>
                         </el-form-item>
                         <el-form-item label="Quantity" prop="quantity">
-                            <el-input v-model="ruleForm.quantity"></el-input>
+                            <el-input type="number" v-model="productForm.quantity"></el-input>
                         </el-form-item>
                         
                 </div>
@@ -20,19 +20,17 @@
                 <div class="price">
                     <div class="title">Product Price</div>
                     <el-form-item label="Product price" prop="price">
-                            <el-input v-model="ruleForm.price"></el-input>
+                            <el-input type="number" v-model="productForm.price"></el-input>
                     </el-form-item>
                 </div>
-
-                <el-form-item>
-                            <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
-                </el-form-item>
+                     <el-button type="primary" @click="submitForm('productForm')">Save</el-button>
+                
             </el-col>
             <el-col :span="8">
                 <div class="additional-inf">
                     <div class="title">Additional Information</div>
                          <el-form-item label="Product Type" prop="type">
-                               <el-select v-model="ruleForm.type" placeholder="Select product type">
+                               <el-select v-model="productForm.type" placeholder="Select product type">
                                     <el-option
                                     v-for="item in options"
                                     :key="item.value"
@@ -58,10 +56,11 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data() {
         return {
-            ruleForm: {
+            productForm: {
                 name: '',
                 quantity: '',
                 type: '',
@@ -109,9 +108,13 @@ export default {
             this.$router.go(-1)
         },
         submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
+            this.$refs[formName].validate(async (valid) => {
             if (valid) {
-              this.alertSuccess();
+              await axios.put('http://localhost:5000/addProduct', {productForm: this.productForm}).
+              then(res => {
+                  this.alertSuccess();
+                  console.log(res)
+              }).catch(err => this.alertErr(err.response.data))
               this.$router.push('/dashboard/product')
             } else {
                 console.log('error submit!!');
