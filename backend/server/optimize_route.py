@@ -5,7 +5,6 @@ from pprint import pprint
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-
 API_KEY = 'AIzaSyAkK1Nj9HWtb4R0crJISga3j9hq2aBC8lQ'
 map_client = googlemaps.Client(API_KEY)
 CONNECTION_STRING = "mongodb://localhost:27017"

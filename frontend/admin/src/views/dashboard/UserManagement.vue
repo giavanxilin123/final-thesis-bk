@@ -2,7 +2,7 @@
     <div class = "management">
         <div class="user_lists">
             <div class="card-header">
-                <div class="icon"><i class="el-icon-document"></i></div>
+                <div class="icon"><i class="el-icon-s-custom"></i></div>
                 <div class="title">Users List</div>
             </div>
             <div class="card-body">
@@ -74,7 +74,6 @@
                     <div class="table-footer">
                         <el-pagination
                             :page-size="10"
-                            
                             layout="prev, pager, next"
                             :total="20">
                         </el-pagination>
@@ -161,7 +160,7 @@ export default {
         left: 15px;
         top: -15px;
     }
-    .management .card-header .icon .el-icon-document {
+    .management .card-header .icon .el-icon-s-custom {
         color: white;
         position: absolute;
         right: 50%;

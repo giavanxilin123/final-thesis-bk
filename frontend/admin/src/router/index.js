@@ -20,10 +20,22 @@ const routes = [
         component: () => import('../views/dashboard/Order.vue')
       },
       {
+        path: 'product',
+        name: 'Product Management',
+        component: () => import('../views/dashboard/ProductManagement.vue'),
+
+      },
+      {
         path: 'optimize-route',
         name:'Optimize Route',
         component: () => import('../views/dashboard/OptimizeRoute.vue')
+      },
+      {
+        path: 'product-create',
+        name: 'Product Create',
+        component: () => import('../views/dashboard/ProductCreate.vue')
       }
+        
     ]
   },
   {
