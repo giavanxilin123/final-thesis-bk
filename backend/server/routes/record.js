@@ -3,7 +3,12 @@ const dbo = require("../db/conn");
 const recordRoutes = express.Router();
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
+const { ObjectID, ObjectId, mongo } = require("mongodb");
+const {PythonShell} = require ('python-shell');
+// const upload = require("../middleware/upload")
+const Grid = require('gridfs-stream')
+
 dotenv.config()
 
 authenticateToken = (req, res, next) => {
@@ -23,36 +28,8 @@ authenticateToken = (req, res, next) => {
   })
 }
 
-recordRoutes.get('/order', async function (req, res) {
-  const dbConnect = dbo.getDb();
-  dbConnect
-    .collection("order")
-    .find({}).limit(50)
-    .toArray(function (err, result) {
-      if (err) {
-        res.status(400).send("Error fetching listings!");
-     } else {
-        res.json(result);
-      }
-    });
+//admin 
 
-});
-
-recordRoutes.route("/customer").get(async function (req, res) {
-  const dbConnect = dbo.getDb();
-  dbConnect
-    .collection("customer")
-    .find({}).limit(50)
-    .toArray(function (err, result) {
-      if (err) {
-        res.status(400).send("Error fetching listings!");
-     } else {
-        res.json(result);
-      }
-    });
-});
-
-//register
 recordRoutes.post('/register', async (req, res, next) => {
   try{
       const salt = await bcrypt.genSalt();
@@ -67,7 +44,7 @@ recordRoutes.post('/register', async (req, res, next) => {
       
       const dbConnect = dbo.getDb();
       dbConnect
-      .collection("customer")
+      .collection("user")
       .insertOne(newUser, (err, result) => {
         res.json(result)
       })
@@ -76,16 +53,13 @@ recordRoutes.post('/register', async (req, res, next) => {
   }
 })
 
-
-//login
-
 recordRoutes.post('/login', (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
   
   const dbConnect = dbo.getDb();
   dbConnect
-  .collection("customer")
+  .collection("user")
   .find({username: username})
   .toArray((err, body) => {
     if(body.length > 0) {
@@ -104,10 +78,11 @@ recordRoutes.post('/login', (req, res, next) => {
             )
             res.status(200).send({
                user: {
-                    fullname: body[0].fullname,
+                    name: body[0].name,
                     username: body[0].username,
                     email: body[0].email,
-                    phone: body[0].phone
+                    phone: body[0].phone,
+                    role: body[0].role
                },
                accessToken : accessToken
            })
@@ -123,19 +98,51 @@ recordRoutes.post('/login', (req, res, next) => {
   })
 })
 
+recordRoutes.get('/order', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("order")
+    .find({}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+
+});
+
+recordRoutes.get('/user-list', async (req, res) => {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("user")
+    .find({}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+})
+
+recordRoutes.route("/customer").get(async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("customer")
+    .find({}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
+
 recordRoutes.put("/order", async (req, res, next) => {
   try{
-    // var newOrder = {
-    //   username : req.body.username,
-    //   fullname : req.body.fullname,
-    //   phone : req.body.phone,
-    //   email : req.body.email,
-    //   address : req.body.address,
-    //   location : req.body.location,
-    //   product_name : req.body.product_name,
-    //   quantity : req.body.quantity,
-    // }
-
     var newOrder = req.body.formOrder
     
     const dbConnect = dbo.getDb();
@@ -149,22 +156,81 @@ recordRoutes.put("/order", async (req, res, next) => {
   }
 });
 
-
-
-
-
-
-// This section will help you create a new record.
-
-
-// This section will help you update a record by id.
-recordRoutes.route("/listings/updateLike").post(function (req, res) {
-  // Update likes
+recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
+  try{
+    let id = req.params.id
+    let status = req.body.status
+    
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("order")
+        .update({_id: ObjectId(id)}, {$set: {"status": status == 'New' ? 'Progressing' : 'New'}}, (err, doc) => {
+          res.json(doc)
+        })
+  } catch{
+        res.status(500).send();
+  }
 });
 
-// This section will help you delete a record
-recordRoutes.route("/listings/delete").delete((req, res) => {
-  // Delete documents
+recordRoutes.get("/solving-route", async (req, res, next) => {
+  PythonShell.run('optimize_route.py', null,  function (err, result) {
+    if (err) throw err;
+    doc = result.map(x => x.split(',').map(y => parseInt(y))).filter(x => x.length != 2)
+    doc.map(x => x.pop())
+    doc.map(x => x.shift())
+    res.send({route_legs: doc})
+    // const dbConnect = dbo.getDb();
+    // dbConnect
+    // .collection("delivery")
+    // .insertOne({route_legs: doc}, (err, result) => {
+    //     res.send(result)
+    // })
+  });
+  
+  
+  
+  // console.log(data)
+  // console.log('alo', alo)
+  
 });
+
+recordRoutes.get('/products', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("product")
+    .find({}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
+
+recordRoutes.put("/addProduct", async (req, res, next) => {
+  try{
+    var newProduct = req.body.productForm
+    
+    const dbConnect = dbo.getDb();
+        dbConnect
+        .collection("product")
+        .insertOne(newProduct, (err, result) => {
+            res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
+
+// recordRoutes.post("/upload", upload.single("file"), (req, res) => {
+//   if(req.file === undefined) return res.send("You must select a file!")
+//   const imgUrl = `http://localhost:5000/file/${req.file.filename}`;
+//   return res.send(imgUrl)
+// })
+
+// let gfs = Grid(dbo.getDb(), mongo)
+// gfs.collection("photos")
 
 module.exports = recordRoutes;
