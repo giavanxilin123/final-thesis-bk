@@ -35,7 +35,7 @@
                         </el-row>
                     </div>
                     <div class="table-body">
-                        <el-row v-for="(product,index) in allProducts" :key="index" style = "background-color: #f9f9f9" :gutter="20">
+                        <el-row v-for="(product,index) in pagedTableData" :key="index" style = "background-color: #f9f9f9" :gutter="20">
                             <el-col :span="4">
                                 <div class= "avatar">
                                     <div class="ava-img">
@@ -73,9 +73,9 @@
                     </div>
                     <div class="table-footer">
                         <el-pagination
-                            :page-size="10"
+                            @current-change="setPage"
                             layout="prev, pager, next"
-                            :total="20">
+                            :total="allProducts.length">
                         </el-pagination>
                         
                     </div>
@@ -104,7 +104,8 @@ export default {
             }],
             value: '',
             input: '',
-            
+            page: 1,
+            pageSize: 10
          }
     },
     async created() {
@@ -113,11 +114,17 @@ export default {
     methods: {
         addProductView() {
             this.$router.push('/dashboard/product-create')
+        },
+        setPage (val) {
+            this.page = val
         }
     },
     computed: {
         allProducts() {
             return this.$store.state.products
+        },
+        pagedTableData() {
+            return this.allProducts.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page)
         }
     },
 }

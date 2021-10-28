@@ -211,7 +211,6 @@ recordRoutes.get('/products', async function (req, res) {
 recordRoutes.put("/addProduct", async (req, res, next) => {
   try{
     var newProduct = req.body.productForm
-    
     const dbConnect = dbo.getDb();
         dbConnect
         .collection("product")

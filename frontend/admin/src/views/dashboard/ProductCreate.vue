@@ -64,8 +64,8 @@ export default {
                 name: '',
                 quantity: '',
                 type: '',
-                price: ''
-
+                price: '',
+                
             },
             options: [{
                 value: 'berries',
@@ -151,7 +151,6 @@ export default {
         cursor: pointer;
         position: relative;
         overflow: hidden;
-        
     }
     .avatar-uploader .el-upload:hover {
         border-color: #409EFF;

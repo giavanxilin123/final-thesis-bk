@@ -18,15 +18,9 @@
           <div class="title">Shopping Cart</div>
         </div>
         <div @click="toLoginPage()" class="shopping-cart">
-          <el-badge
-            :value="cart.length"
-            :hidden="cart.length === 0"
-            class="item"
-          >
-            <div class="icon">
+          <div class="icon">
               <img src="./assets/login.png" alt="" />
             </div>
-          </el-badge>
           <div class="title">Login</div>
         </div>
       </div>
