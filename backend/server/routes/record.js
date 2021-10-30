@@ -253,14 +253,19 @@ recordRoutes.put("/addProduct", async (req, res, next) => {
   }
 });
 
-
-// recordRoutes.post("/upload", upload.single("file"), (req, res) => {
-//   if(req.file === undefined) return res.send("You must select a file!")
-//   const imgUrl = `http://localhost:5000/file/${req.file.filename}`;
-//   return res.send(imgUrl)
-// })
-
-// let gfs = Grid(dbo.getDb(), mongo)
-// gfs.collection("photos")
+recordRoutes.get('/getOrderByUsername/:username', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  let username = req.params.username;
+  dbConnect
+    .collection("order")
+    .find({username:username}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
 
 module.exports = recordRoutes;

@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     BASE_URL,
     products: [],
-    cart: []
+    cart: [],
+    orderHistory: []
   },
   mutations,
   actions
