@@ -39,6 +39,13 @@
               >
             </template>
           </el-table-column>
+          <el-table-column prop="order" label="Product List" width="200">
+            <template slot-scope="scope">
+            <el-button type="info" round @click="getProductList(scope.row.order)"
+              >Details</el-button
+            >
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </section>
@@ -56,6 +63,15 @@ export default {
   computed: {
     tableData() {
       return this.$store.state.orderHistory;
+    },
+  },
+  methods: {
+    getProductList(order) {
+      console.log(order)
+      this.$router.push({
+        path: "/history/product-list",
+        query: { order: order },
+      });
     },
   },
 };
