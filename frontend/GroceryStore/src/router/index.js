@@ -27,7 +27,11 @@ const routes = [
   },
   {
     path: "/history",
-    component: () => import("../views/History.vue"),
+    component: () => import("../views/history"),
+  },
+  {
+    path: "/history/product-list",
+    component: () => import("../views/history/ProductList.vue"),
   },
 ];
 
