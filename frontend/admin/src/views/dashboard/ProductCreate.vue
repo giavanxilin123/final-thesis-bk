@@ -55,17 +55,25 @@
             </el-form-item>
             <div style="padding: 20px">Product Image</div>
             <div style="padding: 20px">
-              <template v-if="productForm.img">
-                <img :src="productForm.img" />
-              </template>
-              
               <input
                 type="file"
                 accept="image/*"
                 @change="saveImg"
-                class="form-control-file"
-                id="my-file"
+                style="margin-bottom: 10px"
               />
+              <template v-if="productForm.img">
+                <img :src="productForm.img" class="form-control-file" />
+              </template>
+              <div
+                v-else
+                class="upload-img"
+                style="width: 100%; text-align: center"
+                type="file"
+                accept="image/*"
+                @change="saveImg"
+              >
+                <i style="line-height: 300px" class="el-icon-plus"></i>
+              </div>
             </div>
           </div>
         </el-col>
@@ -79,11 +87,12 @@ import axios from "axios";
 export default {
   data() {
     return {
+      image: null,
       productForm: {
         name: "",
-        quantity: "",
+        quantity: null,
         type: "",
-        price: "",
+        price: null,
         img: null,
       },
       options: [
@@ -147,12 +156,15 @@ export default {
         reader.onload = (e) => {
           this.productForm.img = e.target.result;
         };
+        this.image = input.files[0];
         reader.readAsDataURL(input.files[0]);
       }
     },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
-        if (valid) {
+        if (valid && this.image.size / 1024 < 60) {
+          this.productForm.quantity = parseInt(this.productForm.quantity);
+          this.productForm.price = parseFloat(this.productForm.price);
           await axios
             .put("http://localhost:5000/addProduct", {
               productForm: this.productForm,
@@ -164,12 +176,13 @@ export default {
             .catch((err) => this.alertErr(err.response.data));
           this.$router.push("/dashboard/product");
         } else {
-          console.log("error submit!!");
+          this.alertErr({message: "File ảnh không được vượt quá 60KB"});
           return false;
         }
       });
     },
     alertErr(err) {
+      console.log(err)
       this.$message({
         showClose: true,
         message: err.message || "Đã có lỗi xảy ra!",
@@ -281,5 +294,13 @@ export default {
 }
 .create-product .el-form-item__error {
   padding: 10px 20px;
+}
+.form-control-file {
+  max-width: 300px;
+}
+.upload-img {
+  border: 1px black dashed;
+  width: 300px;
+  height: 300px;
 }
 </style>

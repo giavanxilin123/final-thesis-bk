@@ -64,7 +64,7 @@
                       v-if="product.img"
                       :src="product.img"
                     />
-                    <img v-else src="../../assets/avatar1.jpeg" alt="" />
+                    <img v-else src="../../assets/No_image_available.jpg" alt="" />
                   </div>
                 </div>
               </el-col>
