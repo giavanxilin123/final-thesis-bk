@@ -14,7 +14,8 @@
         <el-col style="padding: 0 15px" v-for="(product, index) in allProducts" :key="index" :span="6">
           <div class="product">
             <div class="product-img">
-              <img src="../assets/cherry.jpeg" alt="">
+              <img v-if="product.img" :src="product.img">
+              <img v-else src="../assets/No_image_available.jpg" alt="">
             </div>
             <div class="product-name">{{product.name}}</div>
             <div class="product-price">${{product.price}}</div>
