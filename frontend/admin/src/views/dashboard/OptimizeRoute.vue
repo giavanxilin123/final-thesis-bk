@@ -120,7 +120,7 @@ export default {
                 let legs = res.data.route_legs;
                 let location_map = legs.map(x => x.map(y => { return {location : this.orderProgressingList[y-1]['location']}}))
                 for (const step in location_map){
-                    let num = step + 1;
+                    // let num = step + 1;
                     document.getElementsByClassName("panel")[step].innerHTML= `Vehicle ${step}`
                     new window.google.maps.DirectionsService().route({
                         origin: this.center,

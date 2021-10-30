@@ -208,6 +208,37 @@ recordRoutes.get('/products', async function (req, res) {
     });
 });
 
+//set up mongoose
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose')
+
+var fs = require('fs');
+var path = require('path');
+require('dotenv/config');
+
+//connect db
+mongoose.connect(process.env.MONGO_URL,
+  { useNewUrlParser: true, useUnifiedTopology: true }, err => {
+      console.log('connected')
+  });
+
+//set up multer
+var multer = require('multer');
+  
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+  
+var upload = multer({ storage: storage });
+
+//load mongoose model for img
+var imgModel = require('../models/model');
+
 recordRoutes.put("/addProduct", async (req, res, next) => {
   try{
     var newProduct = req.body.productForm
