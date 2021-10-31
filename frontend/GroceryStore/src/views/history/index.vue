@@ -64,8 +64,8 @@ export default {
     tableData() {
       return this.$store.state.orderHistory;
     },
-    customer() {
-      return this.$store.state.customer
+    customer(){
+      return this.$store.state.customer;
     }
   },
   methods: {
