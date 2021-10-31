@@ -5,38 +5,24 @@
       <el-breadcrumb-item :to="{ path: '/history' }"
         >HISTORY</el-breadcrumb-item
       >
+      <el-breadcrumb-item :to="{ path: '/history/product-list' }"
+        >PRODUCT LIST</el-breadcrumb-item
+      >
     </el-breadcrumb>
     <section id="main">
-      <header class="page-header">
-        <h1>Order history</h1>
-      </header>
+      <header class="page-header">Order Details</header>
       <div>
-        <p>Here are the orders you've placed since your account was created.</p>
         <el-table ref="filterTable" :data="tableData" style="width: 100%">
-          <el-table-column prop="_id" label="Order Id" width="250">
+          <el-table-column prop="_id" label="Order Id" width="210">
           </el-table-column>
-          <el-table-column
-            prop="address"
-            label="Date"
-            sortable
-            column-key="date"
-          >
+          <el-table-column prop="name" label="Name"> </el-table-column>
+          <el-table-column prop="quantity" label="Quantity" width="150">
           </el-table-column>
-          <el-table-column prop="total" label="Total Price" width="200">
+          <el-table-column prop="price" label="Unit price" width="150">
           </el-table-column>
-          <el-table-column prop="status" label="status" width="100">
-            <template slot-scope="scope">
-              <el-tag
-                :type="
-                  scope.row.status === 'Completed'
-                    ? 'success'
-                    : scope.row.status === 'New'
-                    ? 'primary'
-                    : 'warning'
-                "
-                disable-transitions
-                >{{ scope.row.status }}</el-tag
-              >
+          <el-table-column label="Total Price" width="150">
+            <template slot-scope="props">
+              {{ Math.round(props.row.quantity * props.row.price * 100) / 100 }}
             </template>
           </el-table-column>
         </el-table>
@@ -50,16 +36,10 @@ export default {
   data() {
     return {};
   },
-  created() {
-    this.$store.dispatch("getOrderHistory", this.customer.username);
-  },
   computed: {
     tableData() {
-      return this.$store.state.orderHistory;
+      return this.$route.query.order;
     },
-    customer() {
-      return this.$store.state.customer
-    }
   },
 };
 </script>
@@ -82,6 +62,7 @@ export default {
   margin: 0 auto;
 }
 .page-header {
+  margin: 20px;
   font-size: 26px;
   line-height: 26px;
   background: #fff;
