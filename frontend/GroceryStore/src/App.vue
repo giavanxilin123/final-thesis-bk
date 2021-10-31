@@ -123,7 +123,13 @@ export default {
        })
     },
     checkOut() {
-      this.$router.push("/order");
+      let access_token = JSON.parse(localStorage.getItem('cus_accessToken'))
+      if(!access_token) {
+        this.alertErr({message: 'You must login to order!'})
+      }
+      else {
+        this.$router.push('/order')
+      }
       this.dialogTableVisible = false;
     },
     removeOrderLine(id) {
@@ -136,10 +142,21 @@ export default {
           }
        })
     },
-    logOut() {
+    async logOut() {
       this.$store.dispatch('logOut')
-      this.$router.push('/')
-    }
+      await this.$router.push("/").catch(error => {
+          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
+            console.log(error)
+          }
+       })
+    },
+    alertErr(err) {
+      this.$message({
+        showClose: true,
+        message:  err.message || "Đã có lỗi xảy ra!",
+        type: "error"
+      });
+      },
   },
   
   computed: {
