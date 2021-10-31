@@ -94,4 +94,16 @@ export const actions = {
         });
     });
   },
+  deleteProductById(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .delete(`${BASE_URL}/deleteProductById/${payload}`)
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
 };

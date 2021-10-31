@@ -87,7 +87,7 @@
                   <div class="action-edit">
                     <i class="el-icon-edit"></i>
                   </div>
-                  <div class="action-delete">
+                  <div @click="deleteProduct(product._id)" class="action-delete">
                     <i class="el-icon-delete"></i>
                   </div>
                 </div>
@@ -146,6 +146,25 @@ export default {
     setPage(val) {
       this.page = val;
     },
+    deleteProduct(id) {
+      this.$confirm('This will permanently delete product. Continue?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('deleteProductById', id)
+          this.$message({
+            type: 'success',
+            message: 'Delete completed'
+          })
+          this.$store.dispatch('fetchProducts'); //upload store fetch
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'Delete canceled'
+          });          
+      });
+    }
   },
   computed: {
     allProducts() {
