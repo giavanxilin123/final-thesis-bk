@@ -65,7 +65,7 @@ export default {
       return this.$store.state.orderHistory;
     },
     customer() {
-      return this.$store.state.customer
+      return this.$store.state.customer;
     }
   },
   methods: {
