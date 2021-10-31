@@ -4,7 +4,7 @@
       <div @click="goBack" class="logo">
         <img src="./assets/logo.svg" alt="" />
       </div>
-      <div>
+      <div style="display: flex">
         <div @click="dialogTableVisible = true" class="shopping-cart">
           <el-badge
             :value="cart.length"
@@ -17,18 +17,27 @@
           </el-badge>
           <div class="title">Shopping Cart</div>
         </div>
-        <div @click="toLoginPage()" class="shopping-cart">
+        <div v-if="Object.keys(this.customer).length === 0"  @click="toLoginPage" class="login">
           <div class="icon">
               <img src="./assets/login.png" alt="" />
             </div>
-          <div class="title">Login</div>
         </div>
+         
+         <el-dropdown v-else class="menu-user" trigger="click">
+          <span style="cursor: pointer" class="el-dropdown-link">
+            {{customer.username}}<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="toOrderHistory" style="cursor: pointer" icon="el-icon-s-order">Order History</el-dropdown-item>
+            <el-dropdown-item @click.native="logOut" style="cursor: pointer" icon="el-icon-switch-button">Log Out</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
       <el-dialog title="SHOPPING CART" :visible.sync="dialogTableVisible">
         <div v-if="cart.length">
           <div v-for="c in cart" :key="c._id" class="cart-detail">
             <div class="product-img">
-              <img src="./assets/cherry.jpeg" alt="" />
+              <img src="./assets/No_image_available.jpg" alt="" />
             </div>
             <div class="product-detail">
               <div class="product-name">{{ c.name }}</div>
@@ -99,11 +108,19 @@ export default {
   },
 
   methods: {
-    toLoginPage() {
-      this.$router.push("/login");
+    async toLoginPage() {
+      await this.$router.push("/login").catch(error => {
+          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
+            console.log(error)
+          }
+       })
     },
-    goBack() {
-      this.$router.push("/");
+    async goBack() {
+      await this.$router.push("/").catch(error => {
+          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
+            console.log(error)
+          }
+       })
     },
     checkOut() {
       this.$router.push("/order");
@@ -112,8 +129,18 @@ export default {
     removeOrderLine(id) {
       this.$store.dispatch("removeOrderLine", id);
     },
+    async toOrderHistory() {
+      await this.$router.push("/history").catch(error => {
+          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
+            console.log(error)
+          }
+       })
+    },
+    logOut() {
+      this.$store.dispatch('logOut')
+    }
   },
-
+  
   computed: {
     cart() {
       return this.$store.state.cart;
@@ -124,6 +151,9 @@ export default {
         .reduce((a, b) => a + b, 0)
         .toFixed(2);
     },
+    customer() {
+      return this.$store.state.customer;
+    }
   },
 };
 
@@ -200,6 +230,14 @@ body {
 </style>
 
 <style scoped>
+.menu-user {
+  line-height: 26px;
+  margin-left: 20px;
+}
+.login {
+  margin-left: 20px;
+  cursor: pointer;
+}
 .header .el-icon-close {
   color: white;
   padding: 2px;
@@ -241,7 +279,7 @@ body {
 }
 
 .header .title {
-  margin-left: 15px;
+  margin-left: 10px;
   font-weight: 500;
 }
 .cart-detail {

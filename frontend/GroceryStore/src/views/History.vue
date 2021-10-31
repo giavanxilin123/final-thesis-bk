@@ -51,12 +51,15 @@ export default {
     return {};
   },
   created() {
-    this.$store.dispatch("getOrderHistory", "tondaithanh");
+    this.$store.dispatch("getOrderHistory", this.customer.username);
   },
   computed: {
     tableData() {
       return this.$store.state.orderHistory;
     },
+    customer() {
+      return this.$store.state.customer
+    }
   },
 };
 </script>

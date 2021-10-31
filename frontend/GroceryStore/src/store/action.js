@@ -55,4 +55,27 @@ export const actions = {
   removeOrderLine(ctx, payload) {
     ctx.commit("REMOVE_ORDER_LINE", payload);
   },
+  logIn(ctx,payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .post(`${BASE_URL}/cusLogin`, payload)
+        .then((res) => {
+          ctx.commit("CUS_LOGIN", res.data.customer);
+          localStorage.setItem(
+            "cus_accessToken",
+            JSON.stringify(res.data.accessToken)
+          );
+          localStorage.setItem("customer", JSON.stringify(res.data.customer));
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err.response.data);
+        });
+    });
+  },
+  logOut(ctx) {
+    localStorage.removeItem("cus_accessToken");
+    localStorage.removeItem("customer");
+    ctx.commit("LOG_OUT");
+  },
 };

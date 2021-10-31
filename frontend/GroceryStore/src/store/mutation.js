@@ -16,4 +16,10 @@ export const mutations = {
   GET_ORDER_HISTORY(state, payload) {
     state.orderHistory = payload;
   },
+  CUS_LOGIN(state, payload) {
+    state.customer = payload
+  },
+  LOG_OUT(state) {
+    state.customer = {};
+  },
 };

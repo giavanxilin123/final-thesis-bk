@@ -79,7 +79,7 @@
                 </div>
               </el-col>
               <el-col :span="4">
-                <div class="role">${{ product.price }}</div>
+                <div class="role">${{ product.price}}</div>
               </el-col>
               <el-col :span="4"><div>2021-08-26 10:27:23</div></el-col>
               <el-col :span="4">

@@ -208,6 +208,7 @@ recordRoutes.get('/products', async function (req, res) {
     });
 });
 
+
 //set up mongoose
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose')
@@ -268,4 +269,47 @@ recordRoutes.get('/getOrderByUsername/:username', async function (req, res) {
     });
 });
 
+recordRoutes.post('/cusLogin', (req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  
+  const dbConnect = dbo.getDb();
+  dbConnect
+  .collection("customer")
+  .find({username: username})
+  .toArray((err, body) => {
+    if(body.length > 0) {
+      bcrypt.compare(
+        password,
+        body[0].password,
+        (err, result) => {
+          if(result){
+            const accessToken = jwt.sign({
+                cusId : body[0]._id,
+                email: body[0].email
+            }, process.env.ACCESS_TOKEN_SECRET,
+            {
+                expiresIn: "1h"
+            }
+            )
+            res.status(200).send({
+               customer: {
+                    fullname: body[0].fullname,
+                    username: body[0].username,
+                    email: body[0].email,
+                    phone: body[0].phone,
+               },
+               accessToken : accessToken
+           })
+        }
+        else{
+            res.status(403).send({message : "Mật khẩu không chính xác"});
+        }
+        }
+      )
+    } else{
+      res.status(404).send({message : "Tài khoản không tồn tại! "})
+    }
+  })
+})
 module.exports = recordRoutes;
