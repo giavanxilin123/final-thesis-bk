@@ -158,7 +158,7 @@ recordRoutes.put("/order", async (req, res, next) => {
 
 recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
   try{
-    let id = req.params.id
+    const {id} = req.params
     let status = req.body.status
     
     const dbConnect = dbo.getDb();
@@ -311,5 +311,19 @@ recordRoutes.post('/cusLogin', (req, res, next) => {
       res.status(404).send({message : "Tài khoản không tồn tại! "})
     }
   })
+})
+
+recordRoutes.delete('/deleteProductById/:id', async function (req, res, next) {
+  try{
+    const {id} = req.params
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("product")
+        .deleteOne({_id: ObjectId(id)}, (err, result) => {
+          res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
 })
 module.exports = recordRoutes;
