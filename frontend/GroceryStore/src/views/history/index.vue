@@ -41,7 +41,7 @@
           </el-table-column>
           <el-table-column prop="order" label="Product List" width="200">
             <template slot-scope="scope">
-            <el-button type="info" round @click="getProductList(scope.row.order)"
+            <el-button type="info" round @click="getProductList(scope.row._id)"
               >Details</el-button
             >
             </template>
@@ -69,11 +69,10 @@ export default {
     }
   },
   methods: {
-    getProductList(order) {
-      console.log(order)
+    getProductList(id) {
       this.$router.push({
         path: "/history/product-list",
-        query: { order: order },
+        query: { id: id },
       });
     },
   },

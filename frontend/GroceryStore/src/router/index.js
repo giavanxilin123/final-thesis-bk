@@ -41,4 +41,15 @@ const router = new VueRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  var token = localStorage.getItem('cus_accessToken')
+  let requiredAuth = ['/history'] 
+  // add route to requiredAuth
+  if (!token && requiredAuth.find((r) => to.path.includes(r))) {
+    next('/')
+  } else {
+    next()
+  }
+})
+
 export default router;

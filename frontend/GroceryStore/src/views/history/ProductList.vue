@@ -16,13 +16,13 @@
           <el-table-column prop="_id" label="Order Id" width="210">
           </el-table-column>
           <el-table-column prop="name" label="Name"> </el-table-column>
-          <el-table-column prop="quantity" label="Quantity" width="150">
+          <el-table-column prop="num" label="Quantity" width="150">
           </el-table-column>
           <el-table-column prop="price" label="Unit price" width="150">
           </el-table-column>
           <el-table-column label="Total Price" width="150">
             <template slot-scope="props">
-              {{ Math.round(props.row.quantity * props.row.price * 100) / 100 }}
+              {{ Math.round(props.row.num * props.row.price * 100) / 100 }}
             </template>
           </el-table-column>
         </el-table>
@@ -33,14 +33,16 @@
 
 <script>
 export default {
-  data() {
-    return {};
-  },
   computed: {
     tableData() {
-      return this.$route.query.order;
+      let id = this.$route.query.id;
+      return this.$store.state.orderHistory.filter(o => o._id == id)[0].order
     },
   },
+  mounted() {
+    let id = this.$route.query.id;
+    console.log(this.$store.state.orderHistory.filter(o => o._id == id)[0].order)
+  }
 };
 </script>
 
