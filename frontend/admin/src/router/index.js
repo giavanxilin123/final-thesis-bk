@@ -34,8 +34,12 @@ const routes = [
         path: 'product-create',
         name: 'Product Create',
         component: () => import('../views/dashboard/ProductCreate.vue')
+      },
+      {
+        path: 'product-update',
+        name: 'Product Update',
+        component: () => import('../views/dashboard/ProductUpdate.vue')
       }
-        
     ]
   },
   {

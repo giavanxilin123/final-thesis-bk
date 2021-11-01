@@ -326,4 +326,31 @@ recordRoutes.delete('/deleteProductById/:id', async function (req, res, next) {
         res.status(500).send();
   }
 })
+
+recordRoutes.get('/api.getProductById/:id', async (req, res, next) => {
+  const {id} = req.params
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("product")
+    .findOne({_id: ObjectId(id)} , (err, result) => {
+      res.send(result)
+    })
+})
+
+recordRoutes.put('/api.updateProduct/:id', async (req, res, next) => {
+  try{
+    const {id} = req.params
+    let updateProduct = req.body
+    console.log(updateProduct)
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("product")
+        .update({_id: ObjectId(id)}, {$set: updateProduct}, (err, doc) => {
+          res.json(doc)
+        })
+  } catch{
+        res.status(500).send();
+  }
+})
+
 module.exports = recordRoutes;
