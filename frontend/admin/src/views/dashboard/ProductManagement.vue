@@ -84,7 +84,7 @@
               <el-col :span="2"><div>{{product.quantity}}</div></el-col>
               <el-col :span="4">
                 <div class="action">
-                  <div class="action-edit">
+                  <div @click="updateProduct(product._id)" class="action-edit">
                     <i class="el-icon-edit"></i>
                   </div>
                   <div @click="deleteProduct(product._id)" class="action-delete">
@@ -164,6 +164,13 @@ export default {
             message: 'Delete canceled'
           });          
       });
+    },
+
+    updateProduct(id) {
+      this.$router.push({
+        path: "/dashboard/product-update",
+        query: {id: id}
+      })
     }
   },
   computed: {
