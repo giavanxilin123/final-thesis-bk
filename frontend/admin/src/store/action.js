@@ -105,5 +105,19 @@ export const actions = {
           reject(err);
         });
     });
+  },
+
+  getProductById(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.getProductById/${payload}`)
+        .then((res) => {
+          ctx.commit("GET_PRODUCT_BY_ID", res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
   }
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="create-product">
+  <div class="update-product">
     <div class="back">
       <i
         @click="backProductsList"
@@ -141,7 +141,7 @@ export default {
           { required: true, message: "Please select type", trigger: "change" },
         ],
       },
-      imageUrl: "",
+      
     };
   },
 
@@ -161,20 +161,18 @@ export default {
       }
     },
     submitForm(formName) {
+      const {id} = this.$route.query 
       this.$refs[formName].validate(async (valid) => {
-        if (valid && this.image.size / 1024 < 60) {
-          this.productForm.quantity = parseInt(this.productForm.quantity);
-          this.productForm.price = parseFloat(this.productForm.price);
+        if (valid) {
           await axios
-            .put("http://localhost:5000/addProduct", {
-              productForm: this.productForm,
-            })
+            .put(`http://localhost:5000/api.updateProduct/${id}`, this.productForm)
             .then((res) => {
               this.alertSuccess();
               console.log(res);
             })
             .catch((err) => this.alertErr(err.response.data));
           this.$router.push("/dashboard/product");
+        console.log(this.productForm)
         } else {
           this.alertErr({message: "File ảnh không được vượt quá 60KB"});
           return false;
@@ -192,14 +190,29 @@ export default {
     alertSuccess() {
       this.$message({
         showClose: true,
-        message: "Thêm sản phẩm thành công!",
+        message: "Sửa sản phẩm thành công!",
         type: "success",
       });
     },
   },
+  async created() {
+      const {id} = this.$route.query
+      await this.$store.dispatch('getProductById', id)
+      this.productForm.name = this.productUpdate.name
+      this.productForm.img = this.productUpdate.img
+      this.productForm.quantity = this.productUpdate.quantity
+      this.productForm.type = this.productUpdate.type
+      this.productForm.price = this.productUpdate.price
+      
+  },
+  computed: {
+    productUpdate() {
+        return this.$store.state.productById
+    }
+  }
+
 };
 </script>
-
 <style scope>
 .avatar-uploader {
   text-align: center;
@@ -222,38 +235,38 @@ export default {
   line-height: 178px;
   text-align: center;
 }
-.create-product .avatar {
+.update-product .avatar {
   width: 178px;
   height: 178px;
   display: block;
 }
 
-.create-product {
+.update-product {
   height: 100vh;
   text-align: left;
 }
-.create-product .back {
+.update-product .back {
   background-color: white;
   padding: 15px;
   color: #747c87;
 }
-.create-product .el-icon-arrow-left {
+.update-product .el-icon-arrow-left {
   cursor: pointer;
 }
-.create-product .el-icon-arrow-left::before {
+.update-product .el-icon-arrow-left::before {
   margin-right: 5px;
 }
-.create-product .general-inf {
+.update-product .general-inf {
   background-color: white;
   padding-bottom: 15px;
 }
 
-.create-product .additional-inf {
+.update-product .additional-inf {
   background-color: white;
   padding-bottom: 15px;
 }
 
-.create-product .price {
+.update-product .price {
   background-color: white;
   padding-bottom: 15px;
   margin: 20px 0;
@@ -263,36 +276,36 @@ export default {
   border-bottom: 1px solid #e5e5e5;
   font-weight: 500;
 }
-.create-product .muiGrid {
+.update-product .muiGrid {
   margin: 20px auto;
   width: 95%;
 }
-.create-product .el-col-16 {
+.update-product .el-col-16 {
   padding-right: 10px;
 }
-.create-product .el-col-8 {
+.update-product .el-col-8 {
   padding-left: 10px;
 }
-.create-product .el-form-item {
+.update-product .el-form-item {
   display: grid;
   margin-bottom: 5px;
   padding-bottom: 25px;
 }
-.create-product .el-form {
+.update-product .el-form {
   padding: 10px;
 }
 </style>
 
 <style>
-.create-product .el-form-item__content {
+.update-product .el-form-item__content {
   margin-left: 0 !important;
   padding: 0 20px;
 }
-.create-product .el-form-item__label {
+.update-product .el-form-item__label {
   text-align: left;
   padding: 0 20px;
 }
-.create-product .el-form-item__error {
+.update-product .el-form-item__error {
   padding: 10px 20px;
 }
 .form-control-file {

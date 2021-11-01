@@ -14,6 +14,9 @@ export const mutations = {
   FETCH_PRODUCTS(state, payload) {
     state.products = payload;
   },
+  GET_PRODUCT_BY_ID(state, payload) {
+    state.productById = payload;
+  },
   // FETCH_ORDERS(state, payload) {
   //   state.orders = payload;
   // },
