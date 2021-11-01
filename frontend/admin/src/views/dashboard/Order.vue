@@ -62,7 +62,7 @@
                                     {{order.address}}
                                 </div>
                             </el-col>
-                            <el-col :span="3"><div>2021-08-26 10:27:23</div></el-col>
+                            <el-col :span="3"><div>{{order.date}}</div></el-col>
                              <el-col :span="3">
                                 <div style="width: 85px; text-align:center; color: white; font-weight: 600" :style="{
                                     padding:'5px', 
