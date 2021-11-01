@@ -2,8 +2,7 @@
   <div>
     <el-breadcrumb class="breadcrumb" separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">HOME</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/login' }"
-        >LOGIN TO ACCOUNT</el-breadcrumb-item
+      <el-breadcrumb-item>LOGIN TO ACCOUNT</el-breadcrumb-item
       >
     </el-breadcrumb>
     <section id="main">
