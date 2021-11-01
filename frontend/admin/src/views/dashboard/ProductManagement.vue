@@ -39,11 +39,11 @@
           <div class="table-head">
             <el-row :gutter="20">
               <el-col :span="4"><div>Image</div></el-col>
-              <el-col :span="4"><div>Name</div></el-col>
+              <el-col :span="6"><div>Name</div></el-col>
               <el-col :span="4"><div>Type</div></el-col>
               <el-col :span="4"><div>Price</div></el-col>
-              <el-col :span="4"
-                ><div>Created At <i class="el-icon-top"></i></div
+              <el-col :span="2"
+                ><div>Quantity</div
               ></el-col>
               <el-col :span="4"
                 ><div style="text-align: right">Actions</div></el-col
@@ -68,7 +68,7 @@
                   </div>
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="6">
                 <div class="name">
                   {{ product.name }}
                 </div>
@@ -81,7 +81,7 @@
               <el-col :span="4">
                 <div class="role">${{ product.price}}</div>
               </el-col>
-              <el-col :span="4"><div>2021-08-26 10:27:23</div></el-col>
+              <el-col :span="2"><div>{{product.quantity}}</div></el-col>
               <el-col :span="4">
                 <div class="action">
                   <div class="action-edit">

@@ -11,8 +11,7 @@
     </el-breadcrumb>
     <section id="main">
       <header class="page-header">Order Details</header>
-      {{ tableData.length }}
-      <!-- <div v-if="tableData.length>0">
+      <div v-if="tableData.length>0">
         <el-table ref="filterTable" :data="tableData" style="width: 100%">
           <el-table-column prop="_id" label="Order Id" width="210">
           </el-table-column>
@@ -27,10 +26,10 @@
             </template>
           </el-table-column>
         </el-table>
-      </div> -->
-      <!-- <div v-else>
+      </div>
+      <div v-else>
         <p>No Data</p>
-      </div> -->
+      </div>
     </section>
   </div>
 </template>
@@ -40,11 +39,15 @@ export default {
   computed: {
     tableData() {
       let id = this.$route.query.id;
-      return this.$store.state.orderHistory.filter((o) => o._id == id)[0].order;
+       return this.$store.state.orderHistory.filter((o) => o._id == id).length >
+        0
+        ? this.$store.state.orderHistory.filter((o) => o._id == id)[0].order
+        : [];
     },
   },
-  created() {
-    this.$stote.dispatch("getOrderHistory");
+  async created() {
+    await this.$store.dispatch("getOrderHistory", this.$store.state.customer.username);
+    // console.log(this.$store.state.orderHistory)
   },
 };
 </script>

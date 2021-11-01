@@ -95,7 +95,8 @@ export default {
                 lat: '',
                 lng: ''
             },
-            status: 'New'
+            status: 'New',
+            date: ''
         },
         center: {lat: 10.7719937, lng: 106.7057951},
       };
@@ -150,6 +151,8 @@ export default {
 
     methods: {
         async checkOut(){
+            let d = new Date();
+            this.formOrder.date = d.toLocaleString()
             await axios.put('http://localhost:5000/order', {formOrder: this.formOrder})
             .then(res => {
                 this.alertSuccess();

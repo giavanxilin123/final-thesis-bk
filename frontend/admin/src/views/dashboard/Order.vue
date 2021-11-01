@@ -126,26 +126,20 @@ export default {
             input: '',
          }
     },
-
     methods: {
         async changeStatus(id, status){
             this.$store.dispatch('updateStatus', {id: id, status: status})
             await this.$store.dispatch('fetchOrders')
         }  
     },
-
     async created() {
         await this.$store.dispatch('fetchOrders');
     },
-   
     computed: {
         orderList() {
             return this.$store.state.orders;
         },
     },
-
-    
-
 }
 </script>
 
