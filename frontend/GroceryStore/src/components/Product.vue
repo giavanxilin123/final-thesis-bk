@@ -23,9 +23,6 @@
     </div>
 
     <div style="padding: 30px 0" class="popular-product">
-      <div style="font-size: 32px; margin: 32px" class="product-title">
-        Popular products
-      </div>
       <el-row :gutter="20">
         <el-col
           style="padding: 0 15px"
