@@ -26,7 +26,7 @@
                             <el-col :span="1"><div>STT</div></el-col>
                             <el-col :span="3"><div>Code</div></el-col>
                             <el-col :span="4"><div>Name</div></el-col>
-                            <el-col :span="2"><div>Order Detail</div></el-col>
+                            <el-col :span="2"><div>Item Number</div></el-col>
                             <el-col :span="5"><div>Address</div></el-col>
                             <el-col :span="3"><div>Created At <i class="el-icon-top"></i></div></el-col>
                             <el-col :span="3"><div>Status</div></el-col>
@@ -54,7 +54,7 @@
                             </el-col>
                             <el-col :span="2">
                                 <div class= "product">
-                                    {{order.product_name}}
+                                    {{order.order?order.order.length:0}}
                                 </div>
                             </el-col>
                              <el-col :span="5">
@@ -83,7 +83,7 @@
                                         <i v-if="order.status == 'Progressing'" class="el-icon-download"></i>
                                     </div>
                                     <div class="action-edit">
-                                        <i class="el-icon-edit"></i>
+                                        <i class="el-icon-s-order"></i>
                                     </div>
                                 </div>
                             </el-col>
