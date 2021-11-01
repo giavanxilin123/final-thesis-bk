@@ -2,9 +2,7 @@
   <div>
     <el-breadcrumb class="breadcrumb" separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">HOME</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/history' }"
-        >HISTORY</el-breadcrumb-item
-      >
+      <el-breadcrumb-item>HISTORY</el-breadcrumb-item>
     </el-breadcrumb>
     <section id="main">
       <header class="page-header">
@@ -13,7 +11,7 @@
       <div>
         <p>Here are the orders you've placed since your account was created.</p>
         <el-table ref="filterTable" :data="tableData" style="width: 100%">
-          <el-table-column prop="_id" label="Order Id" width="250">
+          <el-table-column prop="_id" label="Order Id" width="220">
           </el-table-column>
           <el-table-column
             prop="address"
@@ -22,9 +20,9 @@
             column-key="date"
           >
           </el-table-column>
-          <el-table-column prop="total" label="Total Price" width="200">
+          <el-table-column prop="total" label="Total Price" width="150">
           </el-table-column>
-          <el-table-column prop="status" label="status" width="100">
+          <el-table-column prop="status" label="status" width="150">
             <template slot-scope="scope">
               <el-tag
                 :type="
@@ -41,9 +39,12 @@
           </el-table-column>
           <el-table-column prop="order" label="Product List" width="200">
             <template slot-scope="scope">
-            <el-button type="info" round @click="getProductList(scope.row._id)"
-              >Details</el-button
-            >
+              <el-button
+                type="info"
+                round
+                @click="getProductList(scope.row._id)"
+                >Details</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -66,7 +67,7 @@ export default {
     },
     customer() {
       return this.$store.state.customer;
-    }
+    },
   },
   methods: {
     getProductList(id) {

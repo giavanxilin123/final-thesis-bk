@@ -17,6 +17,26 @@ const routes = [
     component: () => import("../views/About.vue"),
   },
   {
+    path: "/berries",
+    component: () => import("../views/products/Berries.vue"),
+  },
+  {
+    path: "/cereals",
+    component: () => import("../views/products/Cereals.vue"),
+  },
+  {
+    path: "/milk",
+    component: () => import("../views/products/Milk.vue"),
+  },
+  {
+    path: "/nuts",
+    component: () => import("../views/products/Nuts.vue"),
+  },
+  {
+    path: "/vegetables",
+    component: () => import("../views/products/Vegetables.vue"),
+  },
+  {
     path: "/order",
     name: "Order",
     component: () => import("../views/Order.vue"),
