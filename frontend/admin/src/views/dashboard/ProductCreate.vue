@@ -87,7 +87,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      image: null,
+      image: { size: 0 },
       productForm: {
         name: "",
         quantity: null,
@@ -176,13 +176,13 @@ export default {
             .catch((err) => this.alertErr(err.response.data));
           this.$router.push("/dashboard/product");
         } else {
-          this.alertErr({message: "File ảnh không được vượt quá 60KB"});
+          this.alertErr({ message: "File ảnh không được vượt quá 60KB" });
           return false;
         }
       });
     },
     alertErr(err) {
-      console.log(err)
+      console.log(err);
       this.$message({
         showClose: true,
         message: err.message || "Đã có lỗi xảy ra!",
