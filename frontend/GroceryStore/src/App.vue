@@ -17,19 +17,34 @@
           </el-badge>
           <div class="title">Shopping Cart</div>
         </div>
-        <div v-if="Object.keys(this.customer).length === 0"  @click="toLoginPage" class="login">
+        <div
+          v-if="Object.keys(this.customer).length === 0"
+          @click="toLoginPage"
+          class="login"
+        >
           <div class="icon">
-              <img src="./assets/login.png" alt="" />
-            </div>
+            <img src="./assets/login.png" alt="" />
+          </div>
         </div>
-         
-         <el-dropdown v-else class="menu-user" trigger="click">
+
+        <el-dropdown v-else class="menu-user" trigger="click">
           <span style="cursor: pointer" class="el-dropdown-link">
-            {{customer.username}}<i class="el-icon-arrow-down el-icon--right"></i>
+            {{ customer.username
+            }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="toOrderHistory" style="cursor: pointer" icon="el-icon-s-order">Order History</el-dropdown-item>
-            <el-dropdown-item @click.native="logOut" style="cursor: pointer" icon="el-icon-switch-button">Log Out</el-dropdown-item>
+            <el-dropdown-item
+              @click.native="toOrderHistory"
+              style="cursor: pointer"
+              icon="el-icon-s-order"
+              >Order History</el-dropdown-item
+            >
+            <el-dropdown-item
+              @click.native="logOut"
+              style="cursor: pointer"
+              icon="el-icon-switch-button"
+              >Log Out</el-dropdown-item
+            >
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -37,7 +52,8 @@
         <div v-if="cart.length">
           <div v-for="c in cart" :key="c._id" class="cart-detail">
             <div class="product-img">
-              <img src="./assets/No_image_available.jpg" alt="" />
+              <img v-if="c.img" :src="c.img" />
+              <img v-else src="@/assets/No_image_available.jpg" alt="" />
             </div>
             <div class="product-detail">
               <div class="product-name">{{ c.name }}</div>
@@ -109,26 +125,35 @@ export default {
 
   methods: {
     async toLoginPage() {
-      await this.$router.push("/login").catch(error => {
-          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
-            console.log(error)
-          }
-       })
+      await this.$router.push("/login").catch((error) => {
+        if (
+          error.name !== "NavigationDuplicated" &&
+          !error.message.includes(
+            "Avoided redundant navigation to current location"
+          )
+        ) {
+          console.log(error);
+        }
+      });
     },
     async goBack() {
-      await this.$router.push("/").catch(error => {
-          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
-            console.log(error)
-          }
-       })
+      await this.$router.push("/").catch((error) => {
+        if (
+          error.name !== "NavigationDuplicated" &&
+          !error.message.includes(
+            "Avoided redundant navigation to current location"
+          )
+        ) {
+          console.log(error);
+        }
+      });
     },
     checkOut() {
-      let access_token = JSON.parse(localStorage.getItem('cus_accessToken'))
-      if(!access_token) {
-        this.alertErr({message: 'You must login to order!'})
-      }
-      else {
-        this.$router.push('/order')
+      let access_token = JSON.parse(localStorage.getItem("cus_accessToken"));
+      if (!access_token) {
+        this.alertErr({ message: "You must login to order!" });
+      } else {
+        this.$router.push("/order");
       }
       this.dialogTableVisible = false;
     },
@@ -136,29 +161,41 @@ export default {
       this.$store.dispatch("removeOrderLine", id);
     },
     async toOrderHistory() {
-      await this.$router.push("/history").catch(error => {
-          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
-            console.log(error)
-          }
-       })
+      await this.$router.push("/history").catch((error) => {
+        if (
+          error.name !== "NavigationDuplicated" &&
+          !error.message.includes(
+            "Avoided redundant navigation to current location"
+          )
+        ) {
+          console.log(error);
+        }
+      });
     },
     async logOut() {
-      this.$store.dispatch('logOut')
-      await this.$router.push("/").catch(error => {
-          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
-            console.log(error)
-          }
-       })
+      this.$store.dispatch("logOut");
+      await this.$router.push("/").catch((error) => {
+        if (
+          error.name !== "NavigationDuplicated" &&
+          !error.message.includes(
+            "Avoided redundant navigation to current location"
+          )
+        ) {
+          console.log(error);
+        }
+      });
     },
     alertErr(err) {
       this.$message({
         showClose: true,
-        message:  err.message || "Đã có lỗi xảy ra!",
-        type: "error"
+        message: err.message || "Đã có lỗi xảy ra!",
+        type: "error",
       });
-      },
+    },
   },
-  
+  created(){
+    console.log(this.cart);
+  },
   computed: {
     cart() {
       return this.$store.state.cart;
@@ -171,10 +208,9 @@ export default {
     },
     customer() {
       return this.$store.state.customer;
-    }
+    },
   },
 };
-
 </script>
 
 <style>
