@@ -2,8 +2,7 @@
   <div>
     <el-breadcrumb class="breadcrumb" separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">HOME</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/login' }"
-        >LOGIN TO ACCOUNT</el-breadcrumb-item
+      <el-breadcrumb-item>LOGIN TO ACCOUNT</el-breadcrumb-item
       >
     </el-breadcrumb>
     <section id="main">
@@ -11,20 +10,18 @@
         <h1>Log in to your account</h1>
       </header>
       <el-form
-        :model="ruleForm"
-        status-icon
-        :rules="rules"
-        ref="ruleForm"
+        :model="form"
         label-width="120px"
         class="demo-ruleForm"
       >
-        <el-input placeholder="Email" v-model="ruleForm.email"></el-input>
+        <el-input placeholder="Username" v-model="form.username"></el-input>
         <div>
           <el-input
             placeholder="Password"
             type="password"
-            v-model="ruleForm.pass"
+            v-model="form.password"
             autocomplete="off"
+            @keyup.enter.native="logIn"
           ></el-input>
         </div>
         <div class="other-options">
@@ -34,39 +31,53 @@
         <el-button
           class="submitBtn"
           type="success"
-          @click="submitForm('ruleForm')"
+          @click="logIn"
           >Sign in</el-button
         >
       </el-form>
-
       <footer class="page-footer">
-        <!-- Footer content -->
+      
       </footer>
     </section>
   </div>
 </template>
 
 <script>
+
 export default {
   data() {
     return {
-      ruleForm: {
-        email: "",
+      form: {
+        username: "",
         password: "",
       },
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
+    async logIn() {
+      try{
+          await this.$store.dispatch("logIn", this.form);
+          this.alertSuccess();
+          this.$router.push("/");
+        }catch(err){
+          this.alertErr(err)
         }
-      });
     },
+    
+    alertErr(err) {
+      this.$message({
+        showClose: true,
+        message:  err.message || "Đã có lỗi xảy ra!",
+        type: "error"
+      });
+      },
+      alertSuccess() {
+        this.$message({
+          showClose: true,
+          message: "Đăng nhập thành công!",
+          type: "success"
+        });
+      }
   },
 };
 </script>

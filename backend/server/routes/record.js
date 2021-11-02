@@ -158,7 +158,7 @@ recordRoutes.put("/order", async (req, res, next) => {
 
 recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
   try{
-    let id = req.params.id
+    const {id} = req.params
     let status = req.body.status
     
     const dbConnect = dbo.getDb();
@@ -208,10 +208,41 @@ recordRoutes.get('/products', async function (req, res) {
     });
 });
 
+
+//set up mongoose
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose')
+
+var fs = require('fs');
+var path = require('path');
+require('dotenv/config');
+
+//connect db
+mongoose.connect(process.env.MONGO_URL,
+  { useNewUrlParser: true, useUnifiedTopology: true }, err => {
+      console.log('connected')
+  });
+
+//set up multer
+var multer = require('multer');
+  
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+  
+var upload = multer({ storage: storage });
+
+//load mongoose model for img
+var imgModel = require('../models/model');
+
 recordRoutes.put("/addProduct", async (req, res, next) => {
   try{
     var newProduct = req.body.productForm
-    
     const dbConnect = dbo.getDb();
         dbConnect
         .collection("product")
@@ -223,14 +254,103 @@ recordRoutes.put("/addProduct", async (req, res, next) => {
   }
 });
 
+recordRoutes.get('/getOrderByUsername/:username', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  let username = req.params.username;
+  dbConnect
+    .collection("order")
+    .find({username:username}).limit(50)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
 
-// recordRoutes.post("/upload", upload.single("file"), (req, res) => {
-//   if(req.file === undefined) return res.send("You must select a file!")
-//   const imgUrl = `http://localhost:5000/file/${req.file.filename}`;
-//   return res.send(imgUrl)
-// })
+recordRoutes.post('/cusLogin', (req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  
+  const dbConnect = dbo.getDb();
+  dbConnect
+  .collection("customer")
+  .find({username: username})
+  .toArray((err, body) => {
+    if(body.length > 0) {
+      bcrypt.compare(
+        password,
+        body[0].password,
+        (err, result) => {
+          if(result){
+            const accessToken = jwt.sign({
+                cusId : body[0]._id,
+                email: body[0].email
+            }, process.env.ACCESS_TOKEN_SECRET,
+            {
+                expiresIn: "1h"
+            }
+            )
+            res.status(200).send({
+               customer: {
+                    fullname: body[0].fullname,
+                    username: body[0].username,
+                    email: body[0].email,
+                    phone: body[0].phone,
+               },
+               accessToken : accessToken
+           })
+        }
+        else{
+            res.status(403).send({message : "Mật khẩu không chính xác"});
+        }
+        }
+      )
+    } else{
+      res.status(404).send({message : "Tài khoản không tồn tại! "})
+    }
+  })
+})
 
-// let gfs = Grid(dbo.getDb(), mongo)
-// gfs.collection("photos")
+recordRoutes.delete('/deleteProductById/:id', async function (req, res, next) {
+  try{
+    const {id} = req.params
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("product")
+        .deleteOne({_id: ObjectId(id)}, (err, result) => {
+          res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
+})
+
+recordRoutes.get('/api.getProductById/:id', async (req, res, next) => {
+  const {id} = req.params
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("product")
+    .findOne({_id: ObjectId(id)} , (err, result) => {
+      res.send(result)
+    })
+})
+
+recordRoutes.put('/api.updateProduct/:id', async (req, res, next) => {
+  try{
+    const {id} = req.params
+    let updateProduct = req.body
+    console.log(updateProduct)
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("product")
+        .update({_id: ObjectId(id)}, {$set: updateProduct}, (err, doc) => {
+          res.json(doc)
+        })
+  } catch{
+        res.status(500).send();
+  }
+})
 
 module.exports = recordRoutes;
