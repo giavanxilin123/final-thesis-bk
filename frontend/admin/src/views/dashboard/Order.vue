@@ -62,7 +62,9 @@
                 </div>
               </el-col>
               <el-col :span="3">
-                cac
+                <div style="overflow:hidden">
+                  {{ order._id }}
+                </div>
               </el-col>
               <el-col :span="4">
                 <div class="name">
@@ -71,7 +73,7 @@
               </el-col>
               <el-col :span="2">
                 <div class="product">
-                  {{ order.order ? order.order.length : 0 }}
+                  {{ order.order ? order.order.length : 1 }}
                 </div>
               </el-col>
               <el-col :span="5">
