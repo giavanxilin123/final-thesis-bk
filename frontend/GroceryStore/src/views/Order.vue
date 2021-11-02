@@ -21,7 +21,7 @@
           <el-form-item label="Full Name">
             <el-input
               placeholder="Please input"
-              v-model="customer.fullname"
+              v-model="formOrder.fullname"
               :disabled="true"
             >
             </el-input>
@@ -29,21 +29,21 @@
           <el-form-item label="Username">
             <el-input
               placeholder="Please input"
-              v-model="customer.username"
+              v-model="formOrder.username"
               :disabled="true"
             ></el-input>
           </el-form-item>
           <el-form-item label="Email">
             <el-input
               placeholder="Please input"
-              v-model="customer.email"
+              v-model="formOrder.email"
               :disabled="true"
             ></el-input>
           </el-form-item>
           <el-form-item label="Phone">
             <el-input
               placeholder="Please input"
-              v-model="customer.phone"
+              v-model="formOrder.phone"
               :disabled="true"
             ></el-input>
           </el-form-item>
@@ -188,6 +188,10 @@ export default {
   mounted() {
     this.formOrder.order = this.$store.state.cart;
     this.formOrder.total = Math.round(this.subTotal * 105) / 100;
+    this.formOrder.username=this.customer.username;
+    this.formOrder.fullname=this.customer.fullname;
+    this.formOrder.email=this.customer.email;
+    this.formOrder.phone=this.customer.phone;
     const map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.center.lat, lng: this.center.lng },
       zoom: 16,

@@ -14,7 +14,7 @@
           <el-table-column prop="_id" label="Order Id" width="220">
           </el-table-column>
           <el-table-column
-            prop="address"
+            prop="date"
             label="Date"
             sortable
             column-key="date"
