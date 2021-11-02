@@ -63,6 +63,7 @@ export default {
           price: product.price,
           num: 1,
           quantity: product.quantity,
+          img: product.img
         },
       });
       this.alertSuccess();
