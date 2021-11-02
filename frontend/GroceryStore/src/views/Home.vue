@@ -50,7 +50,8 @@ export default {
         _id : product._id,
         price: product.price,
         num: 1,
-        quantity: product.quantity
+        quantity: product.quantity,
+        img: product.img
       }})
       this.alertSuccess()
     },
