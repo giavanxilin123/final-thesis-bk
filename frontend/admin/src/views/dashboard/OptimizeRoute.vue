@@ -115,7 +115,7 @@ export default {
                 spinner: 'el-icon-loading',
                 background: 'rgba(0, 0, 0, 0.7)'
             });
-            await axios.get("http://localhost:5000/solving-route")
+            await axios.get("https://gv-grocery-api.herokuapp.com/solving-route")
             .then(res => {
                 let legs = res.data.route_legs;
                 let location_map = legs.map(x => x.map(y => { return {location : this.orderProgressingList[y-1]['location']}}))

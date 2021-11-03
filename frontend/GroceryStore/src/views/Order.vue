@@ -241,7 +241,7 @@ export default {
       let d = new Date();
       this.formOrder.date = d.toLocaleString();
       await axios
-        .put("http://localhost:5000/order", { formOrder: this.formOrder })
+        .put("https://gv-grocery-api.herokuapp.com/order", { formOrder: this.formOrder })
         .then((res) => {
           this.alertSuccess();
           console.log(res);
