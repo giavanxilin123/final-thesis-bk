@@ -187,6 +187,7 @@ export default {
 
   mounted() {
     this.formOrder.order = this.$store.state.cart;
+    this.formOrder.order.map(o => delete o.img)
     this.formOrder.total = Math.round(this.subTotal * 105) / 100;
     this.formOrder.username=this.customer.username;
     this.formOrder.fullname=this.customer.fullname;
