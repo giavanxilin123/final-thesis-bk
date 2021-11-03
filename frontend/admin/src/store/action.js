@@ -5,7 +5,7 @@ export const BASE_URL = "https://gv-grocery-api.herokuapp.com";
 
 const client = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
   withCredentials: false,
 });
 

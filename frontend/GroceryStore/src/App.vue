@@ -63,7 +63,8 @@
                 :min="1"
                 :max="c.quantity"
               ></el-input-number>
-              <div class="product-price">${{ c.price.toFixed(2) }}</div>
+              <!-- c.price.tofixed(2) bi ngu -->
+              <div class="product-price">${{ c.price }}</div>  
             </div>
             <div>
               <i @click="removeOrderLine(c._id)" class="el-icon-close"></i>
