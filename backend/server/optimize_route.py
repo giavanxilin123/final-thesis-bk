@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import pymongo
 import googlemaps
+import urllib.parse
 from pprint import pprint
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
@@ -8,8 +9,10 @@ from ortools.constraint_solver import pywrapcp
 API_KEY = 'AIzaSyAkK1Nj9HWtb4R0crJISga3j9hq2aBC8lQ'
 map_client = googlemaps.Client(API_KEY)
 # CONNECTION_STRING = "mongodb://localhost:27017"
-CONNECTION_STRING = "mongodb+srv://admin:Thientai1997@@cluster0.hofjb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-client = MongoClient(CONNECTION_STRING)
+username = urllib.parse.quote_plus('admin')
+password = urllib.parse.quote_plus("Thientai1997@")
+CONNECTION_STRING = "mongodb+srv://{}:{}@cluster0.hofjb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority".format(username, password)
+client = pymongo.MongoClient(CONNECTION_STRING)
 dbs = client['groceryStore']
 collection = dbs['order']
 

@@ -4,7 +4,7 @@ export const BASE_URL = "http://localhost:5000";
 
 const client = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
   withCredentials: false,
 });
 
