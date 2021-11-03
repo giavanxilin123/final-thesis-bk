@@ -146,18 +146,18 @@ export default {
     setPage(val) {
       this.page = val;
     },
-    deleteProduct(id) {
+     deleteProduct(id) {
       this.$confirm('This will permanently delete product. Continue?', 'Warning', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
           this.$store.dispatch('deleteProductById', id)
+          this.$store.dispatch('fetchProducts');
           this.$message({
             type: 'success',
             message: 'Delete completed'
-          })
-          this.$store.dispatch('fetchProducts'); //upload store fetch
+          }) //upload store fetch
         }).catch(() => {
           this.$message({
             type: 'info',

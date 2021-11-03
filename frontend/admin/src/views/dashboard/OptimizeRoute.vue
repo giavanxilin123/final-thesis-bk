@@ -27,12 +27,12 @@
                     <el-col style="border-right: 1px solid #eee" :span="4">Capacity</el-col>
                     <el-col :span="10">
                         <div style="padding: 10px; background-color: #67c23a; color: white; width: 30%; margin: 0 auto; border-radius: 5px">
-                        10
+                        3
                         </div>
                     </el-col>
                     <el-col :span="10">
                         <div style="padding: 10px; background-color: #67c23a; color: white; width: 30%; margin: 0 auto; border-radius: 5px">
-                        10
+                        4
                     </div>
                     </el-col>        
                 </el-row>

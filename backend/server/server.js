@@ -5,12 +5,14 @@ const express = require("express");
 const cors = require("cors");
 // get MongoDB driver connection
 const dbo = require("./db/conn");
+const bodyParser = require('body-parser')
 
 const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({limit: '30mb'}));
+app.use(bodyParser.urlencoded({extended: true, limit: '30mb'}))
 app.use(require("./routes/record"));
 
 // Global error handling

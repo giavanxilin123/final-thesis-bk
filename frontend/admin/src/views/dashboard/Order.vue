@@ -73,7 +73,7 @@
               </el-col>
               <el-col :span="2">
                 <div class="product">
-                  {{ order.order ? order.order.length : 1 }}
+                  {{ order.order ? order.order.length : 2 }}
                 </div>
               </el-col>
               <el-col :span="5">

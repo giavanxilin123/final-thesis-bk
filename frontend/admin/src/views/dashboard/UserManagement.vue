@@ -6,9 +6,9 @@
                 <div class="title">Users List</div>
             </div>
             <div class="card-body">
-                <div style="position: relative" class="add">
+                <!-- <div style="position: relative" class="add">
                     <el-button class= "add-button">ADD USER</el-button>
-                </div>
+                </div> -->
                 <div class="toolbar">
                     <div>
                         <div style='text-align: left; font-size: 12px; color: gray; padding:5px'>Per page</div>
