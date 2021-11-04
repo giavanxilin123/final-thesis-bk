@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import pymongo
 import googlemaps
+from functools import reduce
 import urllib.parse
 from pprint import pprint
 from ortools.constraint_solver import routing_enums_pb2
@@ -20,7 +21,9 @@ order_list = collection.find()
 order_delivery_list = list(filter(lambda x: x['status'] == 'Progressing', order_list))
 
 
-demand_list = list(map(lambda x: x['quantity'], order_delivery_list))
+order_detail = list(map(lambda x: x['order'], order_delivery_list))
+demand_list = list(map(lambda o: reduce(lambda a,b: a+b, list(map(lambda x: x['num'], o))) , order_detail))
+
 demand_list.insert(0,0)
 
 location_list = list(map(lambda x: x['location'], order_delivery_list))

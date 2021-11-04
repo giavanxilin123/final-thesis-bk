@@ -53,6 +53,29 @@ recordRoutes.post('/register', async (req, res, next) => {
   }
 })
 
+recordRoutes.post('/api.cusRegister', async (req, res, next) => {
+  try{
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.password, salt)
+      var newCus = {
+        fullname: req.body.fullname,
+        username: req.body.username,
+        email: req.body.email,
+        phone: req.body.phone,
+        password: hashedPassword
+      }    
+      
+      const dbConnect = dbo.getDb();
+      dbConnect
+      .collection("customer")
+      .insertOne(newCus, (err, result) => {
+        res.json(result)
+      })
+  }catch{
+      res.status(500).send();
+  }
+})
+
 recordRoutes.post('/login', (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
