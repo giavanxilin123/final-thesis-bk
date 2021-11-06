@@ -1,0 +1,5 @@
+gmap==1.0
+gmaps==0.9.0
+googlemaps==4.5.3
+pymongo[tls,srv]==3.12.0
+ortools==9.0.9048

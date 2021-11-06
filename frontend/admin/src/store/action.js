@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// export const BASE_URL = "http://localhost:5000";
-export const BASE_URL = "https://gv-grocery-api.herokuapp.com";
+export const BASE_URL = "http://localhost:5000";
+// export const BASE_URL = "https://gv-grocery-api.herokuapp.com";
 
 const client = axios.create({
   baseURL: BASE_URL,
@@ -114,6 +114,20 @@ export const actions = {
         .get(`${BASE_URL}/api.getProductById/${payload}`)
         .then((res) => {
           ctx.commit("GET_PRODUCT_BY_ID", res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  optimizeRoute(ctx) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/solving-route`)
+        .then((res) => {
+          ctx.commit("ROUTE_LEGS", res.data.route_legs)
           resolve(res);
         })
         .catch((err) => {

@@ -19,7 +19,7 @@
           <div class="general-inf">
             <div class="title">General Information</div>
             <el-form-item label="Product name" prop="name">
-              <el-input v-model="productForm.name"></el-input>
+              <el-input  v-model="productForm.name"></el-input>
             </el-form-item>
             <el-form-item label="Quantity" prop="quantity">
               <el-input type="number" v-model="productForm.quantity"></el-input>
@@ -132,7 +132,7 @@ export default {
           },
         ],
         quantity: [
-          { required: true, message: "Please input quantity", trigger: "blur" },
+          {required: true,  message: "Please input quantity", trigger: "blur" },
         ],
         price: [
           { required: true, message: "Please input price", trigger: "blur" },
@@ -166,7 +166,7 @@ export default {
           this.productForm.quantity = parseInt(this.productForm.quantity);
           this.productForm.price = parseFloat(this.productForm.price);
           await axios
-            .put("https://gv-grocery-api.herokuapp.com/addProduct", {
+            .put("http://localhost:5000/addProduct", {
               productForm: this.productForm,
             })
             .then((res) => {

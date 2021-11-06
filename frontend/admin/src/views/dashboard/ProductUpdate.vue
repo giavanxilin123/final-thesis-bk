@@ -165,14 +165,14 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           await axios
-            .put(`https://gv-grocery-api.herokuapp.com/api.updateProduct/${id}`, this.productForm)
+            .put(`http://localhost:5000/${id}`, this.productForm)
             .then((res) => {
               this.alertSuccess();
               console.log(res);
             })
             .catch((err) => this.alertErr(err.response.data));
           this.$router.push("/dashboard/product");
-        console.log(this.productForm)
+        // console.log(this.productForm)
         } else {
           this.alertErr({message: "File ảnh không được vượt quá 60KB"});
           return false;

@@ -10,7 +10,7 @@ export default new Vuex.Store({
     BASE_URL,
     customer: customer || {}, 
     products: [],
-    cart: [],
+    cart:  [],
     orderHistory: []
   },
   mutations,

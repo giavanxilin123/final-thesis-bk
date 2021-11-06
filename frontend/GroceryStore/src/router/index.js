@@ -53,6 +53,10 @@ const routes = [
     path: "/history/product-list",
     component: () => import("../views/history/ProductList.vue"),
   },
+  {
+    path: "/register",
+    component: () => import("../views/Register.vue"),
+  },
 ];
 
 const router = new VueRouter({

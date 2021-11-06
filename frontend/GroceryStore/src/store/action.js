@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// export const BASE_URL = "http://localhost:5000";
 export const BASE_URL = "https://gv-grocery-api.herokuapp.com";
 
 const client = axios.create({
@@ -78,4 +79,28 @@ export const actions = {
     localStorage.removeItem("customer");
     ctx.commit("LOG_OUT");
   },
+  checkOut(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .put(`${BASE_URL}/order`, payload)
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+  register(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .post(`${BASE_URL}/api.cusRegister`, payload)
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
 };

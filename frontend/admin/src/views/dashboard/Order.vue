@@ -33,13 +33,13 @@
         <div class="table-content">
           <div class="table-head">
             <el-row :gutter="20">
-              <el-col :span="1"><div>STT</div></el-col>
-              <el-col :span="3"><div>Code</div></el-col>
+              <!-- <el-col :span="1"><div>STT</div></el-col> -->
+              <el-col :span="4"><div>Code</div></el-col>
               <el-col :span="4"><div>Name</div></el-col>
-              <el-col :span="2"><div>Item Number</div></el-col>
+              <el-col :span="2"><div>Quantity</div></el-col>
               <el-col :span="5"><div>Address</div></el-col>
               <el-col :span="3"
-                ><div>Created At <i class="el-icon-top"></i></div
+                ><div>Created At</div
               ></el-col>
               <el-col :span="3"><div>Status</div></el-col>
               <el-col :span="3"
@@ -54,15 +54,9 @@
               style="background-color: #f9f9f9"
               :gutter="20"
             >
-              <el-col :span="1">
-                <div class="avatar">
-                  <div class="ava-img">
-                    {{ index + 1 }}
-                  </div>
-                </div>
-              </el-col>
-              <el-col :span="3">
-                <div style="overflow:hidden">
+              
+              <el-col style="padding-right: 0 !important" :span="4">
+                <div>
                   {{ order._id }}
                 </div>
               </el-col>
@@ -73,7 +67,7 @@
               </el-col>
               <el-col :span="2">
                 <div class="product">
-                  {{ order.order ? order.order.length : 2 }}
+                  {{ order.order.map(x=>x.num).reduce((a,b)=> a+b, 0) }}
                 </div>
               </el-col>
               <el-col :span="5">
@@ -177,7 +171,7 @@ export default {
   },
   computed: {
     orderList() {
-      return this.$store.state.orders;
+      return this.$store.state.orders
     },
   },
 };
@@ -286,7 +280,7 @@ export default {
   padding: 10px 0;
 }
 .table-body {
-  font-size: 14px;
+  font-size: 13px;
 }
 .ava-img {
   width: 40px;

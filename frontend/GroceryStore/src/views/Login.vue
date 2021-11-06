@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cus-login">
     <el-breadcrumb class="breadcrumb" separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">HOME</el-breadcrumb-item>
       <el-breadcrumb-item>LOGIN TO ACCOUNT</el-breadcrumb-item
@@ -82,6 +82,9 @@ export default {
 };
 </script>
 
+<style>
+</style>
+
 <style scoped>
 .breadcrumb {
   padding: 13px 15%;
@@ -109,6 +112,8 @@ export default {
 .other-options {
   justify-content: space-between;
   display: flex;
+  padding: 10px 0;
+  font-size: 14px;
 }
 .other-options > a {
   text-decoration: none;
@@ -118,6 +123,7 @@ export default {
   margin: 10px 0;
 }
 .submitBtn {
+  margin-top: 25px;
   color: #fff;
   border-radius: 5px;
   padding: 12px 30px 16px;

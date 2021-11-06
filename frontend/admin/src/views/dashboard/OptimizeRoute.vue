@@ -3,20 +3,15 @@
         <el-row style="position: absolute; top: 60px; width: 100%; width: 95%;right: 50%;transform: translateX(50%);">
             <el-col :span="12">
                 <div class="vehicle">
-                        <div class="tag-vehicle">
-                    <div class="icon-truck">
-                        <i style="color: white; " class="fas fa-truck"></i>
-                    </div>
+                    <div class="tag-vehicle">
+                         <div class="icon-truck">
+                                <i style="color: white; " class="fas fa-truck"></i>
+                        </div>
                     <div style="font-size: 18px; padding: 20px">Vehicle</div>
                 </div>
-                <el-row class="vehicle-type">
+                <el-row style="padding: 24px 0" class="vehicle-type">
                     <el-col style="border-right: 1px solid #eee" :span="4">Types</el-col>
-                    <el-col :span="10">
-                        <div style="height: 300px">
-                        <img src="../../assets/vehicle5.jpeg" alt="">
-                        </div>
-                    </el-col>
-                    <el-col :span="10">
+                    <el-col :span="20">
                         <div style="height: 300px">
                         <img src="../../assets/vehicle2.jpeg" alt="">
                     </div>
@@ -25,33 +20,19 @@
                 
                 <el-row class="vehicle-capacity">
                     <el-col style="border-right: 1px solid #eee" :span="4">Capacity</el-col>
-                    <el-col :span="10">
-                        <div style="padding: 10px; background-color: #67c23a; color: white; width: 30%; margin: 0 auto; border-radius: 5px">
-                        3
+                    <el-col :span="20">
+                        <div style="padding: 10px; background-color: #F56C6C; color: white; width: 25%; margin: 0 auto; border-radius: 5px">
+                            10
                         </div>
-                    </el-col>
-                    <el-col :span="10">
-                        <div style="padding: 10px; background-color: #67c23a; color: white; width: 30%; margin: 0 auto; border-radius: 5px">
-                        4
-                    </div>
                     </el-col>        
                 </el-row>
 
                 <el-row class="vehicle-quantity">
                     <el-col style="border-right: 1px solid #eee" :span="4">Quantity</el-col>
-                    <el-col :span="10">
-                        2
-                    </el-col>
-                    <el-col :span="10">
-                        2
-                         <!-- <el-select v-model="value" clearable placeholder="Select">
-                        <el-option
-                        v-for="item in numVehicle"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select> -->
+                    <el-col :span="20">
+                        <div style="padding: 10px; background-color: #67c23a; color: white; width: 25%; margin: 0 auto; border-radius: 5px">
+                        4
+                        </div>
                     </el-col>
                 </el-row>
                 </div>
@@ -62,28 +43,35 @@
                         <div class="icon-map">
                             <i style="color: white;" class="fas fa-map"></i>
                         </div>
-                        <div style="font-size: 18px; padding: 20px">Google Map</div>
+                        <div style="font-size: 18px; padding: 20px">Google Map </div>
+                        
                     </div>
                     <div id="map"></div>
+                    <div style="margin: 10px 0" @click="optimizeRoute"  class="route-step">
+                            <el-button v-loading.fullscreen.lock="fullscreenLoading" type="success">Optimize Route</el-button>
+                    </div>
                 </div>
                 
             </el-col>
-            <div class="route-step">
-                <el-button v-loading.fullscreen.lock="fullscreenLoading" @click="optimizeRoute" type="success">Optimize Route</el-button>
-            </div>
-            <el-col  class="sidebar" :span ="24">
+        </el-row>
+        
+        <div style="position: absolute; top: 650px; right: 50%; transform: translateX(50%); width: 60%; overflow: auto; height: 400px">
+            <el-col class="sidebar" :span ="24">
+                <div style="margin: 15px 0;  background: wheat" id="total"></div>
+                <div style=" background: white" class="distance"></div>
                 <div class="panel"></div>
+                <div style="background: white" class="distance"></div>
                 <div class="panel"></div>
                 <div class="panel"></div>
                 <div class="panel"></div>
             </el-col>
-        </el-row>
+        </div>
        
     </div>
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 export default {
     data() {
       return {
@@ -115,13 +103,14 @@ export default {
                 spinner: 'el-icon-loading',
                 background: 'rgba(0, 0, 0, 0.7)'
             });
-            await axios.get("https://gv-grocery-api.herokuapp.com/solving-route")
-            .then(res => {
-                let legs = res.data.route_legs;
+            await this.$store.dispatch('optimizeRoute')
+            .then(() => {
+                let legs = this.route_legs;
                 let location_map = legs.map(x => x.map(y => { return {location : this.orderProgressingList[y-1]['location']}}))
+                let totalDistance = 0;
                 for (const step in location_map){
-                    // let num = step + 1;
-                    document.getElementsByClassName("panel")[step].innerHTML= `Vehicle ${step}`
+                    let num = parseInt(step) + 1;
+                    document.getElementsByClassName("panel")[step].innerHTML= `Vehicle ${num}`
                     new window.google.maps.DirectionsService().route({
                         origin: this.center,
                         destination: this.center,
@@ -138,12 +127,17 @@ export default {
                                     strokeColor: this.color[step],
                                     strokeWeight: '3',
                                     strokeOpacity: '0.5'
-                                }
-                                }
+                                }}
                             )
+                            let distance = res.routes[0].legs.map(x=>x.distance.value).reduce((a,b) => a+b, 0)
+                            totalDistance += distance;
+                            document.getElementById('total').innerHTML= `Total distance is ${totalDistance} m`
+                            document.getElementsByClassName("distance")[step].innerHTML= `Quãng đường Vehicle ${num} đi là: ${distance} m`
                         }
                     },)
                 }
+                
+                
                 loading.close()
             })
         },
@@ -153,11 +147,13 @@ export default {
         orderProgressingList() {
             return this.$store.state.orders.filter(x => x.status == 'Progressing');
         },
+        route_legs() {
+            return this.$store.state.route_legs
+        }
     },
 
     async mounted() {
         await this.$store.dispatch('fetchOrders');
-        
         this.map = new window.google.maps.Map(document.getElementById('map'), {
             center: { lat: this.center.lat, lng: this.center.lng },
             zoom: 16,

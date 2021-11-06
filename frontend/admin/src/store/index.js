@@ -13,7 +13,8 @@ export default new Vuex.Store({
     allUsers: [],
     orders: [],
     products: [],
-    productById: {}
+    productById: {},
+    route_legs: {}
   },
   mutations,
   actions,

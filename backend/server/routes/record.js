@@ -125,7 +125,7 @@ recordRoutes.get('/order', async function (req, res) {
   const dbConnect = dbo.getDb();
   dbConnect
     .collection("order")
-    .find({}).limit(50)
+    .find({}).sort({"_id": -1})
     .toArray(function (err, result) {
       if (err) {
         res.status(400).send("Error fetching listings!");
@@ -196,25 +196,16 @@ recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
 });
 
 recordRoutes.get("/solving-route", async (req, res, next) => {
-  PythonShell.run('optimize_route.py', null,  function (err, result) {
-    if (err) throw err;
+  await PythonShell.run('optimize_route.py', null,  function (err, result) {
+    // if (err) throw err;
+    console.log(result)
+    console.log(err)
     doc = result.map(x => x.split(',').map(y => parseInt(y))).filter(x => x.length != 2)
     doc.map(x => x.pop())
     doc.map(x => x.shift())
     res.send({route_legs: doc})
-    // const dbConnect = dbo.getDb();
-    // dbConnect
-    // .collection("delivery")
-    // .insertOne({route_legs: doc}, (err, result) => {
-    //     res.send(result)
-    // })
   });
-  
-  
-  
-  // console.log(data)
-  // console.log('alo', alo)
-  
+
 });
 
 recordRoutes.get('/products', async function (req, res) {
@@ -241,7 +232,7 @@ var path = require('path');
 require('dotenv/config');
 
 //connect db
-mongoose.connect(process.env.MONGO_URL,
+mongoose.connect("mongodb+srv://admin:Thientai1997@@cluster0.hofjb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true }, err => {
       console.log('connected')
   });
@@ -364,7 +355,6 @@ recordRoutes.put('/api.updateProduct/:id', async (req, res, next) => {
   try{
     const {id} = req.params
     let updateProduct = req.body
-    console.log(updateProduct)
     const dbConnect = dbo.getDb();
         await dbConnect
         .collection("product")

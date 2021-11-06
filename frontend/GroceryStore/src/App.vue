@@ -53,6 +53,7 @@
           <div v-for="c in cart" :key="c._id" class="cart-detail">
             <div class="product-img">
               <img v-if="c.img" :src="c.img" />
+              
               <img v-else src="@/assets/No_image_available.jpg" alt="" />
             </div>
             <div class="product-detail">
@@ -63,7 +64,7 @@
                 :min="1"
                 :max="c.quantity"
               ></el-input-number>
-              <!-- c.price.tofixed(2) bi ngu -->
+              <!-- c.price.tofixed(2)  code  ngu qua -->
               <div class="product-price">${{ c.price }}</div>  
             </div>
             <div>
@@ -194,9 +195,7 @@ export default {
       });
     },
   },
-  created(){
-    console.log(this.cart);
-  },
+
   computed: {
     cart() {
       return this.$store.state.cart;
