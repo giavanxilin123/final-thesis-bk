@@ -2,8 +2,8 @@
   <div class="home">
     <div class="carousel">
         <div class="carousel-content">
-          <div style = "font-size: 55px; color: white; font-weight: 300; padding: 10px 0"> Nuts & Cereals</div>
-          <div style = "color: white; max-width: 489px">These species are sometimes called "blueberries" and sold as blueberry jam or other products.</div>
+          <div class="carousel-header"> Nuts & Cereals</div>
+          <div class="carousel-body">These species are sometimes called "blueberries" and sold as blueberry jam or other products.</div>
           <el-button style = "margin: 20px; padding: 15px 60px" type="success"> Shop Now</el-button>
         </div>
     </div>
@@ -11,7 +11,7 @@
     <div style = "padding: 30px 0;" class="popular-product">
       <div style = "font-size: 32px; margin: 32px; " class ="product-title"> Popular products</div>
       <el-row :gutter="20">
-        <el-col style="padding: 0 15px" v-for="(product, index) in allProducts" :key="index" :span="6">
+        <el-col class="product-col" v-for="(product, index) in allProducts" :key="index" :xs="12" :sm="12" :lg="6" >
           <div class="product">
             <div class="product-img">
               <img v-if="product.img" :src="product.img">
@@ -37,12 +37,6 @@
 export default {
   name: 'Home',
   
-  data() {
-      return {
-        
-      };
-    },
-
   methods: {
     addToCart(product) {
       this.$store.dispatch('cart', {cart: {
@@ -84,6 +78,37 @@ export default {
 </script>
 
 <style scoped>
+  @media (max-width: 480px) {
+  .home .carousel .carousel-header{
+    font-size: 34px;
+  }
+  .carousel-content {
+    width: 80%;
+  }
+  .product-title {
+    margin: 10px !important
+  }
+  .home .el-row {
+    margin: 0 auto !important;
+    width: 95% !important;
+  }
+  .product-col {
+    padding: 5px !important
+  }
+}
+  .product-col {
+    padding: 0 15px;
+  }
+  .carousel-header {
+    font-size: 55px; 
+    color: white; 
+    font-weight: 300; 
+    padding: 10px 0;
+  }
+  .carousel-body {
+    color: white; 
+    max-width: 489px
+  }
   .product {
     padding: 20px 0;
   }

@@ -7,7 +7,7 @@
     </el-breadcrumb>
     <section id="main">
       <header class="page-header">
-        <h2 style="margin-bottom: 50px">Create an account</h2>
+        <div style="margin-bottom: 50px">Create an account</div>
       </header>
          <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="Fullname" prop="fullname">
@@ -149,6 +149,19 @@ export default {
 </script>
 
 <style>
+@media (max-width: 480px) {
+  .cus-register .el-form-item__label{
+    text-align: left;
+    height: 40px !important;
+  }
+  .cus-register .el-form-item .el-form-item__content{
+    margin-left: 0 !important;
+  }
+  .cus-register .el-form-item{
+    margin-bottom: 10px !important;
+  }
+
+}
   .cus-register .el-input__inner {
     height: 55px;
   }
@@ -159,6 +172,14 @@ export default {
 </style>
 
 <style scoped>
+@media (max-width: 480px) {
+  #main {
+    width: 90% !important;
+  }
+  .page-header {
+    font-size: 36px !important;
+  }
+}
 .breadcrumb {
   padding: 13px 15%;
   display: flex;
@@ -176,10 +197,11 @@ export default {
   margin: 0 auto;
 }
 .page-header {
-  font-size: 26px;
+  font-size: 36px;
   line-height: 26px;
   background: #fff;
   font-family: "Lato", Arial, sans-serif;
+  padding: 60px 0 30px
 }
 .other-options {
   justify-content: space-between;

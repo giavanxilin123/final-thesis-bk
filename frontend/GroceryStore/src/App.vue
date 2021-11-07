@@ -1,9 +1,33 @@
 <template>
   <div id="app">
-    <div class="header">
+    <fixed-header>
+      <div class="header">
+      <div @click="table = true" class="bar">
+         <i style="font-size: 30px" class="fas fa-bars"></i>
+      </div>
+     
+      <el-drawer
+        style="text-align: left; font-size: 13px"
+        :visible.sync="table"
+        direction="ltr"
+        size="60%">
+        <div @click="toPage('./berries')" style="padding: 10px 30px; display: flex; align-items: center; justify-content: space-between"><span>BERRIES</span> <i class="el-icon-arrow-right"></i></div> 
+        <div @click="toPage('./milk')" style="padding: 10px 30px; display: flex; align-items: center; justify-content: space-between"><span>MILK, EGGS & CHEESE</span> <i class="el-icon-arrow-right"></i></div> 
+        <div @click="toPage('./vegetables')" style="padding: 10px 30px; display: flex; align-items: center; justify-content: space-between"><span>VEGETABLES</span> <i class="el-icon-arrow-right"></i></div> 
+        <div @click="toPage('./nuts')" style="padding: 10px 30px; display: flex; align-items: center; justify-content: space-between"><span>NUTS</span> <i class="el-icon-arrow-right"></i></div> 
+        <div @click="toPage('./cereals')" style="padding: 10px 30px; display: flex; align-items: center; justify-content: space-between"><span>CEREALS</span> <i class="el-icon-arrow-right"></i></div> 
+        <div v-if="Object.keys(this.customer).length === 0" @click="toLoginMobile" style="padding: 10px 30px; background: #f8f9fc">Sign in</div>
+        <div v-else >
+          <div style="padding: 10px 30px; background: #f8f9fc" >{{customer.username}}</div>
+          <div @click="toOrderHistory" style="padding: 10px 30px; background: #f8f9fc" >Order History <i class="el-icon-s-order"></i></div>
+          <div @click="logOut" style="padding: 10px 30px; background: #f8f9fc" >Log Out <i class="el-icon-switch-button"></i></div>
+        </div>
+      </el-drawer>
+      
       <div @click="goBack" class="logo">
         <img src="./assets/logo.svg" alt="" />
       </div>
+      
       <div style="display: flex">
         <div @click="dialogTableVisible = true" class="shopping-cart">
           <el-badge
@@ -104,6 +128,8 @@
         </div>
       </el-dialog>
     </div>
+    </fixed-header>
+    
     <div id="nav">
       <router-link to="/berries">BERRIES</router-link>
       <router-link to="/milk">MILK, EGGS & CHEESE</router-link>
@@ -117,9 +143,14 @@
 </template>
 
 <script>
+import FixedHeader from 'vue-fixed-header'
 export default {
+  components: {
+    FixedHeader
+  },
   data() {
     return {
+      table: false,
       num: 1,
       dialogTableVisible: false,
     };
@@ -137,6 +168,19 @@ export default {
           console.log(error);
         }
       });
+    },
+    async toLoginMobile() {
+      await this.$router.push("/login").catch((error) => {
+        if (
+          error.name !== "NavigationDuplicated" &&
+          !error.message.includes(
+            "Avoided redundant navigation to current location"
+          )
+        ) {
+          console.log(error);
+        }
+      });
+      this.table = false
     },
     async goBack() {
       await this.$router.push("/").catch((error) => {
@@ -173,6 +217,7 @@ export default {
           console.log(error);
         }
       });
+      this.table = false
     },
     async logOut() {
       this.$store.dispatch("logOut");
@@ -186,6 +231,7 @@ export default {
           console.log(error);
         }
       });
+      this.table = false
     },
     alertErr(err) {
       this.$message({
@@ -194,6 +240,19 @@ export default {
         type: "error",
       });
     },
+    async toPage(name){
+      await this.$router.push(name).catch((error) => {
+        if (
+          error.name !== "NavigationDuplicated" &&
+          !error.message.includes(
+            "Avoided redundant navigation to current location"
+          )
+        ) {
+          console.log(error);
+        }
+      })
+      this.table = false;
+    }
   },
 
   computed: {
@@ -216,6 +275,14 @@ export default {
 <style>
 body {
   margin: 0;
+}
+@media (max-width: 480px) {
+  .header .el-dialog {
+    width: 75% !important;
+  }
+}
+.v-modal {
+  z-index: 1;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -269,6 +336,10 @@ body {
   padding: 15px;
   background-color: #f4f4f4;
 }
+.header .el-badge__content {
+  background-color: #67c23a;
+}
+
 @keyframes fade-in {
   0% {
     transform: translateX(700px);
@@ -284,6 +355,42 @@ body {
 </style>
 
 <style scoped>
+@media (max-width: 480px) {
+  .header .login {
+    display: none;
+  }
+  .header .title {
+    display: none;
+  }
+  .header .icon img {
+    width: 35px !important;
+  }
+  .header .logo img {
+    width: 180px !important;
+  }
+  #nav {
+    display: none;
+  }
+  .bar {
+    display: block !important;
+  }
+  .header.vue-fixed-header--isFixed {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    z-index: 300;
+    background: white;
+  }
+  .menu-user {
+    display: none;
+  }
+}
+
+.bar {
+  cursor: pointer;
+  display: none;
+}
 .menu-user {
   line-height: 26px;
   margin-left: 20px;

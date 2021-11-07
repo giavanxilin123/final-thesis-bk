@@ -5,11 +5,12 @@
         style="
           text-align: left;
           position: relative;
-          border-right: 1px solid #e5e5e5;
         "
-        :span="15"
+        :lg="15"
+        :xs="24"
       >
-        <div style="font-size: 25px; margin: 15px 0; font-weight: 700">
+        <div class="order-col">
+          <div style="font-size: 25px; margin: 15px 0; font-weight: 700">
           1. Personal Information
         </div>
         <el-form
@@ -86,14 +87,15 @@
         </div>
         <el-button
           @click="checkOut('formOrder')"
-          style="position: absolute; right: 0; margin: 50px"
           type="success"
-          >CheckOut</el-button
+          style="margin: 20px 0"
+          >Check Out</el-button
         >
+        </div>
       </el-col>
 
-      <el-col :span="9">
-        <div>
+      <el-col :lg="9" :xs="24">
+        <div class="order-col">
           <div class="total">
             <div class="type-fee">
               <div style="text-align: left">
@@ -148,7 +150,6 @@
 </template>
 
 <script>
-// import axios from "axios";
 export default {
   data() {
     var checkAddress = (rule, value, callback)=>{
@@ -296,20 +297,29 @@ export default {
 </script>
 
 <style>
+
 .order {
   max-width: 1250px;
   margin: 0 auto;
   width: 90%;
 }
-.order .el-col {
-  padding: 60px !important;
-}
+
 .order #map {
   height: 500px;
 }
 </style>
 
 <style scoped>
+@media (max-width: 480px) {
+.order-col {
+  padding: 0 !important;
+  border-right: none !important;
+}
+}
+.order-col {
+  padding: 55px;
+  border-right: 1px solid #e5e5e5;
+}
 .sum {
   display: flex;
   justify-content: space-between;
