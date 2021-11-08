@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <fixed-header>
       <div class="header">
       <div @click="table = true" class="bar">
          <i style="font-size: 30px" class="fas fa-bars"></i>
@@ -128,8 +127,6 @@
         </div>
       </el-dialog>
     </div>
-    </fixed-header>
-    
     <div id="nav">
       <router-link to="/berries">BERRIES</router-link>
       <router-link to="/milk">MILK, EGGS & CHEESE</router-link>
@@ -143,11 +140,8 @@
 </template>
 
 <script>
-import FixedHeader from 'vue-fixed-header'
+
 export default {
-  components: {
-    FixedHeader
-  },
   data() {
     return {
       table: false,
@@ -232,6 +226,7 @@ export default {
         }
       });
       this.table = false
+      this.alertSuccess()
     },
     alertErr(err) {
       this.$message({
@@ -252,7 +247,14 @@ export default {
         }
       })
       this.table = false;
-    }
+    },
+    alertSuccess() {
+        this.$message({
+          showClose: true,
+          message: "Đăng xuất thành công!",
+          type: "success"
+        });
+      }
   },
 
   computed: {
@@ -281,9 +283,7 @@ body {
     width: 75% !important;
   }
 }
-.v-modal {
-  z-index: 1;
-}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -340,6 +340,7 @@ body {
   background-color: #67c23a;
 }
 
+
 @keyframes fade-in {
   0% {
     transform: translateX(700px);
@@ -356,6 +357,7 @@ body {
 
 <style scoped>
 @media (max-width: 480px) {
+  
   .header .login {
     display: none;
   }
@@ -374,19 +376,19 @@ body {
   .bar {
     display: block !important;
   }
-  .header.vue-fixed-header--isFixed {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    z-index: 300;
-    background: white;
-  }
   .menu-user {
     display: none;
   }
 }
 
+/* .header {
+  position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    z-index: 5000;
+    background: white;
+} */
 .bar {
   cursor: pointer;
   display: none;
