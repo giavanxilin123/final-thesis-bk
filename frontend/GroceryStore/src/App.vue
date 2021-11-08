@@ -191,7 +191,17 @@ export default {
     checkOut() {
       let access_token = JSON.parse(localStorage.getItem("cus_accessToken"));
       if (!access_token) {
-        this.alertErr({ message: "You must login to order!" });
+        this.alertErr({ message: "You must login to order!" })
+        this.$router.push("/login").catch((error) => {
+        if (
+          error.name !== "NavigationDuplicated" &&
+          !error.message.includes(
+            "Avoided redundant navigation to current location"
+          )
+        ) {
+          console.log(error);
+        }
+      })
       } else {
         this.$router.push("/order");
       }

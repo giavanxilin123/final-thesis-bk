@@ -62,7 +62,9 @@
                 <div class="panel"></div>
                 <div style="background: white" class="distance"></div>
                 <div class="panel"></div>
+                <div style="background: white" class="distance"></div>
                 <div class="panel"></div>
+                <div style="background: white" class="distance"></div>
                 <div class="panel"></div>
             </el-col>
         </div>

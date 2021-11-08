@@ -83,8 +83,17 @@
             font-weight: 700;
           "
         >
-          3. Payment
+          3. Select time
         </div>
+        <el-time-select
+          v-model="time"
+          :picker-options="{
+            start: date,
+            step: '2:00',
+            end: '22:00'
+          }"
+          placeholder="Select time">
+        </el-time-select>
         <el-button
           @click="checkOut('formOrder')"
           type="success"
@@ -184,6 +193,7 @@ export default {
         status: "New",
         date: "",
       },
+      time: '',
       rules: {
         address: [{validator: checkAddress, trigger: "blur"}]
       },
@@ -204,6 +214,11 @@ export default {
     customer() {
       return this.$store.state.customer;
     },
+    date(){
+      let d = new Date();
+      return String(d.getHours() + 1)+':00'
+    }
+
   },
 
   mounted() {
@@ -236,6 +251,7 @@ export default {
       let place = autoComplete.getPlace();
       let {formatted_address} = place
       let {name} = place
+      
       this.formOrder.address = (formatted_address.substring(0, name.length) == name) ? formatted_address : name + ", " + formatted_address;
 
       this.formOrder.location.lat = place.geometry.location.lat();
@@ -254,10 +270,12 @@ export default {
               map: map,
             });
           }
+          console.log(res)
         },
         map.setCenter(place.geometry.location),
         marker.setPosition(place.geometry.location)
       );
+      
     });
   },
 
