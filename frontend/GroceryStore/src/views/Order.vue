@@ -85,21 +85,27 @@
         >
           3. Select time
         </div>
+        <span style="margin-right: 20px">Promise Time </span>
         <el-time-select
           v-model="time"
           :picker-options="{
-            start: date,
-            step: '2:00',
-            end: '22:00'
+            start: '9:00',
+            step: '1:00',
+            end: '22:00',
+            minTime: date
           }"
           placeholder="Select time">
         </el-time-select>
-        <el-button
+        
+        <div>
+          <el-button
           @click="checkOut('formOrder')"
           type="success"
           style="margin: 20px 0"
           >Check Out</el-button
         >
+        </div>
+        
         </div>
       </el-col>
 
@@ -159,6 +165,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     var checkAddress = (rule, value, callback)=>{
@@ -170,9 +177,12 @@ export default {
           if (!this.formOrder.location.lat) {
             this.alertErr({message: "Please select the address by google map"})
             callback(new Error('Please select address by google map'));
-          } else if(this.formOrder.total == 0) {
+          } else if(!this.checkProvince) {
+            this.alertErr({message: "Order address must be in Ho Chi Minh city area!"})
+          }else if(this.formOrder.total == 0) {
             this.alertErr({message: "Order is empty, please check again!"})
-          } else {
+          } 
+          else {
             callback()
           }
       }, 1000);
@@ -197,6 +207,7 @@ export default {
       rules: {
         address: [{validator: checkAddress, trigger: "blur"}]
       },
+      checkProvince: '',
       center: { lat: 10.7719937, lng: 106.7057951 },
     };
   },
@@ -216,12 +227,17 @@ export default {
     },
     date(){
       let d = new Date();
-      return String(d.getHours() + 1)+':00'
+      return String(d.getHours())+':00'
     }
 
   },
 
   mounted() {
+    setInterval(async()=> {
+      await axios.get("http://localhost:5000/user-list").then((res) => {
+        console.log(res)
+      })
+    }, 5000)
     this.formOrder.order = this.$store.state.cart;
     // this.formOrder.order.map(o => delete o.img)
     this.formOrder.total = Math.round(this.subTotal * 105) / 100;
@@ -249,6 +265,9 @@ export default {
 
     autoComplete.addListener("place_changed", () => {
       let place = autoComplete.getPlace();
+      let {address_components} = place
+      this.checkProvince = address_components.map(x => x.long_name).includes("Thành phố Hồ Chí Minh")
+  
       let {formatted_address} = place
       let {name} = place
       
@@ -270,7 +289,6 @@ export default {
               map: map,
             });
           }
-          console.log(res)
         },
         map.setCenter(place.geometry.location),
         marker.setPosition(place.geometry.location)
