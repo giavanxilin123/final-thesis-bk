@@ -1,114 +1,107 @@
 <template>
   <div class="order">
     <el-row :gutter="20">
-      <el-col
-        style="
-          text-align: left;
-          position: relative;
-        "
-        :lg="15"
-        :xs="24"
-      >
+      <el-col style="text-align: left; position: relative" :lg="15" :xs="24">
         <div class="order-col">
           <div style="font-size: 25px; margin: 15px 0; font-weight: 700">
-          1. Personal Information
-        </div>
-        <el-form
-          style="margin-bottom: 40px"
-          ref="formOrder"
-          :model="formOrder"
-          label-width="120px"
-        >
-          <el-form-item label="Full Name">
-            <el-input
-              placeholder="Please input"
-              v-model="formOrder.fullname"
-              :disabled="true"
+            1. Personal Information
+          </div>
+          <el-form
+            style="margin-bottom: 40px"
+            ref="formOrder"
+            :model="formOrder"
+            label-width="120px"
+          >
+            <el-form-item label="Full Name">
+              <el-input
+                placeholder="Please input"
+                v-model="formOrder.fullname"
+                :disabled="true"
+              >
+              </el-input>
+            </el-form-item>
+            <el-form-item label="Username">
+              <el-input
+                placeholder="Please input"
+                v-model="formOrder.username"
+                :disabled="true"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="Email">
+              <el-input
+                placeholder="Please input"
+                v-model="formOrder.email"
+                :disabled="true"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="Phone">
+              <el-input
+                placeholder="Please input"
+                v-model="formOrder.phone"
+                :disabled="true"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+
+          <div
+            style="
+              font-size: 25px;
+              margin: 15px 0;
+              border-top: 2px solid #e5e5e5;
+              padding-top: 25px;
+              font-weight: 700;
+            "
+          >
+            2. Addresses
+          </div>
+          <el-form
+            style="margin-bottom: 50px"
+            ref="formOrder"
+            :rules="rules"
+            :model="formOrder"
+            label-width="120px"
+          >
+            <el-form-item label="Enter Address" prop="address">
+              <el-input id="auto_search" v-model="formOrder.address"></el-input>
+            </el-form-item>
+          </el-form>
+
+          <div id="map"></div>
+          <!-- <div
+            style="
+              font-size: 25px;
+              margin: 15px 0;
+              border-top: 2px solid #e5e5e5;
+              padding-top: 25px;
+              font-weight: 700;
+            "
+          >
+            3. Select time
+          </div> -->
+
+          <!-- <span style="margin-right: 20px">Promise Time </span> -->
+          <!-- <el-time-select
+            v-model="time"
+            :picker-options="{
+              start: '9:00',
+              step: '1:00',
+              end: '22:00',
+              minTime: date,
+            }"
+            placeholder="Select time"
+          >
+          </el-time-select> -->
+
+          <div>
+            <el-button
+              @click="checkOut('formOrder')"
+              type="success"
+              style="margin: 20px 0"
+              >Check Out</el-button
             >
-            </el-input>
-          </el-form-item>
-          <el-form-item label="Username">
-            <el-input
-              placeholder="Please input"
-              v-model="formOrder.username"
-              :disabled="true"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="Email">
-            <el-input
-              placeholder="Please input"
-              v-model="formOrder.email"
-              :disabled="true"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="Phone">
-            <el-input
-              placeholder="Please input"
-              v-model="formOrder.phone"
-              :disabled="true"
-            ></el-input>
-          </el-form-item>
-        </el-form>
-
-        <div
-          style="
-            font-size: 25px;
-            margin: 15px 0;
-            border-top: 2px solid #e5e5e5;
-            padding-top: 25px;
-            font-weight: 700;
-          "
-        >
-          2. Addresses
-        </div>
-        <el-form
-          style="margin-bottom: 50px"
-          ref="formOrder"
-          :rules="rules"
-          :model="formOrder"
-          label-width="120px"
-        >
-          <el-form-item label="Enter Address" prop="address">
-            <el-input id="auto_search" v-model="formOrder.address"></el-input>
-          </el-form-item>
-        </el-form>
-
-        <div id="map"></div>
-        <div
-          style="
-            font-size: 25px;
-            margin: 15px 0;
-            border-top: 2px solid #e5e5e5;
-            padding-top: 25px;
-            font-weight: 700;
-          "
-        >
-          3. Select time
-        </div>
-        <span style="margin-right: 20px">Promise Time </span>
-        <el-time-select
-          v-model="time"
-          :picker-options="{
-            start: '9:00',
-            step: '1:00',
-            end: '22:00',
-            minTime: date
-          }"
-          placeholder="Select time">
-        </el-time-select>
-        
-        <div>
-          <el-button
-          @click="checkOut('formOrder')"
-          type="success"
-          style="margin: 20px 0"
-          >Check Out</el-button
-        >
-        </div>
-        
+          </div>
         </div>
       </el-col>
-
       <el-col :lg="9" :xs="24">
         <div class="order-col">
           <div class="total">
@@ -129,6 +122,42 @@
             <div class="sum">
               <div>TOTAL</div>
               <div>${{ ((subTotal * 105) / 100).toFixed(2) }}</div>
+            </div>
+
+            <div
+              style="
+                font-size: 25px;
+                margin: 15px 0;
+                padding-top: 25px;
+                font-weight: 700;
+                text-align: left;
+              "
+            >
+              3. Payment
+            </div>
+            <div class="payment-method">
+              <span @click="choosePaymentMethod(0)"
+                ><img
+                  style="width: 100%; cursor: pointer"
+                  v-if="paymentMethod === 0"
+                  src="@/assets/chosen-cash.png"
+                /><img
+                  v-else
+                  style="width: 100%; cursor: pointer"
+                  src="@/assets/cash-payment.png"
+                />
+              </span>
+              <span @click="choosePaymentMethod(1)"
+                ><img
+                  style="width: 100%; cursor: pointer"
+                  v-if="paymentMethod === 1"
+                  src="@/assets/chosen-momo.png"
+                /><img
+                  v-else
+                  style="width: 100%; cursor: pointer"
+                  src="@/assets/momo-payment.png"
+                />
+              </span>
             </div>
 
             <div class="icon-bg">
@@ -165,26 +194,27 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   data() {
-    var checkAddress = (rule, value, callback)=>{
+    var checkAddress = (rule, value, callback) => {
       if (!value) {
-        this.alertErr({message: "Please input the address"})
-        return callback(new Error('Please input the address'));
+        this.alertErr({ message: "Please input the address" });
+        return callback(new Error("Please input the address"));
       }
       setTimeout(() => {
-          if (!this.formOrder.location.lat) {
-            this.alertErr({message: "Please select the address by google map"})
-            callback(new Error('Please select address by google map'));
-          } else if(!this.checkProvince) {
-            this.alertErr({message: "Order address must be in Ho Chi Minh city area!"})
-          }else if(this.formOrder.total == 0) {
-            this.alertErr({message: "Order is empty, please check again!"})
-          } 
-          else {
-            callback()
-          }
+        if (!this.formOrder.location.lat) {
+          this.alertErr({ message: "Please select the address by google map" });
+          callback(new Error("Please select address by google map"));
+        } else if (!this.checkProvince) {
+          this.alertErr({
+            message: "Order address must be in Ho Chi Minh city area!",
+          });
+        } else if (this.formOrder.total == 0) {
+          this.alertErr({ message: "Order is empty, please check again!" });
+        } else {
+          callback();
+        }
       }, 1000);
     };
     return {
@@ -203,12 +233,13 @@ export default {
         status: "New",
         date: "",
       },
-      time: '',
+      time: "",
       rules: {
-        address: [{validator: checkAddress, trigger: "blur"}]
+        address: [{ validator: checkAddress, trigger: "blur" }],
       },
-      checkProvince: '',
+      checkProvince: "",
       center: { lat: 10.7719937, lng: 106.7057951 },
+      paymentMethod: 0,
     };
   },
 
@@ -225,19 +256,18 @@ export default {
     customer() {
       return this.$store.state.customer;
     },
-    date(){
+    date() {
       let d = new Date();
-      return String(d.getHours())+':00'
-    }
-
+      return String(d.getHours()) + ":00";
+    },
   },
 
   mounted() {
-    setInterval(async()=> {
+    setInterval(async () => {
       await axios.get("http://localhost:5000/user-list").then((res) => {
-        console.log(res)
-      })
-    }, 5000)
+        console.log(res);
+      });
+    }, 5000);
     this.formOrder.order = this.$store.state.cart;
     // this.formOrder.order.map(o => delete o.img)
     this.formOrder.total = Math.round(this.subTotal * 105) / 100;
@@ -265,13 +295,18 @@ export default {
 
     autoComplete.addListener("place_changed", () => {
       let place = autoComplete.getPlace();
-      let {address_components} = place
-      this.checkProvince = address_components.map(x => x.long_name).includes("Thành phố Hồ Chí Minh")
-  
-      let {formatted_address} = place
-      let {name} = place
-      
-      this.formOrder.address = (formatted_address.substring(0, name.length) == name) ? formatted_address : name + ", " + formatted_address;
+      let { address_components } = place;
+      this.checkProvince = address_components
+        .map((x) => x.long_name)
+        .includes("Thành phố Hồ Chí Minh");
+
+      let { formatted_address } = place;
+      let { name } = place;
+
+      this.formOrder.address =
+        formatted_address.substring(0, name.length) == name
+          ? formatted_address
+          : name + ", " + formatted_address;
 
       this.formOrder.location.lat = place.geometry.location.lat();
       this.formOrder.location.lng = place.geometry.location.lng();
@@ -293,26 +328,34 @@ export default {
         map.setCenter(place.geometry.location),
         marker.setPosition(place.geometry.location)
       );
-      
     });
   },
 
   methods: {
+    choosePaymentMethod(idx) {
+      this.paymentMethod = idx;
+    },
     async checkOut(formName) {
-      this.$refs[formName].validate(async (valid ) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           let d = new Date();
           this.formOrder.date = d.toLocaleString();
-          await this.$store.dispatch('checkOut', {formOrder: this.formOrder})
-          .then(() => {
-              this.alertSuccess();
-              this.$router.push("/");
+          await this.$store
+            .dispatch("checkOut", { formOrder: this.formOrder })
+            .then(() => {
+              if (this.paymentMethod === 1) {
+                window.location.href =
+                  "https://me.momo.vn/x3IWu4UkC2C4sqtbC7t9";
+              } else {
+                this.alertSuccess();
+                this.$router.push("/");
+              }
             })
-          .catch((err) => this.alertErr(err.response.data));
+            .catch((err) => this.alertErr(err.response.data));
         } else {
           return false;
         }
-      })  
+      });
     },
     alertErr(err) {
       this.$message({
@@ -333,7 +376,6 @@ export default {
 </script>
 
 <style>
-
 .order {
   max-width: 1250px;
   margin: 0 auto;
@@ -347,10 +389,10 @@ export default {
 
 <style scoped>
 @media (max-width: 480px) {
-.order-col {
-  padding: 0 !important;
-  border-right: none !important;
-}
+  .order-col {
+    padding: 0 !important;
+    border-right: none !important;
+  }
 }
 .order-col {
   padding: 55px;
@@ -388,5 +430,11 @@ export default {
 }
 .icon {
   margin-right: 10px;
+}
+.payment-method {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 30px 0;
 }
 </style>
