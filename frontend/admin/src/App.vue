@@ -5,6 +5,22 @@
   </div>
 </template>
 
+<script>
+import io from 'socket.io-client'
+const socket = io("http://localhost:5000")
+console.log(socket)
+
+
+
+export default {
+  mounted() {
+    socket.on('Server-send-data', (data) => {
+      console.log(data)
+      this.$store.dispatch('fetchOrders')
+    })
+  }
+}
+</script>
 <style>
 body {
   margin: 0;

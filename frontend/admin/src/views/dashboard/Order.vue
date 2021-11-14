@@ -32,17 +32,20 @@
         </div>
         <div class="table-content">
           <div class="table-head">
-            <el-row :gutter="20">
+            <el-row style="font-size: 13px" :gutter="20">
               <!-- <el-col :span="1"><div>STT</div></el-col> -->
               <el-col :span="4"><div>Code</div></el-col>
               <el-col :span="4"><div>Name</div></el-col>
               <el-col :span="2"><div>Quantity</div></el-col>
               <el-col :span="5"><div>Address</div></el-col>
-              <el-col :span="3"
+              <el-col :span="2"
                 ><div>Created At</div
               ></el-col>
-              <el-col :span="3"><div>Status</div></el-col>
-              <el-col :span="3"
+              <el-col :span="2"
+                ><div>PromiseTime</div
+              ></el-col>
+              <el-col :span="2"><div>Status</div></el-col>
+              <el-col :span="2"
                 ><div style="text-align: right">Actions</div></el-col
               >
             </el-row>
@@ -75,24 +78,27 @@
                   {{ order.address }}
                 </div>
               </el-col>
-              <el-col :span="3"
-                ><div>{{ order.date }}</div></el-col
+              <el-col :span="2"
+                ><div style="font-size: 12px">{{ order.date }}</div></el-col
               >
-              <el-col :span="3" style="text-align: center">
-                <el-tag v-if="order.status === 'Completed'" type="success">{{
+              <el-col :span="2"
+                ><div style="font-size: 12px">{{ order.promiseTime }}</div></el-col
+              >
+              <el-col :span="2" style="text-align: center">
+                <el-tag style="font-size: 10px" v-if="order.status === 'Completed'" type="success">{{
                   order.status
                 }}</el-tag>
-                <el-tag v-if="order.status === 'New'" type="primary">{{
+                <el-tag style="font-size: 10px" v-if="order.status === 'New'" type="primary">{{
                   order.status
                 }}</el-tag>
-                <el-tag v-if="order.status === 'Progressing'" type="warning">{{
+                <el-tag style="font-size: 10px" v-if="order.status === 'Progressing'" type="warning">{{
                   order.status
                 }}</el-tag>
-                <el-tag v-if="order.status === 'Delivering'" type="info">{{
+                <el-tag style="font-size: 10px" v-if="order.status === 'Delivering'" type="info">{{
                   order.status
                 }}</el-tag>
               </el-col>
-              <el-col :span="3">
+              <el-col :span="2">
                 <div class="action">
                   <div
                     :style="{
@@ -135,6 +141,7 @@
 
 
 <script>
+
 export default {
   data() {
     return {
@@ -174,6 +181,11 @@ export default {
       return this.$store.state.orders
     },
   },
+  // watch: {
+  //   '$store.state.orders' : function() {
+  //     console.log(this.$store.state.orders)
+  //   }
+  // }
 };
 </script>
 

@@ -6,6 +6,9 @@ const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
 const { ObjectID, ObjectId, mongo } = require("mongodb");
 const {PythonShell} = require ('python-shell');
+var EventEmitter = require("events").EventEmitter;
+var messageBus = new EventEmitter();
+messageBus.setMaxListeners(20);
 // const upload = require("../middleware/upload")
 const Grid = require('gridfs-stream')
 
@@ -19,7 +22,6 @@ authenticateToken = (req, res, next) => {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET , (err, user) => {
     console.log(err)
-
     if (err) return res.sendStatus(403)
 
     req.user = user
@@ -122,6 +124,7 @@ recordRoutes.post('/login', (req, res, next) => {
 })
 
 recordRoutes.get('/order', async function (req, res) {
+  
   const dbConnect = dbo.getDb();
   dbConnect
     .collection("order")
@@ -133,7 +136,6 @@ recordRoutes.get('/order', async function (req, res) {
         res.json(result);
       }
     });
-
 });
 
 recordRoutes.get('/user-list', async (req, res) => {
@@ -173,6 +175,7 @@ recordRoutes.put("/order", async (req, res, next) => {
         .collection("order")
         .insertOne(newOrder, (err, result) => {
             res.json(result)
+            req.io.sockets.emit('Server-send-data', 'Customer order')
         })
   } catch{
         res.status(500).send();
@@ -360,6 +363,35 @@ recordRoutes.put('/api.updateProduct/:id', async (req, res, next) => {
         .collection("product")
         .update({_id: ObjectId(id)}, {$set: updateProduct}, (err, doc) => {
           res.json(doc)
+        })
+  } catch{
+        res.status(500).send();
+  }
+})
+
+
+recordRoutes.get('/api.checkVehicleAvailable', async (req, res, next) => {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("vehicle")
+    .find({"status": "available"})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+})
+
+recordRoutes.delete('/api.deleteOrderById/:id', async function (req, res, next) {
+  try{
+    const {id} = req.params
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("order")
+        .deleteOne({_id: ObjectId(id)}, (err, result) => {
+          res.json(result)
         })
   } catch{
         res.status(500).send();

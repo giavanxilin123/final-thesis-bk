@@ -74,6 +74,7 @@
 
 <script>
 // import axios from 'axios'
+
 export default {
     data() {
       return {
@@ -153,7 +154,6 @@ export default {
             return this.$store.state.route_legs
         }
     },
-
     async mounted() {
         await this.$store.dispatch('fetchOrders');
         this.map = new window.google.maps.Map(document.getElementById('map'), {

@@ -11,7 +11,8 @@ export default new Vuex.Store({
     customer: customer || {}, 
     products: [],
     cart:  [],
-    orderHistory: []
+    orderHistory: [],
+    checkVehicleAvailable: ''
   },
   mutations,
   actions

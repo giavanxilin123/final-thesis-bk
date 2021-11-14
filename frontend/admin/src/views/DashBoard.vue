@@ -86,7 +86,7 @@ export default {
           return this.$store.state.orders;
       },
       countNewOrder(){
-        return this.orderList.filter(x => x.status == "New").length
+        return this.orderList.filter(x => x.status == "Progressing").length
       },
       
     },

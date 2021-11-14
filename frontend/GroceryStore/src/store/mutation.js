@@ -22,4 +22,9 @@ export const mutations = {
   LOG_OUT(state) {
     state.customer = {};
   },
+  CHECK_VEHICLE_AVAILABLE(state, payload){
+    state.checkVehicleAvailable = payload
+  }
 };
+
+

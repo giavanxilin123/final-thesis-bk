@@ -67,7 +67,7 @@
           </el-form>
 
           <div id="map"></div>
-          <!-- <div
+          <div
             style="
               font-size: 25px;
               margin: 15px 0;
@@ -77,20 +77,20 @@
             "
           >
             3. Select time
-          </div> -->
+          </div>
 
-          <!-- <span style="margin-right: 20px">Promise Time </span> -->
-          <!-- <el-time-select
-            v-model="time"
+          <span style="margin-right: 20px">Promise Time</span>
+          <el-time-select
+            v-model="formOrder.promiseTime"
             :picker-options="{
               start: '9:00',
-              step: '1:00',
+              step: '0:15',
               end: '22:00',
-              minTime: date,
+              minTime: date
             }"
             placeholder="Select time"
           >
-          </el-time-select> -->
+          </el-time-select>
 
           <div>
             <el-button
@@ -121,7 +121,7 @@
             </div>
             <div class="sum">
               <div>TOTAL</div>
-              <div>${{ ((subTotal * 105) / 100).toFixed(2) }}</div>
+              <div>${{ ((subTotal * 105) / 100).toFixed(2)}}</div>
             </div>
 
             <div
@@ -133,7 +133,7 @@
                 text-align: left;
               "
             >
-              3. Payment
+              4. Payment methods
             </div>
             <div class="payment-method">
               <span @click="choosePaymentMethod(0)"
@@ -194,7 +194,7 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 export default {
   data() {
     var checkAddress = (rule, value, callback) => {
@@ -230,10 +230,12 @@ export default {
           lat: "",
           lng: "",
         },
-        status: "New",
+        status: "Progressing",
         date: "",
+        promiseTime: "",
       },
-      time: "",
+      t_denta_hour: 0,
+      t_denta_minute: 0,
       rules: {
         address: [{ validator: checkAddress, trigger: "blur" }],
       },
@@ -243,33 +245,14 @@ export default {
     };
   },
 
-  computed: {
-    cart() {
-      return this.$store.state.cart;
-    },
-    subTotal() {
-      return this.$store.state.cart
-        .map((c) => c.price * c.num)
-        .reduce((a, b) => a + b, 0)
-        .toFixed(2);
-    },
-    customer() {
-      return this.$store.state.customer;
-    },
-    date() {
-      let d = new Date();
-      return String(d.getHours()) + ":00";
-    },
-  },
-
-  mounted() {
-    setInterval(async () => {
-      await axios.get("http://localhost:5000/user-list").then((res) => {
-        console.log(res);
-      });
-    }, 5000);
+   async mounted() {
+    await this.$store.dispatch('checkVehicleAvailable')
+    // setInterval(async () => {
+    //   await axios.get("http://localhost:5000/user-list").then((res) => {
+    //     console.log(res);
+    //   });
+    // }, 5000);
     this.formOrder.order = this.$store.state.cart;
-    // this.formOrder.order.map(o => delete o.img)
     this.formOrder.total = Math.round(this.subTotal * 105) / 100;
     this.formOrder.username = this.customer.username;
     this.formOrder.fullname = this.customer.fullname;
@@ -288,7 +271,6 @@ export default {
     });
 
     let directionsService = new window.google.maps.DirectionsService();
-
     let autoComplete = new window.google.maps.places.Autocomplete(
       document.getElementById("auto_search")
     );
@@ -324,11 +306,58 @@ export default {
               map: map,
             });
           }
+          // t0 = time to run engine + time to prepare order
+          let t0 = 10; 
+          let duration_delivery = Math.round(res.routes[0].legs[0].duration.value / 60)
+          console.log(duration_delivery)
+          let t_denta = duration_delivery + t0
+          this.t_denta_hour = Math.floor(t_denta / 60)
+          this.t_denta_minute = t_denta % 60  
+          console.log(this.t_denta_hour, this.t_denta_minute)
         },
         map.setCenter(place.geometry.location),
         marker.setPosition(place.geometry.location)
       );
     });
+    
+  },
+
+  computed: {
+    cart() {
+      return this.$store.state.cart;
+    },
+    subTotal() {
+      return this.$store.state.cart
+        .map((c) => c.price * c.num)
+        .reduce((a, b) => a + b, 0)
+        .toFixed(2);
+    },
+    customer() {
+      return this.$store.state.customer;
+    },
+    date() {
+      let d = new Date();
+      let d_hour = d.getHours() + this.t_denta_hour
+      let d_minute = d.getMinutes() + this.t_denta_minute
+      if (d_minute >= 60){
+        d_hour += 1;
+        d_minute = d_minute % 60
+      }
+      if(!this.formOrder.address){
+        return '24:00'
+      }
+      else if (this.checkVehicleAvailable != 0){
+        return String(d_hour) + ":" + String(d_minute)
+      } 
+        return String(d_hour + this.timeMinBackToDepot / 60) + ":" + String(d_minute)
+    },
+    checkVehicleAvailable() {
+      return this.$store.state.checkVehicleAvailable
+    },
+    timeMinBackToDepot() {
+      // suppose t = 1; must to calculate
+      return 60;
+    }
   },
 
   methods: {
@@ -438,3 +467,4 @@ export default {
   padding: 30px 0;
 }
 </style>
+
