@@ -24,6 +24,10 @@ export const mutations = {
   },
   CHECK_VEHICLE_AVAILABLE(state, payload){
     state.checkVehicleAvailable = payload
+  },
+  REMOVE_CART(state) {
+    console.log('alo')
+    state.cart = []
   }
 };
 

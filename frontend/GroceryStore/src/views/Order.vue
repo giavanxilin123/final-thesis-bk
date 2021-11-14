@@ -364,14 +364,17 @@ export default {
     choosePaymentMethod(idx) {
       this.paymentMethod = idx;
     },
+
     async checkOut(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           let d = new Date();
           this.formOrder.date = d.toLocaleString();
-          await this.$store
-            .dispatch("checkOut", { formOrder: this.formOrder })
-            .then(() => {
+          await this.$store.dispatch("checkOut", { formOrder: this.formOrder })
+          .then(() => {
+            this.$store.dispatch("removeCart")
+          })
+          .then(() => {
               if (this.paymentMethod === 1) {
                 window.location.href =
                   "https://me.momo.vn/x3IWu4UkC2C4sqtbC7t9";
@@ -379,8 +382,8 @@ export default {
                 this.alertSuccess();
                 this.$router.push("/");
               }
-            })
-            .catch((err) => this.alertErr(err.response.data));
+          })
+          .catch((err) => this.alertErr(err.response.data));
         } else {
           return false;
         }

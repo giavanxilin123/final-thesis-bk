@@ -115,5 +115,8 @@ export const actions = {
           reject(err);
         });
     });
-  }
+  },
+  removeCart(ctx) {
+    ctx.commit("REMOVE_CART");
+  },
 };
