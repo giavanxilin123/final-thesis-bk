@@ -166,21 +166,6 @@ recordRoutes.route("/customer").get(async function (req, res) {
     });
 });
 
-recordRoutes.put("/order", async (req, res, next) => {
-  try{
-    var newOrder = req.body.formOrder
-    
-    const dbConnect = dbo.getDb();
-        dbConnect
-        .collection("order")
-        .insertOne(newOrder, (err, result) => {
-            res.json(result)
-            req.io.sockets.emit('Server-send-data', 'Customer order')
-        })
-  } catch{
-        res.status(500).send();
-  }
-});
 
 recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
   try{
@@ -198,15 +183,68 @@ recordRoutes.put("/updateStatus/:id", async (req, res, next) => {
   }
 });
 
+recordRoutes.put("/api.changeProgressingStatus/", async (req, res, next) => {
+  try{
+    let {id_list} = req.body
+    let object_id_list = id_list.map(i => ObjectId(i))
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("order")
+        .updateMany({ "_id": { "$in": object_id_list }}, {$set: {"status": "Progressing"}}, (err, doc) => {
+          console.log(doc)
+          res.json(doc)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
+recordRoutes.put("/api.changeDeliveringStatus/", async (req, res, next) => {
+  try{
+    let {id_list} = req.body
+    let object_id_list = id_list.map(i => ObjectId(i))
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("order")
+        .updateMany({ "_id": { "$in": object_id_list }}, {$set: {"status": "Delivering"}}, (err, doc) => {
+          console.log(doc)
+          res.json(doc)
+        })
+  } catch{
+        console.log("hi")
+        res.status(500).send();
+  }
+});
+
+recordRoutes.put("/api.changeCompletedStatus/", async (req, res, next) => {
+  try{
+    let {id_list} = req.body
+    let object_id_list = id_list.map(i => ObjectId(i))
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("order")
+        .updateMany({ "_id": { "$in": object_id_list }}, {$set: {"status": "Completed"}}, (err, doc) => {
+          console.log(doc)
+          res.json(doc)
+        })
+  } catch{
+        console.log("hi")
+        res.status(500).send();
+  }
+});
+
 recordRoutes.get("/solving-route", async (req, res, next) => {
   await PythonShell.run('optimize_route.py', null,  function (err, result) {
-    // if (err) throw err;
+    if (err) console.log(err)
     console.log(result)
-    console.log(err)
+    let drop = result.shift()
+    drop_nodes = drop.split(':')[1].split(' ').map(x => parseInt(x))
+    drop_nodes.shift()
+    // res.send(result)
     doc = result.map(x => x.split(',').map(y => parseInt(y))).filter(x => x.length != 2)
     doc.map(x => x.pop())
     doc.map(x => x.shift())
-    res.send({route_legs: doc})
+    res.send({route_legs: doc, drop_nodes: drop_nodes})
   });
 
 });
@@ -396,6 +434,83 @@ recordRoutes.delete('/api.deleteOrderById/:id', async function (req, res, next) 
   } catch{
         res.status(500).send();
   }
+})
+
+recordRoutes.put("/order", async (req, res, next) => {
+  try{
+    var newOrder = req.body.formOrder
+    const dbConnect = dbo.getDb();
+        dbConnect
+        .collection("order")
+        .insertOne(newOrder, (err, result) => {
+            res.json(result);
+            req.io.sockets.emit('Server-send-data', newOrder)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
+recordRoutes.put('/api.vehicleToDelivery/:id', async (req, res, next) => {
+  try{
+    const {time}= req.body
+    const {id} = req.params
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("vehicle")
+        .update({_id: ObjectId(id)}, {$set: {timeBackToDepot: time, status: "unavailable"}},(err, doc) => {
+          res.json(doc)
+          req.io.sockets.emit('Server-update-time-delivery', time)
+        })
+  } catch{
+        res.status(500).send();
+  }
+})
+
+recordRoutes.put('/api.vehicleBackToDepot', async (req, res, next) => {
+  try{
+    const {time} = req.body
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("vehicle")
+        .updateMany({timeBackToDepot: time}, {$set: {timeBackToDepot: 0, status: "available"}},(err, doc) => {
+          res.json(doc)
+        })
+  } catch{
+        res.status(500).send();
+  }
+})
+
+recordRoutes.get('/api.timeMinToDepot', async (req, res, next) => {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("vehicle")
+    .find({"status": "unavailable"})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error send time min to depot!");
+     } else {
+       if (result.length != 0){
+         res.json(Math.min(...result.map(x=> x.timeBackToDepot)));
+       } else {
+          res.json(0)
+       }
+      }
+    });
+})
+
+recordRoutes.get('/api.vehicle', async (req, res, next) => {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("vehicle")
+    .find({})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching vehicle!");
+     } else {
+        res.json(result);
+      }
+    });
 })
 
 module.exports = recordRoutes;

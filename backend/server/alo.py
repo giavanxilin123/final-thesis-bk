@@ -1,69 +1,31 @@
-from pymongo import MongoClient
-import pymongo
-import googlemaps
-from functools import reduce
-import urllib.parse
-from pprint import pprint
+"""Capacited Vehicles Routing Problem (CVRP)."""
+
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-API_KEY = 'AIzaSyAkK1Nj9HWtb4R0crJISga3j9hq2aBC8lQ'
-map_client = googlemaps.Client(API_KEY)
-# CONNECTION_STRING = "mongodb://localhost:27017"
-username = urllib.parse.quote_plus('admin')
-password = urllib.parse.quote_plus("Thientai1997@")
-CONNECTION_STRING = "mongodb+srv://{}:{}@cluster0.hofjb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority".format(username, password)
-client = pymongo.MongoClient(CONNECTION_STRING)
-dbs = client['groceryStore']
-collection = dbs['order']
-
-
-order_list = collection.find()
-order_delivery_list = list(filter(lambda x: x['status'] == 'Progressing', order_list))
-order_delivery_list.reverse()
-
-order_detail = list(map(lambda x: x['order'], order_delivery_list))
-demand_list = list(map(lambda o: reduce(lambda a,b: a+b, list(map(lambda x: x['num'], o))) , order_detail))
-demand_list.insert(0,0)
-
-location_list = list(map(lambda x: x['location'], order_delivery_list))
-location_tuple = list(map(lambda x: (x['lat'],x['lng']), location_list))
-
-# print(demand_list)
-depot_position = (10.7719937, 106.7057951)
-location_tuple.insert(0,depot_position)
-
-
-# vehicle
-vehicle_collection = dbs['vehicle']
-vehicle_list = vehicle_collection.find()
-vehicle_available = list(filter(lambda x: x['status'] == 'available', vehicle_list))
-API_KEY = 'AIzaSyAkK1Nj9HWtb4R0crJISga3j9hq2aBC8lQ'
-map_client = googlemaps.Client(API_KEY)
-
-
-def matrix_distance(x, lst):
-    f = []
-    for i in range(0, len(lst)):
-        directions_result = map_client.directions(origin=x, destination=lst[i], mode="driving")
-        f.append(directions_result[0]['legs'][0]['distance']['value'])
-    return f
 
 def create_data_model():
     """Stores the data for the problem."""
-    distance_matrix= list(map(lambda x: matrix_distance(x, location_tuple), location_tuple))
     data = {}
-    data['distance_matrix'] = distance_matrix
-   
-    data['demands'] = demand_list
-    data['vehicle_capacities'] = list(map(lambda x: x['capacity'], vehicle_available))
-    data['num_vehicles'] = len(vehicle_available)
+    data['distance_matrix'] = [
+        [0, 8145, 7192, 6467, 3557, 4578, 2165, 6346], 
+        [8180, 0, 14422, 7807, 5405, 8434, 9981, 6731], 
+        [7386, 16315, 0, 7795, 11178, 6845, 7922, 12616], 
+        [6280, 9396, 8858, 0, 5282, 2978, 8142, 9209], 
+        [3330, 5210, 9718, 5759, 0, 5604, 4493, 4569], 
+        [5241, 11517, 7345, 2997, 6380, 0, 7203, 10307], 
+        [2528, 9430, 7771, 8460, 4077, 6570, 0, 6840], 
+        [6875, 7151, 12602, 9690, 4358, 9535, 6839, 0]]
+    data['demands'] = [0, 3,5,6,5,9,8,7]
+    data['vehicle_capacities'] = [10,10,10,10]
+    data['num_vehicles'] = 4
     data['depot'] = 0
     return data
 
+
 def print_solution(data, manager, routing, solution):
     """Prints solution on console."""
-    # print(f'Objective: {solution.ObjectiveValue()}')
+    print(f'Objective: {solution.ObjectiveValue()}')
     dropped_nodes = 'Dropped nodes:'
     for node in range(routing.Size()):
         if routing.IsStart(node) or routing.IsEnd(node):
@@ -71,7 +33,6 @@ def print_solution(data, manager, routing, solution):
         if solution.Value(routing.NextVar(node)) == node:
             dropped_nodes += ' {}'.format(manager.IndexToNode(node))
     print(dropped_nodes)
-
     total_distance = 0
     total_load = 0
     for vehicle_id in range(data['num_vehicles']):
@@ -79,12 +40,10 @@ def print_solution(data, manager, routing, solution):
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
         route_distance = 0
         route_load = 0
-        route_forEach_vehicle = ""
         while not routing.IsEnd(index):
             node_index = manager.IndexToNode(index)
             route_load += data['demands'][node_index]
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
-            route_forEach_vehicle += '{0},'.format(node_index)
             previous_index = index
             index = solution.Value(routing.NextVar(index))
             route_distance += routing.GetArcCostForVehicle(
@@ -93,13 +52,12 @@ def print_solution(data, manager, routing, solution):
                                                  route_load)
         plan_output += 'Distance of the route: {}m\n'.format(route_distance)
         plan_output += 'Load of the route: {}\n'.format(route_load)
-        # print(plan_output)
+        print(plan_output)
         total_distance += route_distance
         total_load += route_load
-        print(route_forEach_vehicle+'0')
-    # print('Total distance of all routes: {}m'.format(total_distance))
-    # print('Total load of all routes: {}'.format(total_load))
-    # print(array_routes)
+    print('Total distance of all routes: {}m'.format(total_distance))
+    print('Total load of all routes: {}'.format(total_load))
+
 
 def main():
     """Solve the CVRP problem."""
@@ -153,7 +111,7 @@ def main():
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
-    search_parameters.time_limit.FromSeconds(10)
+    search_parameters.time_limit.FromSeconds(1)
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
@@ -165,4 +123,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
