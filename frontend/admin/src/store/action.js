@@ -137,5 +137,18 @@ export const actions = {
           reject(err);
         });
     });
-  }
+  },
+  checkVehicleAvailable(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.checkVehicleAvailable`, payload)
+        .then((res) => {
+          ctx.commit('CHECK_VEHICLE_AVAILABLE', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
 };

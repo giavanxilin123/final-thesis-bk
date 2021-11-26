@@ -46,7 +46,7 @@
                         <div style="font-size: 18px; padding: 20px">Google Map </div>
                         
                     </div>
-                    <div id="map"></div>
+                    <div id="map1"></div>
                     <div style="margin: 10px 0" @click="optimizeRoute"  class="route-step">
                             <el-button v-loading.fullscreen.lock="fullscreenLoading" type="success">Optimize Route</el-button>
                     </div>
@@ -74,7 +74,6 @@
 
 <script>
 // import axios from 'axios'
-
 export default {
     data() {
       return {
@@ -93,8 +92,7 @@ export default {
         fullscreenLoading: false,
         map: '',
         marker: '',
-        color: ['blue', '#f44336', '#67c23a', '#9c27b0', 'black'],
-        legs:[]
+        color: ['blue', 'red', 'green', '#6600A1', 'black'],
       }
     },
     
@@ -107,6 +105,7 @@ export default {
                 background: 'rgba(0, 0, 0, 0.7)'
             });
             await this.$store.dispatch('optimizeRoute')
+            
             .then(() => {
                 let legs = this.route_legs;
                 let location_map = legs.map(x => x.map(y => { return {location : this.orderProgressingList[y-1]['location']}}))
@@ -120,7 +119,7 @@ export default {
                         waypoints: location_map[step],
                         travelMode: 'DRIVING'
                     },
-                    (res, status) => {
+                    async (res, status) => {
                         if (status == 'OK'){
                             new window.google.maps.DirectionsRenderer({
                                 panel: document.getElementsByClassName("panel")[step],
@@ -130,17 +129,21 @@ export default {
                                     strokeColor: this.color[step],
                                     strokeWeight: '3',
                                     strokeOpacity: '0.5'
-                                }}
-                            )
+                                }
+                                }
+                            ) 
                             let distance = res.routes[0].legs.map(x=>x.distance.value).reduce((a,b) => a+b, 0)
+                            // let time = res.routes[0].legs.map(x=>x.duration.value).reduce((a,b) => a+b, 0)
+                            // let d = new Date()
+                            // console.log(Math.ceil(time /60)+ d.getHours()*60 + d.getMinutes())
+                            // await axios.put(`http://localhost:5000/api.vehicleToDelivery/${this.checkVehicleAvailable[step]._id}`, {time: Math.ceil(time /60)+ d.getHours()*60 + d.getMinutes()})
                             totalDistance += distance;
+                            
                             document.getElementById('total').innerHTML= `Total distance is ${totalDistance} m`
-                            document.getElementsByClassName("distance")[step].innerHTML= `Quãng đường Vehicle ${num} đi là: ${distance} m`
+                            document.getElementsByClassName("distance")[step].innerHTML= `Quãng đường Vehicle ${num} đi là: ${distance} m`  
                         }
                     },)
                 }
-                
-                
                 loading.close()
             })
         },
@@ -152,13 +155,19 @@ export default {
         },
         route_legs() {
             return this.$store.state.route_legs
-        }
+        },
+        checkVehicleAvailable() {
+            return this.$store.state.checkVehicleAvailable
+        },
     },
     async mounted() {
+        await this.$store.dispatch('checkVehicleAvailable')
+        
         await this.$store.dispatch('fetchOrders');
-        this.map = new window.google.maps.Map(document.getElementById('map'), {
+        this.map = new window.google.maps.Map(document.getElementById('map1'), {
             center: { lat: this.center.lat, lng: this.center.lng },
             zoom: 16,
+            mapTypeId: window.google.maps.MapTypeId.ROADMAP,
         });
 
         this.marker = new window.google.maps.Marker({
@@ -167,7 +176,6 @@ export default {
             animation:  window.google.maps.Animation.BOUNCE
         })
     }
-    
 }
 </script>
 
@@ -187,7 +195,7 @@ export default {
         box-sizing: border-box;
         overflow: auto;
     }
-    .optimize #map {
+    .optimize #map1 {
         height: 444px;
         margin: 10px;
     }
@@ -259,6 +267,7 @@ export default {
     }
    
 </style>
+
 <style>
     
 </style>

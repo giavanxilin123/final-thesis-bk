@@ -86,7 +86,7 @@
               start: '9:00',
               step: '0:15',
               end: '22:00',
-              minTime: date
+              minTime: date,
             }"
             placeholder="Select time"
           >
@@ -194,7 +194,9 @@
 </template>
 
 <script>
-// import axios from "axios";
+
+import axios from 'axios'
+
 export default {
   data() {
     var checkAddress = (rule, value, callback) => {
@@ -230,12 +232,14 @@ export default {
           lat: "",
           lng: "",
         },
-        status: "Progressing",
+        status: "New",
         date: "",
         promiseTime: "",
+        duration_delivery: ""
       },
       t_denta_hour: 0,
       t_denta_minute: 0,
+      timeMinBackToDepot: 0,
       rules: {
         address: [{ validator: checkAddress, trigger: "blur" }],
       },
@@ -246,6 +250,8 @@ export default {
   },
 
    async mounted() {
+    
+    //  check refresh can you socket
     await this.$store.dispatch('checkVehicleAvailable')
     // setInterval(async () => {
     //   await axios.get("http://localhost:5000/user-list").then((res) => {
@@ -299,21 +305,32 @@ export default {
           destination: place.geometry.location,
           travelMode: "DRIVING",
         },
-        (res, status) => {
+        async (res, status) => {
           if (status == "OK") {
             new window.google.maps.DirectionsRenderer({
               directions: res,
               map: map,
             });
           }
-          // t0 = time to run engine + time to prepare order
-          let t0 = 10; 
+          // t0 = time to run engine(2) + time to prepare order(15)
+          let t0 = 4; 
           let duration_delivery = Math.round(res.routes[0].legs[0].duration.value / 60)
           console.log(duration_delivery)
           let t_denta = duration_delivery + t0
+          this.formOrder.duration_delivery = duration_delivery;
           this.t_denta_hour = Math.floor(t_denta / 60)
           this.t_denta_minute = t_denta % 60  
           console.log(this.t_denta_hour, this.t_denta_minute)
+          if(this.checkVehicleAvailable.length == 0){
+             await axios.get('http://localhost:5000/api.timeMinToDepot')
+             .then(res => {
+              let d  = new Date();
+              console.log(res.data - d.getHours() * 60 - d.getMinutes())
+              this.timeMinBackToDepot = res.data - d.getHours() * 60 - d.getMinutes()
+            })
+          }
+         
+          
         },
         map.setCenter(place.geometry.location),
         marker.setPosition(place.geometry.location)
@@ -344,20 +361,17 @@ export default {
         d_minute = d_minute % 60
       }
       if(!this.formOrder.address){
-        return '24:00'
+        return '22:00'
       }
-      else if (this.checkVehicleAvailable != 0){
-        return String(d_hour) + ":" + String(d_minute)
-      } 
-        return String(d_hour + this.timeMinBackToDepot / 60) + ":" + String(d_minute)
+      // else if (this.checkVehicleAvailable.length != 0){
+      //   return String(d_hour) + ":" + String(d_minute)
+      // } 
+        return String(d_hour + Math.floor(this.timeMinBackToDepot / 60)) + ":" + String(d_minute + (this.timeMinBackToDepot % 60))
     },
     checkVehicleAvailable() {
       return this.$store.state.checkVehicleAvailable
     },
-    timeMinBackToDepot() {
-      // suppose t = 1; must to calculate
-      return 60;
-    }
+    
   },
 
   methods: {

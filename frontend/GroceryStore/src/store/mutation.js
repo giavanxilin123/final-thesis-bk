@@ -26,7 +26,6 @@ export const mutations = {
     state.checkVehicleAvailable = payload
   },
   REMOVE_CART(state) {
-    console.log('alo')
     state.cart = []
   }
 };

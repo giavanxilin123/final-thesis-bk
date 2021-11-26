@@ -15,7 +15,8 @@ export default new Vuex.Store({
     orders:  [],
     products: [],
     productById: {},
-    route_legs: {}
+    route_legs: {},
+    checkVehicleAvailable: ''
   },
   mutations,
   actions,

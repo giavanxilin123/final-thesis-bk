@@ -44,9 +44,10 @@
               <el-col :span="2"
                 ><div>PromiseTime</div
               ></el-col>
+              <el-col :span="2">Preparatory</el-col>
               <el-col :span="2"><div>Status</div></el-col>
-              <el-col :span="2"
-                ><div style="text-align: right">Actions</div></el-col
+              <el-col style="padding: 0 !important" :span="1"
+                ><div style="text-align: right;">Actions</div></el-col
               >
             </el-row>
           </div>
@@ -84,6 +85,9 @@
               <el-col :span="2"
                 ><div style="font-size: 12px">{{ order.promiseTime }}</div></el-col
               >
+              <el-col :span="2"
+                ><div style="font-size: 12px">{{ order.promiseTime }}</div></el-col
+              >
               <el-col :span="2" style="text-align: center">
                 <el-tag style="font-size: 10px" v-if="order.status === 'Completed'" type="success">{{
                   order.status
@@ -98,9 +102,9 @@
                   order.status
                 }}</el-tag>
               </el-col>
-              <el-col :span="2">
+              <el-col :span="1">
                 <div class="action">
-                  <div
+                  <!-- <div
                     :style="{
                       backgroundColor:
                         order.status == 'New' ? '#e6a23c' : '#409eff',
@@ -116,7 +120,7 @@
                       v-if="order.status == 'Progressing'"
                       class="el-icon-download"
                     ></i>
-                  </div>
+                  </div> -->
                   <div class="action-edit">
                     <i class="el-icon-s-order"></i>
                   </div>
@@ -265,11 +269,11 @@ export default {
 </style>
 
 <style scoped>
-.action {
+/* .action {
   display: flex;
   width: 100%;
   justify-content: flex-end;
-}
+} */
 .order-management .el-tag {
   width: 100%;
 }

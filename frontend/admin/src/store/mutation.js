@@ -19,7 +19,10 @@ export const mutations = {
   },
   ROUTE_LEGS(state, payload) {
     state.route_legs = payload
-  }
+  },
+  CHECK_VEHICLE_AVAILABLE(state, payload){
+    state.checkVehicleAvailable = payload
+  },
   // FETCH_ORDERS(state, payload) {
   //   state.orders = payload;
   // },
