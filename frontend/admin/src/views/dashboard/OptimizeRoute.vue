@@ -108,7 +108,11 @@ export default {
             
             .then(() => {
                 let legs = this.route_legs;
+                console.log(legs)
                 let location_map = legs.map(x => x.map(y => { return {location : this.orderProgressingList[y-1]['location']}}))
+                // let orderId_list = legs.map(x => x.map(y => { return {id: this.orderProgressingList[y-1]['_id']}}))
+                // console.log(id_list)
+                // console.log(location_map)
                 let totalDistance = 0;
                 for (const step in location_map){
                     let num = parseInt(step) + 1;
@@ -131,7 +135,7 @@ export default {
                                     strokeOpacity: '0.5'
                                 }
                                 }
-                            ) 
+                            )
                             let distance = res.routes[0].legs.map(x=>x.distance.value).reduce((a,b) => a+b, 0)
                             // let time = res.routes[0].legs.map(x=>x.duration.value).reduce((a,b) => a+b, 0)
                             // let d = new Date()

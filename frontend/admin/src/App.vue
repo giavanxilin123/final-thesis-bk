@@ -9,7 +9,6 @@
 import io from 'socket.io-client'
 import axios from 'axios'
 const socket = io("https://gv-grocery-api.herokuapp.com")
-// console.log(socket)
 
 export default {
   data() {
@@ -35,7 +34,6 @@ export default {
     })
 
     socket.on('Server-send-data', (data) => {
-      console.log(data)
       clearInterval(this.interval)
       this.$store.dispatch('fetchOrders')
       let {promiseTime} = data
@@ -68,8 +66,8 @@ export default {
           })
           .then(() => {
             let legs = this.route_legs;
-            // console.log(legs)
             let location_map = legs.map(x => x.map(y => { return {location : this.orderProgressingList[y-1]['location']}}))
+            let orderId_list = legs.map(x => x.map(y => this.orderProgressingList[y-1]['_id']))
             // let totalDistance = 0;
             for (const step in location_map){
                     // let num = parseInt(step) + 1;
@@ -86,7 +84,9 @@ export default {
                             // totalDistance += distance;
                             let time = res.routes[0].legs.map(x=>x.duration.value).reduce((a,b) => a+b, 0)
                             let d = new Date()
-                            await axios.put(`https://gv-grocery-api.herokuapp.com/api.vehicleToDelivery/${this.checkVehicleAvailable[step]._id}`, {time: Math.ceil(time /60)+ d.getHours()*60 + d.getMinutes()})
+                            await axios.put(`https://gv-grocery-api.herokuapp.com/api.vehicleToDelivery/${this.checkVehicleAvailable[step]._id}`, 
+                            {time: Math.ceil(time /60)+ d.getHours()*60 + d.getMinutes(),
+                            orderId_list: orderId_list[step]})
                             let text;
                             for (const i in res.routes[0].legs) {
                                 text += `- POINT ${String.fromCharCode(65 + parseInt(i))}: ${res.routes[0].legs[i].start_address} %0A`
@@ -114,7 +114,6 @@ export default {
           .then(async()=> {
             axios.put("http://localhost:5000/api.changeDeliveringStatus", {id_list: x.id_list})
             this.$store.dispatch('fetchOrders');
-            
             var index;
             this.queue_order.some(function(entry, i) {
                 if(entry!= undefined){
@@ -133,21 +132,24 @@ export default {
 
     socket.on('Server-update-time-delivery', (time) => {
       console.log(time)
+      clearInterval(this.interval)
       axios.get('https://gv-grocery-api.herokuapp.com/api.vehicle')
            .then(res => {
-              let arr_time = res.data.filter(v => v.status == "unavailable").map(t => t.timeBackToDepot)
-              console.log(this.unique(arr_time))
-              this.unique(arr_time).map(x => this.interval = setInterval(() => {
+              let arr_time = res.data.filter(v => v.status == "unavailable").map(t => {return {timeBackToDepot: t.timeBackToDepot, orderId_list: t.orderId_list}})
+              arr_time.map(x => this.interval = setInterval(() => {
                 var date = new Date();
-                if (date.getHours() === Math.floor (x/ 60) && date.getMinutes() === (x % 60)){
-                  console.log('reset time!')
-                  axios.put('https://gv-grocery-api.herokuapp.com/api.vehicleBackToDepot', {time: x})            
+                if (date.getHours() === Math.floor (x.timeBackToDepot/ 60) && date.getMinutes() === (x.timeBackToDepot % 60)){
+                  console.log('reset vehicle!')
+                  axios.put('https://gv-grocery-api.herokuapp.com/api.vehicleBackToDepot', {time: x.timeBackToDepot})
+                  axios.put('https://gv-grocery-api.herokuapp.com/api.changeCompletedStatus', {id_list: x.orderId_list})
+                  .then(() => {
+                    this.$store.dispatch('fetchOrders');
+                  })     
                 }
               }, 60000))
             }
       )
     })
-
   },
   computed: {
     orderProgressingList() {
@@ -161,9 +163,9 @@ export default {
     },
   },
   methods: {
-    unique(arr) {
-      return Array.from(new Set(arr))
-    }
+    // unique(arr) {
+    //   return Array.from(new Set(arr))
+    // }
   }
 }
 </script>
@@ -194,6 +196,9 @@ body {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+#map {
+  display: none;
 }
 </style>
 
