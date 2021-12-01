@@ -12,7 +12,8 @@ export default new Vuex.Store({
     products: [],
     cart:  [],
     orderHistory: [],
-    checkVehicleAvailable: ''
+    checkVehicleAvailable: '',
+    config: {}
   },
   mutations,
   actions

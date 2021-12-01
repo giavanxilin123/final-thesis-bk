@@ -23,13 +23,17 @@ export const mutations = {
   CHECK_VEHICLE_AVAILABLE(state, payload){
     state.checkVehicleAvailable = payload
   },
-  // FETCH_ORDERS(state, payload) {
-  //   state.orders = payload;
-  // },
-  // UPDATE_STATUS(state, payload) {
-  //     state.orders = payload
-  // }
-  // SEARCH_ROOM(state, payload) {
-  //   state.searchRoom = payload;
-  // }
+  CONFIG(state, payload){
+    state.config = payload
+  },
+  ORDER_AUTO_COLLECTION(state, payload) {
+    state.collection = payload
+  },
+  VEHICLE(state, payload) {
+    state.vehicle = payload
+  },
+  ORDER_BY_ID(state, payload) {
+    state.orderById = payload
+  }
+ 
 };

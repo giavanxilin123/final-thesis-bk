@@ -6,12 +6,6 @@ const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
 const { ObjectID, ObjectId, mongo } = require("mongodb");
 const {PythonShell} = require ('python-shell');
-var EventEmitter = require("events").EventEmitter;
-var messageBus = new EventEmitter();
-messageBus.setMaxListeners(20);
-// const upload = require("../middleware/upload")
-const Grid = require('gridfs-stream')
-
 dotenv.config()
 
 authenticateToken = (req, res, next) => {
@@ -19,13 +13,10 @@ authenticateToken = (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1]
   
   if (token == null) return res.sendStatus(401)
-
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET , (err, user) => {
     console.log(err)
     if (err) return res.sendStatus(403)
-
     req.user = user
-
     next()
   })
 }
@@ -124,7 +115,6 @@ recordRoutes.post('/login', (req, res, next) => {
 })
 
 recordRoutes.get('/order', async function (req, res) {
-  
   const dbConnect = dbo.getDb();
   dbConnect
     .collection("order")
@@ -474,7 +464,7 @@ recordRoutes.put('/api.vehicleBackToDepot', async (req, res, next) => {
     const dbConnect = dbo.getDb();
         await dbConnect
         .collection("vehicle")
-        .updateMany({timeBackToDepot: time}, {$set: {timeBackToDepot: 0, status: "available"}, $unset: {orderId_list: 1}},(err, doc) => {
+        .updateMany({timeBackToDepot: time}, {$set: {timeBackToDepot: 0, status: "available", orderId_list: []} },(err, doc) => {
           res.json(doc)
         })
   } catch{
@@ -514,4 +504,84 @@ recordRoutes.get('/api.vehicle', async (req, res, next) => {
     });
 })
 
+recordRoutes.get('/api.config', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("config")
+    .find({})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
+
+recordRoutes.put('/api.config', async (req, res, next) => {
+  try{
+    const {duration} = req.body
+    console.log(duration)
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("config")
+        .update({}, {$set: duration} ,(err, doc) => {
+          res.json(doc)
+        })
+  } catch{
+        res.status(500).send();
+  }
+})
+
+
+recordRoutes.get('/api.orderAutoCollection', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("order")
+    .find({status: "New"}).sort({"_id": -1})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        queue = new Array(53)
+        arr = result.map(o => {
+          let p = o.promiseTime.split(':');
+          let p_hour = +p[0];
+          let p_minute = +p[1]
+          return {
+            index: 4 * (p_hour - 9) + (p_minute / 15), 
+            id_list: [o._id], 
+            timeRunEngine: p_hour * 60 + p_minute - o.duration_delivery - 2}
+          })
+        
+        const alo = arr.reduce((acc, curr) => {
+          const group = acc.find(g => g.index === curr.index)
+          if (group) {
+            group.id_list = group.id_list.concat(curr.id_list).sort((a,b) => a - b)
+            group.timeRunEngine = Math.min(group.timeRunEngine, curr.timeRunEngine)
+          } else {
+            acc.push({index: curr.index, id_list: curr.id_list, timeRunEngine: curr.timeRunEngine })
+          }
+          return acc
+        }, [])
+    
+        res.send(alo);
+      }
+    });
+});
+
+recordRoutes.get('/api.orderById/:id', async function (req, res) {
+  const {id} = req.params
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("order")
+    .find({_id: ObjectId(id)})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching order by id!");
+     } else {
+        res.json(result);
+      }
+    });
+});
 module.exports = recordRoutes;

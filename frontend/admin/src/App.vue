@@ -13,12 +13,18 @@ const socket = io("https://gv-grocery-api.herokuapp.com")
 export default {
   data() {
     return {
-      queue_order : new Array(52),
+      // queue_order : new Array(52),
       center: {lat: 10.7719937, lng: 106.7057951},
       map: '',
       marker: '',
-      interval: null
+      interval: {},
+
+      intervalTimeBack: null,
     }
+  },
+
+  methods: {
+    
   },
 
   async mounted() {
@@ -33,32 +39,21 @@ export default {
       animation: window.google.maps.Animation.BOUNCE
     })
 
-    socket.on('Server-send-data', (data) => {
-      clearInterval(this.interval)
-      this.$store.dispatch('fetchOrders')
-      let {promiseTime} = data
-      let p = promiseTime.split(':');
-      let p_hour = +p[0];
-      let p_minute = +p[1]
-
-      let index = 4 * (p_hour - 9) + p_minute / 15;
-      let time_run_engine = ((+p[0]) * 60 + (+p[1])) - data.duration_delivery - 2 
+    socket.on('Server-send-data', async (data) => {
       
-      if (this.queue_order[index] == undefined) {
-          this.queue_order[index] = {timeRunEngine: time_run_engine, id_list: [data._id]}
-      } else if (this.queue_order[index].timeRunEngine >= time_run_engine){
-          this.queue_order[index].timeRunEngine = time_run_engine
-          this.queue_order[index].id_list.push(data._id)
-      }
-      else {
-        this.queue_order[index].id_list.push(data._id)
-      }
-      console.log(this.queue_order)
-      this.queue_order.map(x => this.interval = setInterval(() => {
+      this.$store.dispatch('fetchOrders')
+      console.log(data)
+
+      await this.$store.dispatch('orderAutoCollection')
+      console.log(this.collection)
+      
+      this.collection.map(x => {
+        clearInterval(this.interval[x.index])
+        this.interval[x.index] = setInterval(() => {
         var date = new Date();
         if(date.getHours() === Math.floor (x.timeRunEngine / 60) && date.getMinutes() === (x.timeRunEngine % 60)){
-          console.log("change Status!")
-          axios.put("http://localhost:5000/api.changeProgressingStatus", {id_list: x.id_list})
+          console.log("change Status!", date)
+          axios.put("https://gv-grocery-api.herokuapp.com/api.changeProgressingStatus", {id_list: x.id_list})
           .then(async () => {
             this.$store.dispatch('fetchOrders');
             await this.$store.dispatch('optimizeRoute')
@@ -112,31 +107,24 @@ export default {
               }
           })
           .then(async()=> {
-            axios.put("http://localhost:5000/api.changeDeliveringStatus", {id_list: x.id_list})
-            this.$store.dispatch('fetchOrders');
-            var index;
-            this.queue_order.some(function(entry, i) {
-                if(entry!= undefined){
-                    if (entry.timeRunEngine == x.timeRunEngine) {
-                    index = i;
-                    return true;
-                  }
-                }
-            });
-            this.queue_order[index] = undefined
+            axios.put("https://gv-grocery-api.herokuapp.com/api.changeDeliveringStatus", {id_list: x.id_list})
+            .then(() => {
+              this.$store.dispatch('fetchOrders');
+            })
           })
         }
-      }, 60000))
-
+      }, 60000)
+      }
+      )
     })
 
     socket.on('Server-update-time-delivery', (time) => {
       console.log(time)
-      clearInterval(this.interval)
+      clearInterval(this.intervalTimeBack)
       axios.get('https://gv-grocery-api.herokuapp.com/api.vehicle')
            .then(res => {
               let arr_time = res.data.filter(v => v.status == "unavailable").map(t => {return {timeBackToDepot: t.timeBackToDepot, orderId_list: t.orderId_list}})
-              arr_time.map(x => this.interval = setInterval(() => {
+              arr_time.map(x => this.intervalTimeBack = setInterval(() => {
                 var date = new Date();
                 if (date.getHours() === Math.floor (x.timeBackToDepot/ 60) && date.getMinutes() === (x.timeBackToDepot % 60)){
                   console.log('reset vehicle!')
@@ -151,6 +139,13 @@ export default {
       )
     })
   },
+
+  beforeDestroy() {
+    for (const [,value] of Object.entries(this.interval)) {
+      clearInterval(value)
+    }
+  },
+
   computed: {
     orderProgressingList() {
       return this.$store.state.orders.filter(x => x.status == 'Progressing');
@@ -161,12 +156,11 @@ export default {
     checkVehicleAvailable() {
       return this.$store.state.checkVehicleAvailable
     },
+    collection() {
+      return this.$store.state.collection
+    },
   },
-  methods: {
-    // unique(arr) {
-    //   return Array.from(new Set(arr))
-    // }
-  }
+ 
 }
 </script>
 <style>

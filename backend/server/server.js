@@ -1,5 +1,6 @@
 
 require("dotenv").config({ path: "./config.env" });
+require("./worker")
 const express = require("express");
 const cors = require("cors");
 // get MongoDB driver connection

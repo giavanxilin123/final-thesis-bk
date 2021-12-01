@@ -166,7 +166,7 @@ export default {
           this.productForm.quantity = parseInt(this.productForm.quantity);
           this.productForm.price = parseFloat(this.productForm.price);
           await axios
-            .put("http://localhost:5000/addProduct", {
+            .put("https://gv-grocery-api.herokuapp.com/addProduct", {
               productForm: this.productForm,
             })
             .then((res) => {

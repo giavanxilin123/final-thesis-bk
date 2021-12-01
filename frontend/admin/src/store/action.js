@@ -151,4 +151,60 @@ export const actions = {
         });
     });
   },
+
+  config(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.config`, payload)
+        .then((res) => {
+          ctx.commit('CONFIG', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  orderAutoCollection(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.orderAutoCollection`, payload)
+        .then((res) => {
+          ctx.commit('ORDER_AUTO_COLLECTION', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  vehicle(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.vehicle`, payload)
+        .then((res) => {
+          ctx.commit('VEHICLE', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  getOrderById(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.orderById/${payload}`)
+        .then((res) => {
+          ctx.commit('ORDER_BY_ID', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
 };

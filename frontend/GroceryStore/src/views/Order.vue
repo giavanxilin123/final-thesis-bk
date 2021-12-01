@@ -250,14 +250,9 @@ export default {
   },
 
    async mounted() {
-    
-    //  check refresh can you socket
     await this.$store.dispatch('checkVehicleAvailable')
-    // setInterval(async () => {
-    //   await axios.get("http://localhost:5000/user-list").then((res) => {
-    //     console.log(res);
-    //   });
-    // }, 5000);
+    await this.$store.dispatch('config')
+    
     this.formOrder.order = this.$store.state.cart;
     this.formOrder.total = Math.round(this.subTotal * 105) / 100;
     this.formOrder.username = this.customer.username;
@@ -313,7 +308,8 @@ export default {
             });
           }
           // t0 = time to run engine(2) + time to prepare order(15)
-          let t0 = 4; 
+          let t0 = this.config.durationRunEngine + this.config.durationPreparation
+          console.log('t0' ,t0)
           let duration_delivery = Math.round(res.routes[0].legs[0].duration.value / 60)
           console.log(duration_delivery)
           let t_denta = duration_delivery + t0
@@ -322,7 +318,7 @@ export default {
           this.t_denta_minute = t_denta % 60  
           console.log(this.t_denta_hour, this.t_denta_minute)
           if(this.checkVehicleAvailable.length == 0){
-             await axios.get('http://localhost:5000/api.timeMinToDepot')
+             await axios.get('https://gv-grocery-api.herokuapp.com/api.timeMinToDepot')
              .then(res => {
               let d  = new Date();
               console.log(res.data - d.getHours() * 60 - d.getMinutes())
@@ -363,15 +359,14 @@ export default {
       if(!this.formOrder.address){
         return '22:00'
       }
-      // else if (this.checkVehicleAvailable.length != 0){
-      //   return String(d_hour) + ":" + String(d_minute)
-      // } 
         return String(d_hour + Math.floor(this.timeMinBackToDepot / 60)) + ":" + String(d_minute + (this.timeMinBackToDepot % 60))
     },
     checkVehicleAvailable() {
       return this.$store.state.checkVehicleAvailable
     },
-    
+    config() {
+      return this.$store.state.config[0]
+    }
   },
 
   methods: {

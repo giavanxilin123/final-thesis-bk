@@ -16,7 +16,9 @@
           </div>
           <div class="sidebar-content" @click ="productManagement"><i class="el-icon-box icon"></i>Product Management</div>
           <div class="sidebar-content" @click ="optimizeRoute" ><i class="el-icon-map-location icon"></i>Optimize Routing Solver</div>
-          
+            <div class="sidebar-content" @click ="toVehiclePage" ><i class="el-icon-truck icon"></i>Vehicle Management</div>
+          <div class="sidebar-content" @click ="toConfigPage" ><i class="el-icon-setting icon"></i>Config</div>
+
           <div @click ="logOut" class="sidebar-content" ><i class="el-icon-switch-button icon"></i>Log Out</div>
         </div>
       </el-col>
@@ -68,6 +70,22 @@ export default {
 
       async optimizeRoute() {
         await this.$router.push("/dashboard/optimize-route").catch(error => {
+          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
+            console.log(error)
+          }
+        })
+      },
+
+      async toConfigPage() {
+        await this.$router.push("/dashboard/config").catch(error => {
+          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
+            console.log(error)
+          }
+        })
+      },
+
+      async toVehiclePage() {
+        await this.$router.push("/dashboard/vehicle").catch(error => {
           if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
             console.log(error)
           }

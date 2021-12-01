@@ -8,9 +8,12 @@
         </div>
     </div>
 
+   
     <div style = "padding: 30px 0;" class="popular-product">
       <div style = "font-size: 32px; margin: 32px; " class ="product-title"> Popular products</div>
-      <el-row :gutter="20">
+
+      <el-skeleton v-if ="!allProducts.length" :rows="10" animated />
+      <el-row v-else :gutter="20">
         <el-col class="product-col" v-for="(product, index) in allProducts" :key="index" :xs="12" :sm="12" :lg="6" >
           <div class="product">
             <div class="product-img">

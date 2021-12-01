@@ -119,4 +119,17 @@ export const actions = {
   removeCart(ctx) {
     ctx.commit("REMOVE_CART");
   },
+  config(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.config`, payload)
+        .then((res) => {
+          ctx.commit('CONFIG', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
 };

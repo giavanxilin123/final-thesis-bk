@@ -39,6 +39,21 @@ const routes = [
         path: 'product-update',
         name: 'Product Update',
         component: () => import('../views/dashboard/ProductUpdate.vue')
+      },
+      {
+        path: 'config',
+        name: 'Config',
+        component: () => import('../views/dashboard/Config.vue')
+      },
+      {
+        path: 'vehicle',
+        name: 'Vehicle',
+        component: () => import('../views/dashboard/Vehicle.vue')
+      },
+      {
+        path: 'order-information',
+        name: 'Order Information',
+        component: () => import('../views/dashboard/OrderInformation.vue')
       }
     ]
   },

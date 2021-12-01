@@ -27,7 +27,10 @@ export const mutations = {
   },
   REMOVE_CART(state) {
     state.cart = []
-  }
+  },
+  CONFIG(state, payload){
+    state.config = payload
+  },
 };
 
 

@@ -22,14 +22,14 @@
               <el-input v-model="productForm.name"></el-input>
             </el-form-item>
             <el-form-item label="Quantity" prop="quantity">
-              <el-input type="number" v-model="productForm.quantity"></el-input>
+              <el-input type="number" v-model.number="productForm.quantity"></el-input>
             </el-form-item>
           </div>
 
           <div class="price">
             <div class="title">Product Price</div>
             <el-form-item label="Product price" prop="price">
-              <el-input type="number" v-model="productForm.price"></el-input>
+              <el-input type="number" v-model.number="productForm.price"></el-input>
             </el-form-item>
           </div>
           <el-button type="primary" @click="submitForm('productForm')"
@@ -165,7 +165,7 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           await axios
-            .put(`http://localhost:5000/${id}`, this.productForm)
+            .put(`https://gv-grocery-api.herokuapp.com/api.updateProduct/${id}`, this.productForm)
             .then((res) => {
               this.alertSuccess();
               console.log(res);
