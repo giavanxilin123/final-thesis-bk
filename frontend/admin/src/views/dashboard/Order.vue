@@ -7,27 +7,6 @@
       </div>
       <div class="card-body">
         <div class="toolbar">
-          <div>
-            <div
-              style="
-                text-align: left;
-                font-size: 12px;
-                color: gray;
-                padding: 5px;
-              "
-            >
-              Per page
-            </div>
-            <el-select v-model="value" placeholder="Select">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </div>
           <el-input placeholder="Search ..." v-model="input"></el-input>
         </div>
         <div class="table-content">
@@ -44,7 +23,8 @@
               <el-col :span="2"
                 ><div>PromiseTime</div
               ></el-col>
-              <el-col :span="2">Preparatory</el-col>
+              <el-col :span="2">Prepare <i @click="sortOrder" style="cursor: pointer" class="el-icon-sort-up
+"></i></el-col>
               <el-col :span="2"><div>Status</div></el-col>
               <el-col style="padding: 0 !important" :span="1"
                 ><div style="text-align: right;">Actions</div></el-col
@@ -86,7 +66,7 @@
                 ><div style="font-size: 12px">{{ order.promiseTime }}</div></el-col
               >
               <el-col :span="2"
-                ><div style="font-size: 12px">{{ order.promiseTime }}</div></el-col
+                ><div style="font-size: 12px">{{ formatTime(preparatory(order.promiseTime, order.duration_delivery)) }}</div></el-col
               >
               <el-col :span="2" style="text-align: center">
                 <el-tag style="font-size: 10px" v-if="order.status === 'Completed'" type="success">{{
@@ -104,23 +84,6 @@
               </el-col>
               <el-col :span="1">
                 <div class="action">
-                  <!-- <div
-                    :style="{
-                      backgroundColor:
-                        order.status == 'New' ? '#e6a23c' : '#409eff',
-                    }"
-                    v-if="
-                      order.status == 'New' || order.status == 'Progressing'
-                    "
-                    @click="changeStatus(order._id, order.status)"
-                    class="action-changeStatus"
-                  >
-                    <i v-if="order.status == 'New'" class="el-icon-upload2"></i>
-                    <i
-                      v-if="order.status == 'Progressing'"
-                      class="el-icon-download"
-                    ></i>
-                  </div> -->
                   <div class="action-edit">
                     <i class="el-icon-s-order"></i>
                   </div>
@@ -149,25 +112,7 @@
 export default {
   data() {
     return {
-      options: [
-        {
-          value: "5",
-          label: "5",
-        },
-        {
-          value: "10",
-          label: "10",
-        },
-        {
-          value: "25",
-          label: "25",
-        },
-        {
-          value: "50",
-          label: "50",
-        },
-      ],
-      value: "",
+      sort: false,
       input: "",
     };
   },
@@ -176,13 +121,33 @@ export default {
       this.$store.dispatch("updateStatus", { id: id, status: status });
       await this.$store.dispatch("fetchOrders");
     },
+    preparatory(promiseTime, duration){
+      let hour = +promiseTime.split(":")[0]
+      let minute = +promiseTime.split(":")[1]
+      let preparatory = hour * 60 + minute - duration - 2;
+      // return String(Math.floor(preparatory / 60)) +":" + String(preparatory % 60)
+      return preparatory
+    },
+
+    formatTime(p) {
+      return String(Math.floor(p / 60)) +":" + String(p % 60)
+    },
+    sortOrder() {
+      this.sort = true;
+    }
   },
   async created() {
     await this.$store.dispatch("fetchOrders");
   },
   computed: {
     orderList() {
-      return this.$store.state.orders
+      let orders = this.$store.state.orders
+      if(this.sort == true){
+          orders.sort((a,b) => {
+            return this.preparatory(a.promiseTime, a.duration_delivery) - this.preparatory(b.promiseTime, b.duration_delivery)
+          })
+      }
+      return orders;
     },
   },
   // watch: {

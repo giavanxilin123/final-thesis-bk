@@ -18,7 +18,7 @@
                 text-align: left;
                 font-size: 12px;
                 color: gray;
-                padding: 5px;
+                paddxing: 5px;
               "
             >
               Per page

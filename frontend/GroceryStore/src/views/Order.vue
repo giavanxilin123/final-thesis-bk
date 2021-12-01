@@ -85,7 +85,7 @@
             :picker-options="{
               start: '9:00',
               step: '0:15',
-              end: '22:00',
+              end: '24:00',
               minTime: date,
             }"
             placeholder="Select time"
