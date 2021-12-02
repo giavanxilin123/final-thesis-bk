@@ -8,7 +8,8 @@
       <header class="page-header">
         <div>Order history</div>
       </header>
-      <div>
+      <el-skeleton v-if="!tableData.length"  :rows="6" animated />
+      <div v-else>
         <p style="text-align: left">Here are the orders you've placed since your account was created.</p>
         <el-table ref="filterTable" :data="tableData" style="width: 100%">
           <el-table-column prop="_id" label="Order Id" width="220">
@@ -126,7 +127,7 @@ export default {
   line-height: 26px;
   background: #fff;
   font-family: "Lato", Arial, sans-serif;
-  width: 60%;
+  width: 65%;
   margin: 0 auto;
 }
 .page-header {

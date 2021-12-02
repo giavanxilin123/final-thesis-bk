@@ -79,21 +79,23 @@
             3. Select time
           </div>
 
-          <span style="margin-right: 20px">Promise Time</span>
-          <el-time-select
-            v-model="formOrder.promiseTime"
-            :picker-options="{
-              start: '9:00',
-              step: '0:15',
-              end: '24:00',
-              minTime: date,
-            }"
-            placeholder="Select time"
-          >
+          <!-- <span style="margin-right: 20px">Promise Time</span> -->
+         <el-time-select
+                    v-model="formOrder.promiseTime"
+                    :picker-options="{
+                      start: '9:00',
+                      step: '0:15',
+                      end: '22:00',
+                      minTime: date,
+                    }"
+                    placeholder="Select time"
+                  >
           </el-time-select>
+         
 
           <div>
             <el-button
+              v-loading.fullscreen.lock="fullscreenLoading"
               @click="checkOut('formOrder')"
               type="success"
               style="margin: 20px 0"
@@ -237,11 +239,13 @@ export default {
         promiseTime: "",
         duration_delivery: ""
       },
+      fullscreenLoading: false,
       t_denta_hour: 0,
       t_denta_minute: 0,
       timeMinBackToDepot: 0,
       rules: {
         address: [{ validator: checkAddress, trigger: "blur" }],
+        promiseTime: [{ validator: checkAddress, trigger: "blur" }],
       },
       checkProvince: "",
       center: { lat: 10.7719937, lng: 106.7057951 },
@@ -375,13 +379,21 @@ export default {
     },
 
     async checkOut(formName) {
+     
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
+           const loading = this.$loading({
+                lock: true,
+                text: 'Waiting for checkout',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+        });
           let d = new Date();
           this.formOrder.date = d.toLocaleString();
           await this.$store.dispatch("checkOut", { formOrder: this.formOrder })
           .then(() => {
             this.$store.dispatch("removeCart")
+            loading.close()
           })
           .then(() => {
               if (this.paymentMethod === 1) {
@@ -396,6 +408,7 @@ export default {
         } else {
           return false;
         }
+        
       });
     },
     alertErr(err) {
