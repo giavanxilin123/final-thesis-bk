@@ -245,7 +245,7 @@ export default {
       timeMinBackToDepot: 0,
       rules: {
         address: [{ validator: checkAddress, trigger: "blur" }],
-        promiseTime: [{ validator: checkAddress, trigger: "blur" }],
+        // promiseTime: [{ validator: checkAddress, trigger: "blur" }],
       },
       checkProvince: "",
       center: { lat: 10.7719937, lng: 106.7057951 },
