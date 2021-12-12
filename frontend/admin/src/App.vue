@@ -62,6 +62,7 @@ export default {
           .then(() => {
             let legs = this.route_legs;
             let location_map = legs.map(x => x.map(y => { return {location : this.orderProgressingList[y-1]['location']}}))
+            console.log(location_map)
             let orderId_list = legs.map(x => x.map(y => this.orderProgressingList[y-1]['_id']))
             // let totalDistance = 0;
             for (const step in location_map){
@@ -81,7 +82,8 @@ export default {
                             let d = new Date()
                             await axios.put(`https://gv-grocery-api.herokuapp.com/api.vehicleToDelivery/${this.checkVehicleAvailable[step]._id}`, 
                             {time: Math.ceil(time /60)+ d.getHours()*60 + d.getMinutes(),
-                            orderId_list: orderId_list[step]})
+                            orderId_list: orderId_list[step],
+                            route: location_map})
                             let text;
                             for (const i in res.routes[0].legs) {
                                 text += `- POINT ${String.fromCharCode(65 + parseInt(i))}: ${res.routes[0].legs[i].start_address} %0A`

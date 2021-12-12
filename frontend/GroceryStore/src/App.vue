@@ -18,7 +18,9 @@
         <div v-if="Object.keys(this.customer).length === 0" @click="toLoginMobile" style="padding: 10px 30px; background: #f8f9fc">Sign in</div>
         <div v-else >
           <div style="padding: 10px 30px; background: #f8f9fc" >{{customer.username}}</div>
+          <div style="padding: 10px 30px; background: #f8f9fc" >Profile <i class="el-icon-user"></i></div>
           <div @click="toOrderHistory" style="padding: 10px 30px; background: #f8f9fc" >Order History <i class="el-icon-s-order"></i></div>
+          <div style="padding: 10px 30px; background: #f8f9fc" >Account Setting <i class="el-icon-key"></i></div>
           <div @click="logOut" style="padding: 10px 30px; background: #f8f9fc" >Log Out <i class="el-icon-switch-button"></i></div>
         </div>
       </el-drawer>
@@ -57,10 +59,20 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item
+              style="cursor: pointer"
+              icon="el-icon-user"
+              >Profile</el-dropdown-item
+            >
+            <el-dropdown-item
               @click.native="toOrderHistory"
               style="cursor: pointer"
               icon="el-icon-s-order"
               >Order History</el-dropdown-item
+            >
+            <el-dropdown-item
+              style="cursor: pointer"
+              icon="el-icon-key"
+              >Account Setting</el-dropdown-item
             >
             <el-dropdown-item
               @click.native="logOut"

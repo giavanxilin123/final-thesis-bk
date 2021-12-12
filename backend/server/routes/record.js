@@ -445,11 +445,12 @@ recordRoutes.put('/api.vehicleToDelivery/:id', async (req, res, next) => {
   try{
     const {time} = req.body
     const {orderId_list} = req.body
+    const {route} = req.body
     const {id} = req.params
     const dbConnect = dbo.getDb();
         await dbConnect
         .collection("vehicle")
-        .update({_id: ObjectId(id)}, {$set: {timeBackToDepot: time, status: "unavailable", orderId_list : orderId_list}}, (err, doc) => {
+        .update({_id: ObjectId(id)}, {$set: {timeBackToDepot: time, status: "unavailable", orderId_list : orderId_list, route: route}}, (err, doc) => {
           res.json(doc)
           req.io.sockets.emit('Server-update-time-delivery', time)
         })
@@ -464,7 +465,7 @@ recordRoutes.put('/api.vehicleBackToDepot', async (req, res, next) => {
     const dbConnect = dbo.getDb();
         await dbConnect
         .collection("vehicle")
-        .updateMany({timeBackToDepot: time}, {$set: {timeBackToDepot: 0, status: "available", orderId_list: []} },(err, doc) => {
+        .updateMany({timeBackToDepot: time}, {$set: {timeBackToDepot: 0, status: "available", orderId_list: [], route: []} },(err, doc) => {
           res.json(doc)
         })
   } catch{

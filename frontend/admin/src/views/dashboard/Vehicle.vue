@@ -16,16 +16,19 @@
           <div class="table-head">
             <el-row :gutter="20">
               
-              <el-col :span="4"><div>Name</div></el-col>
+              <el-col :span="3"><div>Name</div></el-col>
               <el-col :span="3"><div>Capacity</div></el-col>
-              <el-col :span="4"><div>Driver</div></el-col>
+              <el-col :span="3"><div>Driver</div></el-col>
               <el-col :span="4"
                 ><div>Return Time</div
               ></el-col>
               <el-col :span="5"
                 ><div >OrderID</div
               ></el-col>
-              <el-col :span="4"
+              <el-col :span="3"
+                ><div style="text-align: right">Route</div></el-col
+              >
+              <el-col :span="3"
                 ><div style="text-align: right">Status</div></el-col
               >
             </el-row>

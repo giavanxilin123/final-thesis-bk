@@ -12,10 +12,10 @@
           <div class="general-inf">
             <div class="title">Settings</div>
             <el-form-item label="Run Engine Duration" prop="durationRunEngine">
-              <el-input type="number" v-model.number="form.durationRunEngine"></el-input>
+              <el-input min=1 max=5 type="number" v-model.number="form.durationRunEngine"></el-input>
             </el-form-item>
             <el-form-item label="Goods Preparation Duration" prop="durationPreparation">
-              <el-input type="number" v-model.number="form.durationPreparation"></el-input>
+              <el-input  min=1 max=20 type="number" v-model.number="form.durationPreparation"></el-input>
             </el-form-item>
           </div>
 

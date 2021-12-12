@@ -29,17 +29,13 @@ demand_list.insert(0,0)
 location_list = list(map(lambda x: x['location'], order_delivery_list))
 location_tuple = list(map(lambda x: (x['lat'],x['lng']), location_list))
 
-# print(demand_list)
 depot_position = (10.7719937, 106.7057951)
 location_tuple.insert(0,depot_position)
-
 
 # vehicle
 vehicle_collection = dbs['vehicle']
 vehicle_list = vehicle_collection.find()
 vehicle_available = list(filter(lambda x: x['status'] == 'available', vehicle_list))
-API_KEY = 'AIzaSyAkK1Nj9HWtb4R0crJISga3j9hq2aBC8lQ'
-map_client = googlemaps.Client(API_KEY)
 
 
 def matrix_distance(x, lst):
@@ -54,7 +50,6 @@ def create_data_model():
     distance_matrix= list(map(lambda x: matrix_distance(x, location_tuple), location_tuple))
     data = {}
     data['distance_matrix'] = distance_matrix
-   
     data['demands'] = demand_list
     data['vehicle_capacities'] = list(map(lambda x: x['capacity'], vehicle_available))
     data['num_vehicles'] = len(vehicle_available)
@@ -144,7 +139,7 @@ def main():
         True,  # start cumul to zero
         'Capacity')
 
-    penalty = 30000
+    penalty = 40000
     for node in range(1, len(data['distance_matrix'])):
         routing.AddDisjunction([manager.NodeToIndex(node)], penalty)
     # Setting first solution heuristic.

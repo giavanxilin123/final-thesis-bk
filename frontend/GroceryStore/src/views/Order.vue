@@ -78,10 +78,10 @@
           >
             3. Select time
           </div>
-
           <!-- <span style="margin-right: 20px">Promise Time</span> -->
          <el-time-select
                     v-model="formOrder.promiseTime"
+                    :disabled="formOrder.location.lat == 0"
                     :picker-options="{
                       start: '9:00',
                       step: '0:15',
@@ -329,8 +329,6 @@ export default {
               this.timeMinBackToDepot = res.data - d.getHours() * 60 - d.getMinutes()
             })
           }
-         
-          
         },
         map.setCenter(place.geometry.location),
         marker.setPosition(place.geometry.location)

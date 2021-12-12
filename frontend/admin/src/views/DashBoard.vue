@@ -3,10 +3,12 @@
     <el-row>
       <el-col class="menu" :span="4">
         <div class="overlay">
-          <div style="padding: 20px; font-size: 18px; font-weight: 600; text-align: left"><i style="margin-right: 20px; font-size: 25px" class="el-icon-menu"></i>DASHBOARD</div>
+          <div style="padding: 20px; font-size: 18px; font-weight: 600; text-align: center"><img style="width: 30px" src="../assets/gv.png" alt="">
+            GRAIN STORE</div>
           <div class="divider"></div>
           <div class=user>{{user.name}}</div>
           <div class="divider"></div>
+          <div class="sidebar-content"><i class="el-icon-menu icon"></i>Dashboard</div>
           <div class="sidebar-content" @click ="userManagement"><i class="el-icon-s-custom icon"></i>User Management</div>
           
           <div class="sidebar-content" @click ="orderManagement">
@@ -17,7 +19,7 @@
           <div class="sidebar-content" @click ="productManagement"><i class="el-icon-box icon"></i>Product Management</div>
           <div class="sidebar-content" @click ="optimizeRoute" ><i class="el-icon-map-location icon"></i>Optimize Routing Solver</div>
             <div class="sidebar-content" @click ="toVehiclePage" ><i class="el-icon-truck icon"></i>Vehicle Management</div>
-          <div class="sidebar-content" @click ="toConfigPage" ><i class="el-icon-setting icon"></i>Config</div>
+          <div class="sidebar-content" @click ="toConfigPage" ><i class="el-icon-setting icon"></i>Configuration</div>
 
           <div @click ="logOut" class="sidebar-content" ><i class="el-icon-switch-button icon"></i>Log Out</div>
         </div>

@@ -33,7 +33,7 @@
             </el-form-item>
           </div>
           <el-button type="primary" @click="submitForm('productForm')"
-            >Save</el-button
+            >Create</el-button
           >
         </el-col>
         <el-col :span="8">
