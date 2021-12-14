@@ -132,7 +132,7 @@ recordRoutes.get('/user-list', async (req, res) => {
   const dbConnect = dbo.getDb();
   dbConnect
     .collection("user")
-    .find({}).limit(50)
+    .find({})
     .toArray(function (err, result) {
       if (err) {
         res.status(400).send("Error fetching listings!");
@@ -146,7 +146,7 @@ recordRoutes.route("/customer").get(async function (req, res) {
   const dbConnect = dbo.getDb();
   dbConnect
     .collection("customer")
-    .find({}).limit(50)
+    .find({})
     .toArray(function (err, result) {
       if (err) {
         res.status(400).send("Error fetching listings!");
@@ -201,7 +201,6 @@ recordRoutes.put("/api.changeDeliveringStatus/", async (req, res, next) => {
           res.json(doc)
         })
   } catch{
-        console.log("hi")
         res.status(500).send();
   }
 });
@@ -218,7 +217,6 @@ recordRoutes.put("/api.changeCompletedStatus/", async (req, res, next) => {
           res.json(doc)
         })
   } catch{
-        console.log("hi")
         res.status(500).send();
   }
 });
@@ -236,17 +234,46 @@ recordRoutes.get("/solving-route", async (req, res, next) => {
     doc.map(x => x.shift())
     res.send({route_legs: doc, drop_nodes: drop_nodes})
   });
-
 });
 
-recordRoutes.get('/products', async function (req, res) {
+recordRoutes.get('/api.getAllProducts', async function (req, res) {
   const dbConnect = dbo.getDb();
   dbConnect
     .collection("product")
-    .find({}).limit(50)
+    .find({})
     .toArray(function (err, result) {
       if (err) {
         res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
+
+recordRoutes.get('/api.getPopularProducts', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("product")
+    .find({}).limit(4)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        res.json(result);
+      }
+    });
+});
+
+recordRoutes.get('/api.getProductByType/:type', async function (req, res) {
+  const {type} = req.params
+  const dbConnect = dbo.getDb();
+  console.log(type)
+  dbConnect
+    .collection("product")
+    .find({type: type})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching products!");
      } else {
         res.json(result);
       }
@@ -304,7 +331,7 @@ recordRoutes.get('/getOrderByUsername/:username', async function (req, res) {
   let username = req.params.username;
   dbConnect
     .collection("order")
-    .find({username:username}).limit(50)
+    .find({username:username})
     .toArray(function (err, result) {
       if (err) {
         res.status(400).send("Error fetching listings!");

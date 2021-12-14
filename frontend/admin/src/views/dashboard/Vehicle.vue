@@ -22,11 +22,11 @@
               <el-col :span="4"
                 ><div>Return Time</div
               ></el-col>
-              <el-col :span="5"
+              <el-col :span="6"
                 ><div >OrderID</div
               ></el-col>
-              <el-col :span="3"
-                ><div style="text-align: right">Route</div></el-col
+              <el-col :span="2"
+                ><div>Route</div></el-col
               >
               <el-col :span="3"
                 ><div style="text-align: right">Status</div></el-col
@@ -41,7 +41,7 @@
               :gutter="20"
             >
               
-              <el-col :span="4">
+              <el-col :span="3">
                 <div class="name">
                   {{ vehicle.name }}
                 </div>
@@ -51,7 +51,7 @@
                   {{ vehicle.capacity }}
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="3">
                 <div class="driver">
                     {{vehicle.driver}}
                 </div>
@@ -60,7 +60,7 @@
                   <div v-if="vehicle.status =='available'">None</div>
                   <div v-else>{{formatTime(vehicle.timeBackToDepot)}}</div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="6">
                   <div  v-if="vehicle.status =='available'">None</div>
                   <div v-else>
                       <div @click="orderInformation(order)" style="padding: 2px 5px;cursor:pointer; margin: 5px 0; background: gray; color: white; font-weight: 500; letter-spacing: 1px" v-for="(order, index) in vehicle.orderId_list" :key="index">
@@ -68,7 +68,12 @@
                       </div>
                   </div>
                   </el-col>
-              <el-col :span="4">
+              <el-col :span="2">
+                <div class="route">
+                R1
+                </div>
+              </el-col>
+              <el-col :span="3">
                 <div class="status">
                 <div  v-if="vehicle.status =='available'">
                     <el-tag style="font-weight: 600; text-transform: uppercase;" type="success">{{vehicle.status}}</el-tag>

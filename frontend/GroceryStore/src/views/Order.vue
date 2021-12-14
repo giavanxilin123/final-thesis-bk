@@ -99,7 +99,7 @@
               @click="checkOut('formOrder')"
               type="success"
               style="margin: 20px 0"
-              >Check Out</el-button
+              >Confirm</el-button
             >
           </div>
         </div>

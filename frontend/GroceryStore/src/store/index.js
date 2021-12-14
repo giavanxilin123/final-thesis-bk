@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     BASE_URL,
     customer: customer || {}, 
-    products: [],
+    popularProducts: [],
+    productByType: [],
     cart:  [],
     orderHistory: [],
     checkVehicleAvailable: '',

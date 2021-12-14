@@ -21,12 +21,26 @@ client.interceptors.request.use((config) => {
 });
 
 export const actions = {
-  fetchProducts(ctx) {
+  fetchPopularProducts(ctx) {
     return new Promise((resolve, reject) => {
       client
-        .get(`${BASE_URL}/products`)
+        .get(`${BASE_URL}/api.getPopularProducts`)
         .then((res) => {
-          ctx.commit("FETCH_PRODUCTS", res.data);
+          ctx.commit("FETCH_POPULAR_PRODUCTS", res.data);
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  fetchProductByType(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.getProductByType/${payload}`)
+        .then((res) => {
+          ctx.commit("FETCH_PRODUCT_BY_TYPE", res.data);
           resolve(res);
         })
         .catch((err) => {

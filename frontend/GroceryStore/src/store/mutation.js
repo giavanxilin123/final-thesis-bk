@@ -1,6 +1,9 @@
 export const mutations = {
-  FETCH_PRODUCTS(state, payload) {
-    state.products = payload;
+  FETCH_POPULAR_PRODUCTS(state, payload) {
+    state.popularProducts = payload;
+  },
+  FETCH_PRODUCT_BY_TYPE(state, payload) {
+    state.productByType = payload
   },
   CART(state, payload) {
     let empty = state.cart.map((c) => c._id).indexOf(payload._id);

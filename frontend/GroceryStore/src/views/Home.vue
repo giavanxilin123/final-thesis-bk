@@ -12,9 +12,9 @@
     <div style = "padding: 30px 0;" class="popular-product">
       <div style = "font-size: 32px; margin: 32px; " class ="product-title"> Popular products</div>
 
-      <el-skeleton v-if ="!allProducts.length" :rows="10" animated />
+      <el-skeleton v-if ="!popularProducts.length" :rows="10" animated />
       <el-row v-else :gutter="20">
-        <el-col class="product-col" v-for="(product, index) in allProducts" :key="index" :xs="12" :sm="12" :lg="6" >
+        <el-col class="product-col" v-for="(product, index) in popularProducts" :key="index" :xs="12" :sm="12" :lg="6" >
           <div class="product">
             <div class="product-img">
               <img v-if="product.img" :src="product.img">
@@ -69,12 +69,12 @@ export default {
   },
 
   created(){
-    this.$store.dispatch('fetchProducts')
+    this.$store.dispatch('fetchPopularProducts')
   },
 
   computed: {
-    allProducts() {
-      return this.$store.state.products
+    popularProducts() {
+      return this.$store.state.popularProducts
     }
   }
 }

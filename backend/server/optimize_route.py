@@ -58,7 +58,6 @@ def create_data_model():
 
 def print_solution(data, manager, routing, solution):
     """Prints solution on console."""
-    # print(f'Objective: {solution.ObjectiveValue()}')
     dropped_nodes = 'Dropped nodes:'
     for node in range(routing.Size()):
         if routing.IsStart(node) or routing.IsEnd(node):
@@ -88,14 +87,9 @@ def print_solution(data, manager, routing, solution):
                                                  route_load)
         plan_output += 'Distance of the route: {}m\n'.format(route_distance)
         plan_output += 'Load of the route: {}\n'.format(route_load)
-        # print(plan_output)
         total_distance += route_distance
         total_load += route_load
         print(route_forEach_vehicle+'0')
-    # print('Total distance of all routes: {}m'.format(total_distance))
-    # print('Total load of all routes: {}'.format(total_load))
-    # print(array_routes)
-
 def main():
     """Solve the CVRP problem."""
     # Instantiate the data problem.
