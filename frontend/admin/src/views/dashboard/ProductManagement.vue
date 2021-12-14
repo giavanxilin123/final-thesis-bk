@@ -152,12 +152,13 @@ export default {
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          this.$store.dispatch('deleteProductById', id)
-          this.$store.dispatch('fetchProducts');
-          this.$message({
+          this.$store.dispatch('deleteProductById', id).then(()=>{
+            this.$store.dispatch('fetchProducts');
+            this.$message({
             type: 'success',
             message: 'Delete completed'
           }) //upload store fetch
+          })
         }).catch(() => {
           this.$message({
             type: 'info',

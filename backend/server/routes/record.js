@@ -612,4 +612,19 @@ recordRoutes.get('/api.orderById/:id', async function (req, res) {
       }
     });
 });
+
+recordRoutes.get('/api.getVehicleById/:id', async function (req, res) {
+  const {id} = req.params
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("vehicle")
+    .find({_id: ObjectId(id)})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching vehicle by id!");
+     } else {
+        res.json(result);
+      }
+    });
+});
 module.exports = recordRoutes;

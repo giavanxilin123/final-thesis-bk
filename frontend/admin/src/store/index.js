@@ -20,7 +20,8 @@ export default new Vuex.Store({
     config: {},
     collection: [],
     vehicle: [],
-    orderById : []
+    orderById : [],
+    vehicleById : {}
   },
   mutations,
   actions,

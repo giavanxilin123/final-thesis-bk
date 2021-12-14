@@ -16,7 +16,7 @@
           <div class="table-head">
             <el-row :gutter="20">
               
-              <el-col :span="3"><div>Name</div></el-col>
+              <el-col :span="2"><div>Name</div></el-col>
               <el-col :span="3"><div>Capacity</div></el-col>
               <el-col :span="3"><div>Driver</div></el-col>
               <el-col :span="4"
@@ -25,8 +25,8 @@
               <el-col :span="6"
                 ><div >OrderID</div
               ></el-col>
-              <el-col :span="2"
-                ><div>Route</div></el-col
+              <el-col :span="3"
+                ><div>Map</div></el-col
               >
               <el-col :span="3"
                 ><div style="text-align: right">Status</div></el-col
@@ -41,7 +41,7 @@
               :gutter="20"
             >
               
-              <el-col :span="3">
+              <el-col :span="2">
                 <div class="name">
                   {{ vehicle.name }}
                 </div>
@@ -68,9 +68,14 @@
                       </div>
                   </div>
                   </el-col>
-              <el-col :span="2">
-                <div class="route">
-                R1
+              <el-col :span="3">
+                <div class="map">
+                <div  v-if="vehicle.status =='available'">
+                    None
+                </div>
+                  <div @click="mapView(vehicle._id)" v-else>
+                       <i style="font-size: 25px; cursor: pointer" class="el-icon-map-location"></i>
+                  </div>
                 </div>
               </el-col>
               <el-col :span="3">
@@ -137,6 +142,12 @@ export default {
     setPage(val) {
       this.page = val;
     },
+    mapView(id) {
+      this.$router.push({
+        path: "/dashboard/optimize-route",
+        query : {id: id}
+      })
+    },
      
     formatTime(time) {
         let h = String(Math.floor(time / 60))
@@ -148,7 +159,6 @@ export default {
     },
 
     orderInformation(id) {
-
         this.$router.push({
         path: "/dashboard/order-information",
         query: {id: id}

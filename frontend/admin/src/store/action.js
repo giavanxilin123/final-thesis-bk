@@ -88,7 +88,7 @@ export const actions = {
   fetchProducts(ctx) {
     return new Promise((resolve, reject) => {
       client
-        .get(`${BASE_URL}/products`)
+        .get(`${BASE_URL}/api.getAllProducts`)
         .then((res) => {
           ctx.commit("FETCH_PRODUCTS", res.data);
           resolve(res);
@@ -200,6 +200,20 @@ export const actions = {
         .get(`${BASE_URL}/api.orderById/${payload}`)
         .then((res) => {
           ctx.commit('ORDER_BY_ID', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  getVehicleById(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.getVehicleById/${payload}`)
+        .then((res) => {
+          ctx.commit('GET_VEHICLE_BY_ID', res.data)
           resolve(res);
         })
         .catch((err) => {
