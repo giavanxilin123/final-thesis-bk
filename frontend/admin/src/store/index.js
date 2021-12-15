@@ -21,7 +21,8 @@ export default new Vuex.Store({
     collection: [],
     vehicle: [],
     orderById : [],
-    vehicleById : {}
+    vehicleById : {},
+    orderCollection : []
   },
   mutations,
   actions,

@@ -146,4 +146,20 @@ export const actions = {
         });
     });
   },
+
+  updateProfile(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .put(`${BASE_URL}/api.updateProfile`, payload)
+        .then((res) => {
+          ctx.commit('UPDATE_PROFILE', res.data)
+          localStorage.setItem("customer", JSON.stringify(res.data));
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
 };

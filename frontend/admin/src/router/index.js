@@ -54,6 +54,11 @@ const routes = [
         path: 'order-information',
         name: 'Order Information',
         component: () => import('../views/dashboard/OrderInformation.vue')
+      },
+      {
+        path: 'order-collection',
+        name: 'Order Collection',
+        component: () => import('../views/dashboard/OrderCollection.vue')
       }
     ]
   },

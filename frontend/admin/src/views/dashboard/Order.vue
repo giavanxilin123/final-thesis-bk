@@ -6,8 +6,13 @@
         <div class="title">Orders List</div>
       </div>
       <div class="card-body">
-        <div class="toolbar">
+        <!-- <div class="toolbar">
           <el-input placeholder="Search ..." v-model="input"></el-input>
+        </div> -->
+        <div style="position: relative" class="add">
+          <el-button @click="toAutomaticOrderCollection"
+            >VIEW AUTOMATIC ORDER COLLECTION</el-button
+          >
         </div>
         <div class="table-content">
           <div class="table-head">
@@ -84,7 +89,7 @@
               </el-col>
               <el-col :span="1">
                 <div class="action">
-                  <div class="action-edit">
+                  <div @click="orderInformation(order._id)" class="action-edit">
                     <i class="el-icon-s-order"></i>
                   </div>
                 </div>
@@ -113,7 +118,7 @@ export default {
   data() {
     return {
       sort: false,
-      input: "",
+      // input: "",
     };
   },
   methods: {
@@ -129,11 +134,25 @@ export default {
       return preparatory
     },
 
-    formatTime(p) {
-      return String(Math.floor(p / 60)) +":" + String(p % 60)
+    formatTime(time) {
+        let h = String(Math.floor(time / 60))
+        let m = String(time % 60)
+        if (m.length == 1) {
+            m = '0' + m;
+        }
+        return h + ":" + m;
     },
     sortOrder() {
       this.sort = true;
+    },
+     orderInformation(id) {
+        this.$router.push({
+        path: "/dashboard/order-information",
+        query: {id: id}
+      })
+    },
+    toAutomaticOrderCollection() {
+      this.$router.push('/dashboard/order-collection')
     }
   },
   async created() {
@@ -184,7 +203,7 @@ export default {
 .order-management .icon {
   height: 60px;
   width: 60px;
-  background-color: #9c27b0;
+  background-color: #4caf50;
   border-radius: 3px;
   position: absolute;
   left: 15px;

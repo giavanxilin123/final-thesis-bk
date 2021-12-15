@@ -221,4 +221,18 @@ export const actions = {
         });
     });
   },
+
+  getOrderCollection(ctx) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.orderAutoCollection`)
+        .then((res) => {
+          ctx.commit('GET_ORDER_COLLECTION', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
 };

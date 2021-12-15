@@ -80,11 +80,11 @@
               </el-col>
               <el-col :span="3">
                 <div class="status">
-                <div  v-if="vehicle.status =='available'">
-                    <el-tag style="font-weight: 600; text-transform: uppercase;" type="success">{{vehicle.status}}</el-tag>
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: grey"  v-if="vehicle.status =='available'">
+                  
                 </div>
-                  <div v-else>
-                       <el-tag style="font-weight: 600; text-transform: uppercase;" type="danger">{{vehicle.status}}</el-tag>
+                  <div style="width: 10px; height: 10px; border-radius: 50%; background: #67c23a" v-else>
+                       
                   </div>
                 </div>
               </el-col>
@@ -108,26 +108,26 @@
 export default {
   data() {
     return {
-      options: [
-        {
-          value: "5",
-          label: "5",
-        },
-        {
-          value: "10",
-          label: "10",
-        },
-        {
-          value: "25",
-          label: "25",
-        },
-        {
-          value: "50",
-          label: "50",
-        },
-      ],
-      value: "",
-      input: "",
+      // options: [
+      //   {
+      //     value: "5",
+      //     label: "5",
+      //   },
+      //   {
+      //     value: "10",
+      //     label: "10",
+      //   },
+      //   {
+      //     value: "25",
+      //     label: "25",
+      //   },
+      //   {
+      //     value: "50",
+      //     label: "50",
+      //   },
+      // ],
+      // value: "",
+      // input: "",
       page: 1,
       pageSize: 10,
     };
@@ -136,9 +136,6 @@ export default {
     await this.$store.dispatch("vehicle");
   },
   methods: {
-    // addProductView() {
-    //   this.$router.push("/dashboard/product-create");
-    // },
     setPage(val) {
       this.page = val;
     },
@@ -188,7 +185,6 @@ export default {
   text-align: right;
 }
 .management .table-body .el-row {
-  border-bottom: 1px solid silver;
   padding: 5px 0;
   display: flex;
 }

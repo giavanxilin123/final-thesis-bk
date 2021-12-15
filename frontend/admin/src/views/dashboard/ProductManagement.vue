@@ -11,7 +11,7 @@
             >ADD PRODUCT</el-button
           >
         </div>
-        <div class="toolbar">
+        <!-- <div class="toolbar">
           <div>
             <div
               style="
@@ -34,7 +34,7 @@
             </el-select>
           </div>
           <el-input placeholder="Search ..." v-model="input"></el-input>
-        </div>
+        </div> -->
         <div class="table-content">
           <div class="table-head">
             <el-row :gutter="20">
@@ -112,26 +112,26 @@
 export default {
   data() {
     return {
-      options: [
-        {
-          value: "5",
-          label: "5",
-        },
-        {
-          value: "10",
-          label: "10",
-        },
-        {
-          value: "25",
-          label: "25",
-        },
-        {
-          value: "50",
-          label: "50",
-        },
-      ],
-      value: "",
-      input: "",
+      // options: [
+      //   {
+      //     value: "5",
+      //     label: "5",
+      //   },
+      //   {
+      //     value: "10",
+      //     label: "10",
+      //   },
+      //   {
+      //     value: "25",
+      //     label: "25",
+      //   },
+      //   {
+      //     value: "50",
+      //     label: "50",
+      //   },
+      // ],
+      // value: "",
+      // input: "",
       page: 1,
       pageSize: 10,
     };

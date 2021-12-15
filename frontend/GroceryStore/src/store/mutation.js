@@ -34,6 +34,9 @@ export const mutations = {
   CONFIG(state, payload){
     state.config = payload
   },
+  UPDATE_PROFILE(state, payload){
+    state.customer = payload
+  },
 };
 
 

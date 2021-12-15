@@ -627,4 +627,38 @@ recordRoutes.get('/api.getVehicleById/:id', async function (req, res) {
       }
     });
 });
+
+recordRoutes.get("/api.getOrderByIdList", async (req, res, next) => {
+  try{
+    let {id_list} = req.body
+    let object_id_list = id_list.map(i => ObjectId(i))
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("order")
+        .find({ "_id": { "$in": object_id_list }})
+        .toArray((err, result) => {
+          if (err) {
+            res.status(400).send("Error fetching Order by ID list!");
+         } else {
+            res.json(result);
+          }
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
+recordRoutes.put('/api.updateProfile', async (req, res, next) => {
+  try{
+    let updateProfile = req.body
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("customer")
+        .update({username: updateProfile.username}, {$set: updateProfile}, (err, doc) => {
+          res.json(updateProfile)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
 module.exports = recordRoutes;

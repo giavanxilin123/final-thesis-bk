@@ -9,7 +9,7 @@
                 <!-- <div style="position: relative" class="add">
                     <el-button class= "add-button">ADD USER</el-button>
                 </div> -->
-                <div class="toolbar">
+                <!-- <div class="toolbar">
                     <div>
                         <div style='text-align: left; font-size: 12px; color: gray; padding:5px'>Per page</div>
                         <el-select v-model="value" placeholder="Select">
@@ -22,7 +22,7 @@
                         </el-select>
                     </div>
                     <el-input placeholder="Search ..." v-model="input"></el-input>
-                </div>
+                </div> -->
                 <div class="table-content">
                     <div class="table-head">
                         <el-row :gutter="20">
@@ -88,26 +88,11 @@
 <script>
 
 export default {
-    data(){
-        return {
-            options: [{
-            value: '5',
-            label: '5'
-            }, {
-            value: '10',
-            label: '10'
-            }, {
-            value: '25',
-            label: '25'
-            }, {
-            value: '50',
-            label: '50'
-            }],
-            value: '',
-            input: '',
+    // data(){
+    //     return {
             
-         }
-    },
+    //      }
+    // },
 
     async created() {
         await this.$store.dispatch('fetchUser');

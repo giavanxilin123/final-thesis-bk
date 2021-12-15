@@ -78,7 +78,7 @@
           >
             3. Select time
           </div>
-          <!-- <span style="margin-right: 20px">Promise Time</span> -->
+          <span style="margin-right: 20px">Promise Time</span>
          <el-time-select
                     v-model="formOrder.promiseTime"
                     :disabled="formOrder.location.lat == 0"

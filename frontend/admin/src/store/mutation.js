@@ -37,5 +37,8 @@ export const mutations = {
   },
   GET_VEHICLE_BY_ID(state, payload) {
     state.vehicleById = payload
+  },
+  GET_ORDER_COLLECTION(state, payload) {
+    state.orderCollection = payload
   }
 };
