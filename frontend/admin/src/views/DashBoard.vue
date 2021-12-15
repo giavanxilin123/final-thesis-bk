@@ -18,8 +18,12 @@
           </div>
           <div class="sidebar-content" @click ="productManagement"><i class="el-icon-box icon"></i>Product Management</div>
           <!-- <div class="sidebar-content" @click ="optimizeRoute" ><i class="el-icon-map-location icon"></i>Optimize Routing Solver</div> -->
-          <div class="sidebar-content" @click ="toVehiclePage" ><i class="el-icon-truck icon"></i>Vehicle Management</div>
-          <div class="sidebar-content" @click ="toConfigPage" ><i class="el-icon-setting icon"></i>Configuration</div>
+          <div class="sidebar-content" @click ="toVehiclePage" >
+            <el-badge style="margin-right: 20px" :value="numberVehicleActive" :hidden="numberVehicleActive === 0" class="item">
+              <i style="margin-right: 0" class="el-icon-truck icon"></i>
+            </el-badge>Vehicle Management
+          </div>
+          <div v-if="user.role == 'admin'" class="sidebar-content" @click ="toConfigPage" ><i class="el-icon-setting icon"></i>Configuration</div>
 
           <div @click ="logOut" class="sidebar-content" ><i class="el-icon-switch-button icon"></i>Log Out</div>
         </div>
@@ -108,21 +112,28 @@ export default {
       countNewOrder(){
         return this.orderList.filter(x => x.status == "New").length
       },
-      
+      numberVehicleActive() {
+        return this.$store.state.vehicle
+        .filter(v => v.status == "unavailable").length
+      }
     },
 
     async mounted() {
         await this.$store.dispatch('fetchOrders');
+        await this.$store.dispatch('vehicle');
     },  
     
 }
 </script>
 
 <style>
-    
+  .dashboard .el-badge__content {
+  background-color: #4caf50;
+}
 </style>
 
 <style scoped>
+
   .user {
     padding: 20px;
     text-align: left;

@@ -54,6 +54,10 @@ const routes = [
     component: () => import("../views/Profile.vue"),
   },
   {
+    path: "/account-setting",
+    component: () => import("../views/AccountSetting.vue"),
+  },
+  {
     path: "/history/product-list",
     component: () => import("../views/history/ProductList.vue"),
   },

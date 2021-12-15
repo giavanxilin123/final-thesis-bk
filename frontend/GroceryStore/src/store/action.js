@@ -161,5 +161,17 @@ export const actions = {
         });
     });
   },
-
+  
+  changePassword(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .put(`${BASE_URL}/api.updatePassword`, payload)
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err.response.data);
+        });
+    });
+  },
 };

@@ -61,11 +61,11 @@
                             <el-col :span="4"><div>2021-08-26 10:27:23</div></el-col>
                             <el-col :span="4">
                                 <div class="action">
-                                    <div class="action-edit">
-                                        <i class="el-icon-edit"></i>
-                                    </div>
-                                    <div class="action-delete">
+                                    <div @click="deleteStaff(user._id)" v-if="user.role == 'staff'  && role == 'admin' " class="action-delete">
                                         <i class="el-icon-delete"></i>
+                                    </div>
+                                    <div v-if="user.role == 'staff'  && role == 'admin' || user.username == username " class="action-edit">
+                                        <i class="el-icon-edit"></i>
                                     </div>
                                 </div>
                             </el-col>
@@ -88,26 +88,45 @@
 <script>
 
 export default {
-    // data(){
-    //     return {
-            
-    //      }
-    // },
 
     async created() {
         await this.$store.dispatch('fetchUser');
     },
 
-    methods: {
-        
-    },
-    
     computed: {
         allUsers() {
             return this.$store.state.allUsers
+        },
+        role() {
+            return this.$store.state.user.role
+        },
+        username() {
+            return this.$store.state.user.username
         }
     },
-    
+
+    methods: {
+        deleteStaff(id) {
+            this.$confirm('This will permanently delete staff. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+                }).then(() => {
+                this.$store.dispatch('deleteStaffById', id).then(()=>{
+                    this.$store.dispatch('fetchUser');
+                    this.$message({
+                    type: 'success',
+                    message: 'Delete completed'
+                }) //upload store fetch
+                })
+                }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: 'Delete canceled'
+                });          
+            });
+        },
+    }
     
 
 }

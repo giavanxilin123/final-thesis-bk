@@ -23,16 +23,17 @@ authenticateToken = (req, res, next) => {
 
 //admin 
 
-recordRoutes.post('/register', async (req, res, next) => {
+recordRoutes.post('/api.register', async (req, res, next) => {
   try{
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(req.body.password, salt)
       var newUser = {
-        fullname: req.body.fullname,
+        name: req.body.fullname,
         username: req.body.username,
         email: req.body.email,
         phone: req.body.phone,
-        password: hashedPassword
+        password: hashedPassword,
+        role: "admin"
       }    
       
       const dbConnect = dbo.getDb();
@@ -86,7 +87,8 @@ recordRoutes.post('/login', (req, res, next) => {
           if(result){
             const accessToken = jwt.sign({
                 cusId : body[0]._id,
-                email: body[0].email
+                email: body[0].email,
+                role: body[0].role
             }, process.env.ACCESS_TOKEN_SECRET,
             {
                 expiresIn: "1h"
@@ -661,4 +663,55 @@ recordRoutes.put('/api.updateProfile', async (req, res, next) => {
         res.status(500).send();
   }
 });
+
+recordRoutes.put('/api.updatePassword', async(req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  const newPassword = req.body.newPassword;
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(newPassword, salt)
+
+  const dbConnect = dbo.getDb();
+  dbConnect
+  .collection("customer")
+  .find({username: username})
+  .toArray((err, body) => {
+    if(body.length > 0) {
+      bcrypt.compare(
+        password,
+        body[0].password,
+        (err, result) => {
+          if(result){
+            dbConnect
+            .collection("customer")
+            .update({username: username}, {$set: {password: hashedPassword}}, (err, doc) => {
+              res.json(doc)
+            })
+        }
+        else{
+            res.status(403).send({message : "Mật khẩu không chính xác"});
+        }
+        }
+      )
+    } else{
+      res.status(404).send()
+    }
+  })
+})
+
+recordRoutes.delete('/api.deleteStaffById/:id', async function (req, res, next) {
+  try{
+    const {id} = req.params
+    const dbConnect = dbo.getDb();
+        await dbConnect
+        .collection("user")
+        .deleteOne({_id: ObjectId(id)}, (err, result) => {
+          res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
+})
+
+
 module.exports = recordRoutes;

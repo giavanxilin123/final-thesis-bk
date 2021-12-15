@@ -235,4 +235,17 @@ export const actions = {
         });
     });
   },
+
+  deleteStaffById(ctx, payload) {
+    return new Promise((resolve, reject) => {
+      client
+        .delete(`${BASE_URL}/api.deleteStaffById/${payload}`)
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
 };

@@ -20,7 +20,7 @@
           <div style="padding: 10px 30px; background: #f8f9fc" >{{customer.username}}</div>
           <div @click="toProfile" style="padding: 10px 30px; background: #f8f9fc" >Profile <i class="el-icon-user"></i></div>
           <div @click="toOrderHistory" style="padding: 10px 30px; background: #f8f9fc" >Order History <i class="el-icon-s-order"></i></div>
-          <div style="padding: 10px 30px; background: #f8f9fc" >Account Setting <i class="el-icon-key"></i></div>
+          <div @click="toAccountSetting" style="padding: 10px 30px; background: #f8f9fc" >Account Setting <i class="el-icon-key"></i></div>
           <div @click="logOut" style="padding: 10px 30px; background: #f8f9fc" >Log Out <i class="el-icon-switch-button"></i></div>
         </div>
       </el-drawer>
@@ -71,6 +71,7 @@
               >Order History</el-dropdown-item
             >
             <el-dropdown-item
+            @click.native="toAccountSetting"
               style="cursor: pointer"
               icon="el-icon-key"
               >Account Setting</el-dropdown-item
@@ -250,6 +251,21 @@ export default {
       });
       this.table = false
     },
+
+    async toAccountSetting() {
+      await this.$router.push("/account-setting").catch((error) => {
+        if (
+          error.name !== "NavigationDuplicated" &&
+          !error.message.includes(
+            "Avoided redundant navigation to current location"
+          )
+        ) {
+          console.log(error);
+        }
+      });
+      this.table = false
+    },
+    
     async logOut() {
       this.$store.dispatch("logOut");
       await this.$router.push("/").catch((error) => {
