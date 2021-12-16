@@ -5,7 +5,7 @@
         @click="backToVehiclePage"
         style="margin-left: 5px; cursor: pointer"
         class="el-icon-arrow-left"
-        >Back to Vehicle Page</i
+        >Back</i
       >
     </div>
     <el-row class="muiGrid">

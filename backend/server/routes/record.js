@@ -8,6 +8,27 @@ const { ObjectID, ObjectId, mongo } = require("mongodb");
 const {PythonShell} = require ('python-shell');
 dotenv.config()
 
+var axios = require('axios');
+
+var schedule = require('node-schedule');
+var j = schedule.scheduleJob({hour: 10, minute: 56}, function(){
+    console.log('Time for work!');
+    let text = 'I love vy';
+    var config = {
+      method: 'post',
+      url: `https://api.telegram.org/bot2132188523:AAHyWbw4hkfmThyBEJdfu5tBbaZ25kamQQY/sendMessage?chat_id=-683648998&text=${text}`,
+      headers: { }
+    };
+    
+    axios(config)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+});
+
 authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
