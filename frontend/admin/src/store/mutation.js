@@ -40,5 +40,17 @@ export const mutations = {
   },
   GET_ORDER_COLLECTION(state, payload) {
     state.orderCollection = payload
-  }
+  },
+  GET_REVENUE(state, payload) {
+    state.revenue = payload
+  },
+  GET_NUM_ORDERS(state, payload) {
+    state.numOrders = payload
+  },
+  GET_NUM_CUS(state, payload) {
+    state.numCus = payload
+  },
+  GET_BESTSELLING(state, payload) {
+    state.bestSelling = payload
+  },
 };

@@ -83,7 +83,7 @@
                     v-model="formOrder.promiseTime"
                     :disabled="formOrder.location.lat == 0"
                     :picker-options="{
-                      start: '9:00',
+                      start: '08:00',
                       step: '0:15',
                       end: '22:00',
                       minTime: date,
@@ -258,11 +258,14 @@ export default {
     await this.$store.dispatch('config')
     
     this.formOrder.order = this.$store.state.cart;
+    this.formOrder.order.map(o => delete o.img)
     this.formOrder.total = Math.round(this.subTotal * 105) / 100;
     this.formOrder.username = this.customer.username;
     this.formOrder.fullname = this.customer.fullname;
     this.formOrder.email = this.customer.email;
     this.formOrder.phone = this.customer.phone;
+
+    console.log(this.formOrder)
 
     const map = new window.google.maps.Map(document.getElementById("map"), {
       center: { lat: this.center.lat, lng: this.center.lng },
@@ -326,6 +329,7 @@ export default {
              .then(res => {
               let d  = new Date();
               console.log(res.data - d.getHours() * 60 - d.getMinutes())
+              console.log('now: ',d)
               this.timeMinBackToDepot = res.data - d.getHours() * 60 - d.getMinutes()
             })
           }
@@ -387,7 +391,8 @@ export default {
                 background: 'rgba(0, 0, 0, 0.7)'
         });
           let d = new Date();
-          this.formOrder.date = d.toLocaleString();
+          // this.formOrder.date = d.toLocaleString();
+          this.formOrder.date = d;
           await this.$store.dispatch("checkOut", { formOrder: this.formOrder })
           .then(() => {
             this.$store.dispatch("removeCart")
@@ -399,6 +404,11 @@ export default {
                   "https://me.momo.vn/x3IWu4UkC2C4sqtbC7t9";
               } else {
                 this.alertSuccess();
+                this.$gtag.event('checkout', {
+                  'event_category': 'documentation',
+                  'event_label': 'checkout',
+                  'value': 1
+                })
                 this.$router.push("/");
               }
           })

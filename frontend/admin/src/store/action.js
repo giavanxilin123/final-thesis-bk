@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 export const BASE_URL = "http://localhost:5000";
 // export const BASE_URL = "https://gv-grocery-api.herokuapp.com";
 
@@ -241,6 +240,62 @@ export const actions = {
       client
         .delete(`${BASE_URL}/api.deleteStaffById/${payload}`)
         .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  getRevenue(ctx) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.getRevenue`)
+        .then((res) => {
+          ctx.commit('GET_REVENUE', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  getNumOrders(ctx) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.numOrders`)
+        .then((res) => {
+          ctx.commit('GET_NUM_ORDERS', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  getNumCus(ctx) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.numCus`)
+        .then((res) => {
+          ctx.commit('GET_NUM_CUS', res.data)
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  getBestSelling(ctx) {
+    return new Promise((resolve, reject) => {
+      client
+        .get(`${BASE_URL}/api.bestSelling`)
+        .then((res) => {
+          ctx.commit('GET_BESTSELLING', res.data)
           resolve(res);
         })
         .catch((err) => {

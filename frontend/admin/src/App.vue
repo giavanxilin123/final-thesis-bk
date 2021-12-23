@@ -8,12 +8,14 @@
 <script>
 import io from 'socket.io-client'
 import axios from 'axios'
-const socket = io("https://gv-grocery-api.herokuapp.com")
 
+
+const BASE_URL = "http://localhost:5000"
+// const socket = io("https://gv-grocery-api.herokuapp.com")
+const socket = io("http://localhost:5000")
 export default {
   data() {
     return {
-      // queue_order : new Array(52),
       center: {lat: 10.7719937, lng: 106.7057951},
       map: '',
       marker: '',
@@ -53,7 +55,7 @@ export default {
         var date = new Date();
         if(date.getHours() === Math.floor (x.timeRunEngine / 60) && date.getMinutes() === (x.timeRunEngine % 60)){
           console.log("change Status!", date)
-          axios.put("https://gv-grocery-api.herokuapp.com/api.changeProgressingStatus", {id_list: x.id_list})
+          axios.put(`${BASE_URL}/api.changeProgressingStatus`, {id_list: x.id_list})
           .then(async () => {
             this.$store.dispatch('fetchOrders');
             await this.$store.dispatch('optimizeRoute')
@@ -80,8 +82,8 @@ export default {
                             // totalDistance += distance;
                             let time = res.routes[0].legs.map(x=>x.duration.value).reduce((a,b) => a+b, 0)
                             let d = new Date()
-                            await axios.put(`https://gv-grocery-api.herokuapp.com/api.vehicleToDelivery/${this.checkVehicleAvailable[step]._id}`, 
-                            {time: Math.ceil(time /60)+ d.getHours()*60 + d.getMinutes(),
+                            await axios.put(`${BASE_URL}/api.vehicleToDelivery/${this.checkVehicleAvailable[step]._id}`, 
+                            {time: Math.ceil(time / 60)+ d.getHours()* 60 + d.getMinutes(),
                             orderId_list: orderId_list[step],
                             route: location_map})
                             let text;
@@ -109,7 +111,7 @@ export default {
               }
           })
           .then(async()=> {
-            axios.put("https://gv-grocery-api.herokuapp.com/api.changeDeliveringStatus", {id_list: x.id_list})
+            axios.put(`${BASE_URL}/api.changeDeliveringStatus`, {id_list: x.id_list})
             .then(() => {
               this.$store.dispatch('fetchOrders');
             })
@@ -123,15 +125,15 @@ export default {
     socket.on('Server-update-time-delivery', (time) => {
       console.log(time)
       clearInterval(this.intervalTimeBack)
-      axios.get('https://gv-grocery-api.herokuapp.com/api.vehicle')
+      axios.get(`${BASE_URL}/api.vehicle`)
            .then(res => {
               let arr_time = res.data.filter(v => v.status == "unavailable").map(t => {return {timeBackToDepot: t.timeBackToDepot, orderId_list: t.orderId_list}})
               arr_time.map(x => this.intervalTimeBack = setInterval(() => {
                 var date = new Date();
                 if (date.getHours() === Math.floor (x.timeBackToDepot/ 60) && date.getMinutes() === (x.timeBackToDepot % 60)){
                   console.log('reset vehicle!')
-                  axios.put('https://gv-grocery-api.herokuapp.com/api.vehicleBackToDepot', {time: x.timeBackToDepot})
-                  axios.put('https://gv-grocery-api.herokuapp.com/api.changeCompletedStatus', {id_list: x.orderId_list})
+                  axios.put(`${BASE_URL}/api.vehicleBackToDepot`, {time: x.timeBackToDepot})
+                  axios.put(`${BASE_URL}/api.changeCompletedStatus`, {id_list: x.orderId_list})
                   .then(() => {
                     this.$store.dispatch('fetchOrders');
                   })     

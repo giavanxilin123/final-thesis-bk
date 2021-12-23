@@ -36,6 +36,11 @@ const routes = [
         component: () => import('../views/dashboard/ProductCreate.vue')
       },
       {
+        path: 'user-create',
+        name: 'User Create',
+        component: () => import('../views/dashboard/UserCreate.vue')
+      },
+      {
         path: 'product-update',
         name: 'Product Update',
         component: () => import('../views/dashboard/ProductUpdate.vue')
@@ -59,6 +64,11 @@ const routes = [
         path: 'order-collection',
         name: 'Order Collection',
         component: () => import('../views/dashboard/OrderCollection.vue')
+      },
+      {
+        path: 'graph',
+        name: 'Dashboard',
+        component: () => import('../views/dashboard/Dashboard.vue')
       }
     ]
   },

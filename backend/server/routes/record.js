@@ -9,25 +9,9 @@ const {PythonShell} = require ('python-shell');
 dotenv.config()
 
 var axios = require('axios');
+var CronJob = require('cron').CronJob;
+let API_KEY='AIzaSyAkK1Nj9HWtb4R0crJISga3j9hq2aBC8lQ'
 
-var schedule = require('node-schedule');
-var j = schedule.scheduleJob({hour: 10, minute: 56}, function(){
-    console.log('Time for work!');
-    let text = 'I love vy';
-    var config = {
-      method: 'post',
-      url: `https://api.telegram.org/bot2132188523:AAHyWbw4hkfmThyBEJdfu5tBbaZ25kamQQY/sendMessage?chat_id=-683648998&text=${text}`,
-      headers: { }
-    };
-    
-    axios(config)
-    .then(function (response) {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-});
 
 authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization']
@@ -43,6 +27,107 @@ authenticateToken = (req, res, next) => {
 }
 
 //admin 
+
+// let j = []
+// let center = '10.7719937,106.7057951'
+
+recordRoutes.put("/order", async (req, res, next) => {
+  try{
+    var newOrder = req.body.formOrder
+    newOrder.date = new Date()
+    const dbConnect = dbo.getDb();
+    orderCollection = dbConnect.collection("order")
+    // vehicleCollection = dbConnect.collection("vehicle")
+      
+        orderCollection
+        .insertOne(newOrder, (err, result) => {
+            res.json(result);
+            req.io.sockets.emit('Server-send-data', newOrder)
+            // var config = {
+            //   method: 'get',
+            //   url: `http://localhost:5000/api.orderAutoCollection`,
+            //   headers: { }
+            // };
+            
+            // axios(config)
+            // .then(function (response) {
+            //   let arr = response.data;
+            //   console.log(arr)
+            //   arr.map(x => {
+            //     if(j[x.index] !== undefined) {
+            //       j[x.index].stop()
+            //     }
+            //     var cron = ' * * *'
+            //     cron = '0 ' + String(x.timeRunEngine % 60) + ' ' + String(Math.floor(x.timeRunEngine / 60)) + cron
+            //     j[x.index] = new CronJob(cron, async function() {
+            //       console.log('Time for work')
+            //       let object_id_list = x.id_list.map(i => ObjectId(i))
+            //       await orderCollection
+            //       .updateMany({ "_id": { "$in": object_id_list }}, {$set: {"status": "Progressing"}})
+            //       req.io.sockets.emit('Server-send-data', 'fetchOrder')
+            //       axios.get(`http://localhost:5000/solving-route`)
+            //       .then(res => {
+            //         let legs = res.data.route_legs
+            //         orderCollection.find({ "_id": { "$in": object_id_list }}).sort({"_id": -1})
+            //         .toArray(async (err, result) => {
+            //           let order = result
+            //           let l = legs.map(x => x.map(y => order[y-1].location))
+            //           let location_map = legs.map(x => x.map(y =>{return {location: order[y-1].location}}))
+            //           location_map_string = l.map(x => x.map(y => String(y.lat) + ',' + String(y.lng))).map(z => z.join("|"))
+            //           let orderId_list = legs.map(x => x.map(y => order[y-1]._id))
+            //           for (const step in location_map_string) {
+            //             await axios.get(`https://maps.googleapis.com/maps/api/directions/json?origin=${center}&destination=${center}&waypoints=${location_map_string[step]}&key=${API_KEY}`)
+            //             .then(async (res) => {
+            //               let text;
+            //                 for (const i in res.data.routes[0].legs) {
+            //                     text += `- POINT ${String.fromCharCode(65 + parseInt(i))}: ${res.data.routes[0].legs[i].start_address}`
+            //                     for (const j in res.data.routes[0].legs[i].steps){
+            //                         text += `${parseInt(j) + 1}. ${res.data.routes[0].legs[i].steps[j].html_instructions}`
+            //                     }
+            //                 }
+            //                 text += `- POINT A: ${res.data.routes[0].legs[res.data.routes[0].legs.length - 1].end_address}`
+            //                 text = text.split('<b>').join('')
+            //                        .split('</b>').join('')
+            //                        .split('<div style="font-size:0.9em">').join('')
+            //                        .split('<div>').join('')
+            //                        .split('&nbsp;').join('')
+            //                        .split('</div>').join('')
+            //                        .split('<wbr/>').join(' ')
+            //                        .split('&amp').join('')
+            //                        .split('undefined').join('')
+            //               let time = res.data.routes[0].legs.map(x => x.duration.value).reduce((a, b) => a + b, 0)
+            //               let d = new Date()
+            //               await vehicleCollection
+            //               .find({"status": "available"})
+            //               .toArray(async (err, result) => {
+            //                 await axios.put(`http://localhost:5000/api.vehicleToDelivery/${result[step]._id}`, 
+            //                 {time: Math.ceil(time / 60)+ d.getHours() * 60 + d.getMinutes(),
+            //                 orderId_list: orderId_list[step],
+            //                 route: location_map})
+            //                 await orderCollection
+            //                 .updateMany({ "_id": { "$in": object_id_list }}, {$set: {"status": "Delivering"}})
+            //                 req.io.sockets.emit('Server-send-data', 'fetchOrder')
+            //                 let uri = `https://api.telegram.org/bot2132188523:AAHyWbw4hkfmThyBEJdfu5tBbaZ25kamQQY/sendMessage?chat_id=-683648998&text=${text}`
+            //                 let encoded = encodeURI(uri);
+            //                 console.log(encoded)
+            //                 await axios.post(encoded)
+            //               })  
+            //             })
+            //           }
+            //         })
+            //       })
+            //     }, null, true, 'Asia/Ho_Chi_Minh');
+            //     j[x.index].start();
+            //   })
+            // })
+            // .catch(function (error) {
+            //   console.log(error);
+            // });
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
 
 recordRoutes.post('/api.register', async (req, res, next) => {
   try{
@@ -204,7 +289,6 @@ recordRoutes.put("/api.changeProgressingStatus/", async (req, res, next) => {
       await dbConnect
         .collection("order")
         .updateMany({ "_id": { "$in": object_id_list }}, {$set: {"status": "Progressing"}}, (err, doc) => {
-          console.log(doc)
           res.json(doc)
         })
   } catch{
@@ -220,7 +304,6 @@ recordRoutes.put("/api.changeDeliveringStatus/", async (req, res, next) => {
       await dbConnect
         .collection("order")
         .updateMany({ "_id": { "$in": object_id_list }}, {$set: {"status": "Delivering"}}, (err, doc) => {
-          console.log(doc)
           res.json(doc)
         })
   } catch{
@@ -236,7 +319,6 @@ recordRoutes.put("/api.changeCompletedStatus/", async (req, res, next) => {
       await dbConnect
         .collection("order")
         .updateMany({ "_id": { "$in": object_id_list }}, {$set: {"status": "Completed"}}, (err, doc) => {
-          console.log(doc)
           res.json(doc)
         })
   } catch{
@@ -247,7 +329,6 @@ recordRoutes.put("/api.changeCompletedStatus/", async (req, res, next) => {
 recordRoutes.get("/solving-route", async (req, res, next) => {
   await PythonShell.run('optimize_route.py', null,  function (err, result) {
     if (err) console.log(err)
-    console.log(result)
     let drop = result.shift()
     drop_nodes = drop.split(':')[1].split(' ').map(x => parseInt(x))
     drop_nodes.shift()
@@ -290,7 +371,6 @@ recordRoutes.get('/api.getPopularProducts', async function (req, res) {
 recordRoutes.get('/api.getProductByType/:type', async function (req, res) {
   const {type} = req.params
   const dbConnect = dbo.getDb();
-  console.log(type)
   dbConnect
     .collection("product")
     .find({type: type})
@@ -476,21 +556,6 @@ recordRoutes.delete('/api.deleteOrderById/:id', async function (req, res, next) 
   }
 })
 
-recordRoutes.put("/order", async (req, res, next) => {
-  try{
-    var newOrder = req.body.formOrder
-    const dbConnect = dbo.getDb();
-        dbConnect
-        .collection("order")
-        .insertOne(newOrder, (err, result) => {
-            res.json(result);
-            req.io.sockets.emit('Server-send-data', newOrder)
-        })
-  } catch{
-        res.status(500).send();
-  }
-});
-
 recordRoutes.put('/api.vehicleToDelivery/:id', async (req, res, next) => {
   try{
     const {time} = req.body
@@ -572,7 +637,6 @@ recordRoutes.get('/api.config', async function (req, res) {
 recordRoutes.put('/api.config', async (req, res, next) => {
   try{
     const {duration} = req.body
-    console.log(duration)
     const dbConnect = dbo.getDb();
         await dbConnect
         .collection("config")
@@ -594,13 +658,13 @@ recordRoutes.get('/api.orderAutoCollection', async function (req, res) {
       if (err) {
         res.status(400).send("Error fetching listings!");
      } else {
-        queue = new Array(53)
+        queue = new Array(57)
         arr = result.map(o => {
           let p = o.promiseTime.split(':');
           let p_hour = +p[0];
           let p_minute = +p[1]
           return {
-            index: 4 * (p_hour - 9) + (p_minute / 15), 
+            index: 4 * (p_hour - 8) + (p_minute / 15), 
             id_list: [o._id], 
             timeRunEngine: p_hour * 60 + p_minute - o.duration_delivery - 2}
           })
@@ -734,5 +798,175 @@ recordRoutes.delete('/api.deleteStaffById/:id', async function (req, res, next) 
   }
 })
 
+recordRoutes.get("/api.getRevenue", async (req, res, next) => {
+  try{
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("order")
+        .find({})
+        .toArray((err, result) => {
+          if (err) {
+            res.status(400).send("Error fetching Order !");
+         } else {
+            let revenue = result.map(o => o.total).reduce((x,y) => x+y, 0)
+            res.json(revenue);
+          }
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
 
+
+recordRoutes.get("/api.getRevenue", async (req, res, next) => {
+  try{
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("order")
+        .find({})
+        .toArray((err, result) => {
+          if (err) {
+            res.status(400).send("Error fetching Order !");
+         } else {
+            let revenue = result.map(o => o.total).reduce((x,y) => x+y, 0)
+            res.json(revenue);
+          }
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
+recordRoutes.post('/api.addUser', async (req, res, next) => {
+  try{
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.userForm.password, salt)
+      var newUser = {
+        name: req.body.userForm.name,
+        username: req.body.userForm.username,
+        email: req.body.userForm.email,
+        phone: req.body.userForm.phone,
+        password: hashedPassword,
+        role: "staff"
+      }    
+      
+      const dbConnect = dbo.getDb();
+      dbConnect
+      .collection("user")
+      .insertOne(newUser, (err, result) => {
+        res.json(result)
+      })
+  }catch{
+      res.status(500).send();
+  }
+})
+
+recordRoutes.get('/api.orderAutoCollection', async function (req, res) {
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("order")
+    .find({status: "New"}).sort({"_id": -1})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching listings!");
+     } else {
+        queue = new Array(57)
+        arr = result.map(o => {
+          let p = o.promiseTime.split(':');
+          let p_hour = +p[0];
+          let p_minute = +p[1]
+          return {
+            index: 4 * (p_hour - 8) + (p_minute / 15), 
+            id_list: [o._id], 
+            timeRunEngine: p_hour * 60 + p_minute - o.duration_delivery - 2}
+          })
+        
+        const alo = arr.reduce((acc, curr) => {
+          const group = acc.find(g => g.index === curr.index)
+          if (group) {
+            group.id_list = group.id_list.concat(curr.id_list).sort((a,b) => a - b)
+            group.timeRunEngine = Math.min(group.timeRunEngine, curr.timeRunEngine)
+          } else {
+            acc.push({index: curr.index, id_list: curr.id_list, timeRunEngine: curr.timeRunEngine })
+          }
+          return acc
+        }, [])
+    
+        res.send(alo);
+      }
+    });
+});
+
+recordRoutes.get("/api.orderLastWeek", async (req, res, next) => {
+  let d =  new Date()
+  d.setDate(d.getDate()-6)
+  try{
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("order")
+        .find({'date': {
+          $gte: d
+        },
+        }).toArray((err, result) => {
+          res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
+recordRoutes.get("/api.numOrders", async (req, res, next) => {
+  try{
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("order")
+        .count().then(result => {
+          res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
+recordRoutes.get("/api.bestSelling", async (req, res, next) => {
+  try{
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("order")
+        .find({})
+        .toArray((err, result) => {
+          let order = result.map(x => x.order.map(y => {return {name: y.name, num: y.num, price: y.price}}))
+                      .reduce((a, b) => {
+                        return a.concat(b)
+                      })
+          let arr = order.reduce((acc, curr) => {
+            const group = acc.find(g => g.name === curr.name)
+            if (group) {
+              group.num = group.num + curr.num
+            } else {
+              acc.push({name: curr.name, num: curr.num, price: curr.price})
+            }
+            return acc
+          }, [])
+          arr.sort((a,b) => b.num - a.num)
+          res.send(arr)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
+
+recordRoutes.get("/api.numCus", async (req, res, next) => {
+  try{
+    const dbConnect = dbo.getDb();
+      await dbConnect
+        .collection("customer")
+        .count().then(result => {
+          res.json(result)
+        })
+  } catch{
+        res.status(500).send();
+  }
+});
 module.exports = recordRoutes;
+

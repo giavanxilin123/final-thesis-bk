@@ -22,7 +22,11 @@ export default new Vuex.Store({
     vehicle: [],
     orderById : [],
     vehicleById : {},
-    orderCollection : []
+    orderCollection : [],
+    revenue: '',
+    numOrders: '',
+    numCus: '',
+    bestSelling: []
   },
   mutations,
   actions,

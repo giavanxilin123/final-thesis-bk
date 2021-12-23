@@ -22,14 +22,14 @@
               <el-col :span="4"><div>Name</div></el-col>
               <el-col :span="2"><div>Quantity</div></el-col>
               <el-col :span="5"><div>Address</div></el-col>
-              <el-col :span="2"
+              <el-col :span="4"
                 ><div>Created At</div
               ></el-col>
               <el-col :span="2"
                 ><div>PromiseTime</div
               ></el-col>
-              <el-col :span="2">Prepare <i @click="sortOrder" style="cursor: pointer" class="el-icon-sort-up
-"></i></el-col>
+              <!-- <el-col :span="2">Prepare <i @click="sortOrder" style="cursor: pointer" class="el-icon-sort-up
+"></i></el-col> -->
               <el-col :span="2"><div>Status</div></el-col>
               <el-col style="padding: 0 !important" :span="1"
                 ><div style="text-align: right;">Actions</div></el-col
@@ -38,7 +38,7 @@
           </div>
           <div class="table-body">
             <el-row
-              v-for="(order, index) in orderList"
+              v-for="(order, index) in pagedTableData"
               :key="index"
               style="background-color: #f9f9f9"
               :gutter="20"
@@ -64,15 +64,15 @@
                   {{ order.address }}
                 </div>
               </el-col>
-              <el-col :span="2"
-                ><div style="font-size: 12px">{{ order.date }}</div></el-col
+              <el-col :span="4"
+                ><div style="font-size: 12px">{{ new Date(order.date).toLocaleString() }}</div></el-col
               >
               <el-col :span="2"
                 ><div style="font-size: 12px">{{ order.promiseTime }}</div></el-col
               >
-              <el-col :span="2"
+              <!-- <el-col :span="2"
                 ><div style="font-size: 12px">{{ formatTime(preparatory(order.promiseTime, order.duration_delivery)) }}</div></el-col
-              >
+              > -->
               <el-col :span="2" style="text-align: center">
                 <el-tag style="font-size: 10px" v-if="order.status === 'Completed'" type="success">{{
                   order.status
@@ -98,10 +98,9 @@
           </div>
           <div class="table-footer">
             <el-pagination
-              :page-size="3"
+              @current-change="setPage"
               layout="prev, pager, next"
-              :total="7"
-              @current-change="1"
+              :total="orderList.length"
             >
             </el-pagination>
           </div>
@@ -118,7 +117,8 @@ export default {
   data() {
     return {
       sort: false,
-      // input: "",
+      page: 1,
+      pageSize: 10,
     };
   },
   methods: {
@@ -153,6 +153,9 @@ export default {
     },
     toAutomaticOrderCollection() {
       this.$router.push('/dashboard/order-collection')
+    },
+    setPage(val) {
+      this.page = val;
     }
   },
   async created() {
@@ -167,6 +170,12 @@ export default {
           })
       }
       return orders;
+    },
+    pagedTableData() {
+      return this.orderList.slice(
+        this.pageSize * this.page - this.pageSize,
+        this.pageSize * this.page
+      );
     },
   },
   // watch: {

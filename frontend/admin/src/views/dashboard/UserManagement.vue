@@ -6,9 +6,9 @@
                 <div class="title">Users List</div>
             </div>
             <div class="card-body">
-                <!-- <div style="position: relative" class="add">
-                    <el-button class= "add-button">ADD USER</el-button>
-                </div> -->
+                <div v-if="role == 'admin'" style="position: relative" class="add">
+                    <el-button  @click="addUser" class= "add-button">ADD USER</el-button>
+                </div>
                 <!-- <div class="toolbar">
                     <div>
                         <div style='text-align: left; font-size: 12px; color: gray; padding:5px'>Per page</div>
@@ -30,7 +30,7 @@
                             <el-col :span="4"><div>Name</div></el-col>
                             <el-col :span="4"><div>Email</div></el-col>
                             <el-col :span="4"><div>Role</div></el-col>
-                            <el-col :span="4"><div>Created At <i class="el-icon-top"></i></div></el-col>
+                            <el-col :span="4"><div>Phone</div></el-col>
                             <el-col :span="4"><div style="text-align: right">Actions</div></el-col>
                         </el-row>
                     </div>
@@ -58,7 +58,7 @@
                                     {{user.role}}
                                 </div>
                             </el-col>
-                            <el-col :span="4"><div>2021-08-26 10:27:23</div></el-col>
+                            <el-col :span="4"><div>{{user.phone}}</div></el-col>
                             <el-col :span="4">
                                 <div class="action">
                                     <div @click="deleteStaff(user._id)" v-if="user.role == 'staff'  && role == 'admin' " class="action-delete">
@@ -126,6 +126,10 @@ export default {
                 });          
             });
         },
+
+        addUser() {
+            this.$router.push('/dashboard/user-create')
+        }
     }
     
 

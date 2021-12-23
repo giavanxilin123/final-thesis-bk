@@ -59,6 +59,11 @@ export default {
           await this.$store.dispatch("logIn", this.form);
           this.alertSuccess();
           this.$router.push("/");
+          this.$gtag.event('login', {
+            'event_category': 'documentation',
+            'event_label': 'login',
+            'value': 1
+          })
         }catch(err){
           this.alertErr(err)
         }

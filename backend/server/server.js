@@ -46,7 +46,4 @@ dbo.connectToServer(function (err) {
   });
 })
 
-var schedule = require('node-schedule');
-var j = schedule.scheduleJob({hour: 22, minute: 57}, function(){
-    console.log('Time for work!');
-  });
+

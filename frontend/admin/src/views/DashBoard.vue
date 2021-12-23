@@ -8,7 +8,7 @@
           <div class="divider"></div>
           <div class=user>{{user.name}}</div>
           <div class="divider"></div>
-          <div class="sidebar-content"><i class="el-icon-menu icon"></i>Dashboard</div>
+          <div class="sidebar-content" @click ="dashboard"><i class="el-icon-menu icon"></i>Dashboard</div>
           <div class="sidebar-content" @click ="userManagement"><i class="el-icon-s-custom icon"></i>User Management</div>
           
           <div class="sidebar-content" @click ="orderManagement">
@@ -97,6 +97,14 @@ export default {
           }
         })
       },
+
+      async dashboard() {
+        await this.$router.push("/dashboard/graph").catch(error => {
+          if (error.name !== 'NavigationDuplicated' && !error.message.includes('Avoided redundant navigation to current location')) {
+            console.log(error)
+          }
+        })
+      },
       logOut() {
         this.$store.dispatch('logOut');
         this.$router.push('/')
@@ -127,9 +135,9 @@ export default {
 </script>
 
 <style>
-  .dashboard .el-badge__content {
+  /* .dashboard .el-badge__content {
   background-color: #4caf50;
-}
+} */
 </style>
 
 <style scoped>

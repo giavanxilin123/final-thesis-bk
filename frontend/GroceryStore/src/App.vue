@@ -307,7 +307,10 @@ export default {
           message: "Đăng xuất thành công!",
           type: "success"
         });
-      }
+     },
+     async  getData() {
+      
+    }
   },
 
   computed: {
@@ -324,7 +327,27 @@ export default {
       return this.$store.state.customer;
     },
   },
-};
+
+  // async mounted() {
+  //   const { google } = require('googleapis')
+  //   const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
+  //   const jwt = new google.auth.JWT("starting-account-2e0055tao3l3@quickstart-1639981901007.iam.gserviceaccount.com", null, "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDL1NQ/lHXbpuBs\nTPdSU/kMgn/D5Ej2vVOE7PfoghbkTEVK19dpdQrktSAjTcZOPZ5M7fuV8NVDDv1y\nyvtcwAVPJKg9sdAdBm2txczL4UAI5ZmXPiuYIo89Eq41DzOCdFCOWsSeS3KAzSMu\nLunvnQC697EnOdC9k2cE91QSV0uPwcygvUXPl7znCOoe4/00awYK6/hQYLtSqPhO\nioVRiNPDk1yofErNnioz41QquvUlQjHMi9RDntX6UvkUfKZlOMlP3cUIQ5SJ4F2h\nP9hFPZNUTccMAV+M+PdILhBPpTju4MPDezVlZJKTRXbDkXc4P16jWVVoYJuBd77i\n6fjZKZepAgMBAAECggEAKkv6VU053cA1vtOD2PYq7pEf8SbsiyMDc0h3MyzXkj1P\nfbXnce9DOO1rA1hux6qasE0MEXO91WIFbu43FeqUz3UEYnUFAhjk5pPuqPoPfykh\n45QXmMTHI32+X61NW4tGchvcxBpU4uxumfVLPxk93w5qGQEy0zwEuy+Vpw6tU+Gc\n3Fg8cQGFgv7+1BaUUnBQSYNd8hgMWTUwGmv72NSDTkmrn7rdyH9HvMhSgDdPEGTC\nsh+Rt5fKEuAOj1XzyZrVqJSwmtgd4gVqRlpf7GM/oLqMu8Qf3FlMtFUJhVCSUbpl\nnguSJb/LItgjw5QTwCayDZN/sUPWhHprMCjBbvN3uQKBgQDySJdJlrk+CDCmaQc3\nIjQ/8m1ssfCLMsC8a8E/6hwADdgP4kgtaIjboqSFzMdZ0+lUCN57SlHD1i+lxe/f\nNUcwUyCyg8dsm3ZlLiZnDxN6DSy31WG6fVG9M8irGBzsoeUcv/Bif8T994jTdRjr\nmNP054lDLfgOWhSK8URRI44+zQKBgQDXXvOWYOiwRjoulopmjoRkKBGGkyJoSpJS\n4Kq23tk+Ft11RsOG42u5eAxJNpDDzgrFtY3R6plmYshUkfC95X3cgH39JsFInfG3\nPzK8ndEY97mon/UMQYs3JmgDxEeFeUDmc9p7+sExfJ/o/Vw8q24x9jbFZsubyKMS\nAwXdLPuETQKBgEUYUpzX8Sgxqb4rgbVFeeUqu+4dqN3psXGKwWf62dViHVYaUD8y\n6qTIc2b9CXUirA4dIWXDwiG5eYkrM8dSKGUtr8t5LWxZwaAFU0pc0E8kZrZekipf\nBuqQVBAHJmiNmwth6aoNih5rc4fqgxrdUMUtKsYP3AgrxGQDflota6mZAoGAJ62c\nnvXXqLIngfHGKcLT7UfcgriUvDYQ4yf1C5/e0iuQPUz+NNmtPQw65zogTZKmNWqP\naD8aZ9yHH92LRtEC8R7TF1KOhXxjzejcxhclML5i/AgMM2fX6B8xRpBgxNxj8pEh\njXnTIfTd2STkW2ER+i5sRM39cQPz1xurduYUqHkCgYASLYgF9f+GhKMoNOnPWcQT\nm16/WcN3c5pt0Z4Y17WWUzzyno3F2oAhWmsVys1OzYL8ZUlf9Wqeyncrb8FJx+Si\nxpy1PB+jGprh0ro/tGo9RjVUBehy+Dvvf7qobz/spz/2RKfcefrrzoy+X6Cf3SG1\nvU4ZMEb6F049RZEK/I5BMw==\n-----END PRIVATE KEY-----\n", scopes)
+  //   const view_id = "215635502";
+  //   async function getData() {
+  //   const response = await jwt.authorize()
+  //   const result = await google.analytics('v3').data.ga.get({
+  //   'auth': jwt,
+  //         'ids': 'ga:' + view_id,
+  //         'start-date': '30daysAgo',
+  //         'end-date': 'today',
+  //         'metrics': 'ga:pageviews'
+  //   })
+
+  //     console.dir('google analytic: ', result)
+  //   };
+  //   getData();
+  // }
+}
 </script>
 
 <style>

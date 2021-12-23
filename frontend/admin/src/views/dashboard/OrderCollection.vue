@@ -8,7 +8,7 @@
         >Back to Order Management Page</i
       >
     </div>
-    <el-row class="muiGrid">
+    <el-row v-if="orderCollection.length !==0" class="muiGrid">
         <el-descriptions style="margin: 10px 0" v-for="(c, index) in orderCollection" :key="index"  direction="vertical" :column="3" border>
             <el-descriptions-item label="Time Run Optimization Tool">{{formatTime(c.timeRunEngine)}}</el-descriptions-item>
             <el-descriptions-item label="OrderID">
@@ -17,6 +17,9 @@
                 </div>
             </el-descriptions-item>
         </el-descriptions>
+    </el-row>
+    <el-row class="muiGrid" v-else>
+      <el-empty :image-size="300"></el-empty>
     </el-row>
   </div>
 </template>
@@ -49,10 +52,11 @@ export default {
 
     computed: {
         orderCollection() {
-            let order = this.$store.state.orderCollection.sort((a, b) => {
-                return a.timeRunEngine - b.timeRunEngine
-            })
-            return order
+            // let order = this.$store.state.orderCollection.sort((a, b) => {
+            //     return a.timeRunEngine - b.timeRunEngine
+            // })
+            // return order
+            return this.$store.state.orderCollection
         },
            
     }
