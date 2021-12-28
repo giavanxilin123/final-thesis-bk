@@ -59,7 +59,7 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           await axios
-            .put(`https://gv-grocery-api.herokuapp.com/api.config`, {duration: this.form})
+            .put(`http://localhost:5000/api.config`, {duration: this.form})
             .then(() => {
               this.alertSuccess();
             })

@@ -325,7 +325,7 @@ export default {
           this.t_denta_minute = t_denta % 60  
           console.log(this.t_denta_hour, this.t_denta_minute)
           if(this.checkVehicleAvailable.length == 0){
-             await axios.get('https://gv-grocery-api.herokuapp.com/api.timeMinToDepot')
+             await axios.get('http://locahost:5000/api.timeMinToDepot')
              .then(res => {
               let d  = new Date();
               console.log(res.data - d.getHours() * 60 - d.getMinutes())
