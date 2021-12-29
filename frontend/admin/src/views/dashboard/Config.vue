@@ -60,6 +60,7 @@ export default {
         if (valid) {
           await axios
             .put(`http://localhost:5000/api.config`, {duration: this.form})
+            // .put(`https://gv-grocery-api.herokuapp.com/api.config`, {duration: this.form})
             .then(() => {
               this.alertSuccess();
             })

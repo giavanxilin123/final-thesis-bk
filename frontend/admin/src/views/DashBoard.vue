@@ -18,11 +18,11 @@
           </div>
           <div class="sidebar-content" @click ="productManagement"><i class="el-icon-box icon"></i>Product Management</div>
           <!-- <div class="sidebar-content" @click ="optimizeRoute" ><i class="el-icon-map-location icon"></i>Optimize Routing Solver</div> -->
-          <div class="sidebar-content" @click ="toVehiclePage" >
+          <!-- <div class="sidebar-content" @click ="toVehiclePage" >
             <el-badge style="margin-right: 20px" :value="numberVehicleActive" :hidden="numberVehicleActive === 0" class="item">
               <i style="margin-right: 0" class="el-icon-truck icon"></i>
             </el-badge>Vehicle Management
-          </div>
+          </div> -->
           <div v-if="user.role == 'admin'" class="sidebar-content" @click ="toConfigPage" ><i class="el-icon-setting icon"></i>Configuration</div>
 
           <div @click ="logOut" class="sidebar-content" ><i class="el-icon-switch-button icon"></i>Log Out</div>

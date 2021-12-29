@@ -143,6 +143,7 @@ export default {
 
     async created() {
             await axios.get('http://localhost:5000/api.orderLastWeek')
+            // await axios.get('https://gv-grocery-api.herokuapp.com/api.orderLastWeek')
             .then(res => {
                 let arr =res.data.map(x=> {
                     return {total: x.total, date:new Date(x.date).toDateString(), numOrder: 1}

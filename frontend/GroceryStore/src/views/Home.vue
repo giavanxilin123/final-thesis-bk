@@ -2,7 +2,7 @@
   <div class="home">
     <div class="carousel">
         <div class="carousel-content">
-          <div class="carousel-header"> Nuts & Cereals</div>
+          <div class="carousel-header"> Berries & Blueberry</div>
           <div class="carousel-body">These species are sometimes called "blueberries" and sold as blueberry jam or other products.</div>
           <el-button style = "margin: 20px; padding: 15px 60px" type="success"> Shop Now</el-button>
         </div>
