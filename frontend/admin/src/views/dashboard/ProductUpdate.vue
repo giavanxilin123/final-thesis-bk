@@ -166,6 +166,7 @@ export default {
         if (valid) {
           await axios
             .put(`http://localhost:5000/api.updateProduct/${id}`, this.productForm)
+            // .put(`https://gv-grocery-api.herokuapp.com/api.updateProduct/${id}`, this.productForm)
             .then((res) => {
               this.alertSuccess();
               console.log(res);

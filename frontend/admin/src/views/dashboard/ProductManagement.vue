@@ -138,6 +138,7 @@ export default {
   },
   async created() {
     await this.$store.dispatch("fetchProducts");
+    console.log(this.pagedTableData)
   },
   methods: {
     addProductView() {

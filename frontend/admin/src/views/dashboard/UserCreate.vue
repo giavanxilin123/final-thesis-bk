@@ -142,7 +142,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          await axios
+          await axios 
+          //  .post("https://gv-grocery-api.herokuapp.com/api.addUser", {
             .post("http://localhost:5000/api.addUser", {
               userForm: this.userForm,
             })

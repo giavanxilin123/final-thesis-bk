@@ -154,9 +154,13 @@ export default {
       if (input.files) {
         var reader = new FileReader();
         reader.onload = (e) => {
+          
           this.productForm.img = e.target.result;
+          console.log('e', e.target.result)
         };
+        console.log('hu', this.productForm.img)
         this.image = input.files[0];
+        console.log(this.image)
         reader.readAsDataURL(input.files[0]);
       }
     },
@@ -167,6 +171,7 @@ export default {
           this.productForm.price = parseFloat(this.productForm.price);
           await axios
             .put("http://localhost:5000/addProduct", {
+            // .put("https://gv-grocery-api.herokuapp.com/addProduct", {
               productForm: this.productForm,
             })
             .then((res) => {
